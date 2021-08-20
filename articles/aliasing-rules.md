@@ -121,7 +121,7 @@ fish: Job 1, 'cargo $argv' terminated by signal SIGBUS (Misaligned address error
 
 > There is no legal way to obtain aliasing &mut, not even with UnsafeCell<T>.
 
-この実行時の borrow check みたいなルールを _[aliasing] rules_ と言います。 Interior mutability と aliasing rules を合わせて、 `&UnsafeCell<T>` → `*mut T` → `&mut T` は 重なりが無い限り sound [^2] であると言えます。
+この実行時の borrow check みたいなルールを _[aliasing] rules_ と言います。 Interior mutability と aliasing rules を合わせて、 `&UnsafeCell<T>` → `*mut T` → `&mut T` は実行時に alias (参照の重なり) が無い限り sound [^2] であると言えます。
 
 `UnsafeCell` を含め、 [miri] で検証して行きます。
 
