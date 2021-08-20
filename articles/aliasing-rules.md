@@ -57,7 +57,7 @@ $ cargo run
 
 こんな世界じゃ、 `&mut T` も `&T` も変わりませんね。スライスを immutable にします:
 
-```diff_rust
+```diff-rust
 fn main() {
 -    let xs = &mut [0, 1, 2];
 +    let xs = &[0, 1, 2];
@@ -194,7 +194,7 @@ error: aborting due to previous error
 $ rustup +nightly component add miri
 ```
 
-```diff_rust
+```rust
 fn main() {
     use std::cell::UnsafeCell;
 
@@ -209,8 +209,7 @@ fn main() {
     *x0 = 10;
     *x1 = 20;
 
-    println!(
-        "{:?}",
+    println!("{:?}",
         xs.iter().map(|x| unsafe { *x.get() }).collect::<Vec<_>>()
     );
 }
@@ -299,7 +298,7 @@ error: aborting due to previous error
 
 `x1_mut` を `x1_ref` に置き換えると通ります:
 
-```diff_rust
+```diff-rust
 fn main() {
     let xs = &mut [0, 1, 2];
 
@@ -332,7 +331,7 @@ $ cargo +nightly miri run
 
 `x1_mut` を `x1_ptr_2` に置き換えても通ります:
 
-```diff_rust
+```diff-rust
 fn main() {
     let xs = &mut [0, 1, 2];
 
