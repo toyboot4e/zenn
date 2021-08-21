@@ -129,7 +129,7 @@ fish: Job 1, 'cargo $argv' terminated by signal SIGBUS (Misaligned address error
 
 # `miri`
 
-[miri] は、 Rust の [aliasing] モデル……を定義しようとするモデル、 [Stacked Borrows](SB) を実装した Rust MIR の interpreter だそうです。 [miri] でコードを実行すれば、様々な UB を検出できます。
+[miri] は、 Rust の [aliasing] モデル……を定義しようとするモデル、 [Stacked Borrows][SB] を実装した Rust MIR の interpreter だそうです。 [miri] でコードを実行すれば、様々な UB を検出できます。
 
 [SB]: https://github.com/rust-lang/unsafe-code-guidelines/blob/master/wip/stacked-borrows.md
 
