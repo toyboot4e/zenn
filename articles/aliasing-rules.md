@@ -225,7 +225,7 @@ $ cargo +nightly miri run
 
 **`xs: &[U]` であるにも関わらず、内部のデータを変更しましたが、冒頭の UB は出ませんでした** 。 `miri` もエラーを出しません。これが、 `UnsafeCell` の interior mutability!
 
-## 検証 3 (追記): やっぱり `slice::split_at_mut` は必要だった
+## 検証 3 (追記): やっぱり危険で、 `slice::split_at_mut` が有用でした
 
 検証 3-1, 3-2 では、コンテナの要素それぞれの可変参照を同時に取れると言いたかったです。しかし、少し例をいじると UB になることが分かりました ([code](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=d56d5b42be1b0e8c9ea9a43ab9a65d11)):
 
@@ -272,11 +272,13 @@ error: Undefined Behavior: no item granting write access to tag <2854> at alloc1
 error: aborting due to previous error
 ```
 
-ああ~……結局そうなのですね。肝心の検証 3-1, 3-2 は失敗でした。
+`xs.len()` がスライス全体の参照を取ると思います。 **スライスの indexer はスライス全体の参照を取らない** ようですが、例外的に見えます。
 
-## 失敗 ~~検証 3-1: `&mut T` → `*mut T` → `&mut T` は重なりが無いなら sound~~
+非常に気を遣えば、 `unsafe { &mut *(&mut xs[n] as *mut _ }` で複数の可変参照を
 
-**誤解でした** 。上の検証 3 (追記) もご参照ください
+## 危険 ~~検証 3-1: `&mut T` → `*mut T` → `&mut T` は重なりが無いなら sound~~
+
+**上の検証 3 (追記) もご参照ください**
 
 これが sound だと明確に書いてあるのを見た記憶は無いのですが、現在の `miri` としては sound でした。
 
@@ -306,9 +308,9 @@ $ cargo +nightly miri run
 
 `x0`, `x1` の参照を重ねると、 [miri] はエラーを出します。
 
-## 失敗 ~~検証 3-2: `&mut T` → `*mut T` → `&mut T` の `*mut T` は `&T` と同じ扱い~~
+## ？ ~~検証 3-2: `&mut T` → `*mut T` → `&mut T` の `*mut T` は `&T` と同じ扱い~~
 
-**誤解でした** 。上の検証 3 (追記) もご参照ください
+**上の検証 3 (追記) もご参照ください**
 
 同じ値の `*mut T` と `&mut T` を取ります。 `*mut T` は後でデリファレンスします。デリファレンスするまでの間、同じ値への他の参照を作ったとき、 aliasing rules (実行時の borrow rules と解釈) に違反するしょうか？
 
@@ -422,6 +424,7 @@ fn main() {
 * `UnsafeCell<T>` は interior mutability を提供する特殊な型である。
 * ~~`&mut T` → `*mut T` → `&mut T` において、 `*mut T` は aliasing rules 上 `&T` と同じ扱い~~
 * 追記: **やっぱりコンテナから複数の可変参照を取るのは非常に厳しい**
+    * **`&mut xs[n]` はスライス全体の借用を取らない** 。しかし、うっかり `xs.len()` などを呼ぶと、スライス全体の借用を取ってしまう。したがって、コンテナから複数の `&mut T` を取るのは非常に **危険**
     * TODO: `split_at_mut` の実装を見る
     * TODO: `split_at_mut` 他の方法で強引に借用の分割ができるか調べる
 
