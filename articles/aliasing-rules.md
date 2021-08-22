@@ -272,9 +272,9 @@ error: Undefined Behavior: no item granting write access to tag <2854> at alloc1
 error: aborting due to previous error
 ```
 
-`xs.len()` がスライス全体の参照を取ると思います。 **スライスの indexer はスライス全体の参照を取らない** ようですが、例外的に見えます。
+`xs.len()` がスライス全体の参照を取ります。一方で、 **スライスの indexer (`&mut xs[m]`) はスライス全体の参照を取らなかった** ようですが、これは **例外** 的な操作に見えます。
 
-非常に気を遣えば、 `unsafe { &mut *(&mut xs[n] as *mut _ }` で複数の可変参照を
+非常に気を遣えば、スライスから複数の可変参照を取ることができそうです (3-1) が、やはり危険だったのでお勧めできません。
 
 ## 危険 ~~検証 3-1: `&mut T` → `*mut T` → `&mut T` は重なりが無いなら sound~~
 
@@ -424,7 +424,7 @@ fn main() {
 * `UnsafeCell<T>` は interior mutability を提供する特殊な型である。
 * ~~`&mut T` → `*mut T` → `&mut T` において、 `*mut T` は aliasing rules 上 `&T` と同じ扱い~~
 * 追記: **やっぱりコンテナから複数の可変参照を取るのは非常に厳しい**
-    * **`&mut xs[n]` はスライス全体の借用を取らない** 。しかし、うっかり `xs.len()` などを呼ぶと、スライス全体の借用を取ってしまう。したがって、コンテナから複数の `&mut T` を取るのは非常に **危険**
+    * **`&mut xs[n]` はスライス全体の借用を取らない** 。しかし、 **うっかり** `xs.len()` などを呼ぶと、 **スライス全体の借用を取ってしまう** 。したがって、コンテナから複数の `&mut T` を取るのは非常に危険
     * TODO: `split_at_mut` の実装を見る
     * TODO: `split_at_mut` 他の方法で強引に借用の分割ができるか調べる
 
