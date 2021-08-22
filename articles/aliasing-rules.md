@@ -225,7 +225,7 @@ $ cargo +nightly miri run
 
 **`xs: &[U]` であるにも関わらず、内部のデータを変更しましたが、冒頭の UB は出ませんでした** 。 `miri` もエラーを出しません。これが、 `UnsafeCell` の interior mutability!
 
-## 検証 3 (追記): やっぱり危険で、 `slice::split_at_mut` が有用でした
+## 検証 3 (追記): やっぱりポインタで借用の分割をするのは危険でした
 
 検証 3-1, 3-2 では、コンテナの要素それぞれの可変参照を同時に取れると言いたかったです。しかし、少し例をいじると UB になることが分かりました ([code](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=d56d5b42be1b0e8c9ea9a43ab9a65d11)):
 
