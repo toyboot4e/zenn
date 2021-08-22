@@ -438,7 +438,7 @@ fn main() {
 
 [Q]: https://qnighy.hatenablog.com/entry/2017/05/20/070000
 
-## TODO: スライスの所有者の扱い？
+## 訂正: 誤解 ~~TODO: スライスの所有者の扱い？~~
 
 [miri] は以下のコードを通します:
 
@@ -459,7 +459,9 @@ $ cargo +nightly miri run
 [10, 1, 2]
 ```
 
-`xs.len()` では `&xs` を取っていますが、 `[T]` の参照 (`&xs[0..]`) を取ったことにはならないようですね。ふーむ。 Rust チョットワカラナイ……
+~~`xs.len()` では `&xs` を取っていますが、 `[T]` の参照 (`&xs[0..]`) を取ったことにはならないようですね。ふーむ。 Rust チョットワカラナイ……~~
+
+`xs.len()` が最適化で MIR から消えていたっぽいですね！！！ (検証 3 をご参照ください)
 
 [^1]: UB = undefined behavior. UB とは言うけれど、 Unspecified behavior / undefined behavior は区別しよう、みたいな議論も [unsafe-code-guidelines](https://github.com/rust-lang/unsafe-code-guidelines) にあったような……
 [^2]: Sound = 100% 実行時に UB を起こさない　だと思います。
