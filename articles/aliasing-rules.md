@@ -225,7 +225,58 @@ $ cargo +nightly miri run
 
 **`xs: &[U]` であるにも関わらず、内部のデータを変更しましたが、冒頭の UB は出ませんでした** 。 `miri` もエラーを出しません。これが、 `UnsafeCell` の interior mutability!
 
-## 検証 3-1: `&mut T` → `*mut T` → `&mut T` は重なりが無いなら sound
+## 検証 3 (追記): やっぱり `slice::split_at_mut` は必要だった
+
+検証 3-1, 3-2 では、コンテナの要素それぞれの可変参照を同時に取れると言いたかったです。しかし、少し例をいじると UB になることが分かりました ([code](https://play.rust-lang.org/?version=stable&mode=debug&edition=2018&gist=d56d5b42be1b0e8c9ea9a43ab9a65d11)):
+
+```diff-rust
+fn main() {
+    let xs = &mut [0, 1, 2];
+    let x0 = unsafe { &mut *(&mut xs[0] as *mut _) };
+    let x1 = unsafe { &mut *(&mut xs[1] as *mut _) };
+    *x0 = 10;
++    println!("{}", xs.len());
+    *x1 = 11;
+    assert_eq!(xs, &mut [10, 11, 2]);
+}
+```
+
+```sh
+   Compiling playground v0.0.1 (/playground)
+    Finished dev [unoptimized + debuginfo] target(s) in 1.25s
+     Running `/playground/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/bin/cargo-miri target/miri/x86_64-unknown-linux-gnu/debug/playground`
+error: Undefined Behavior: no item granting write access to tag <2854> at alloc1420+0x4 found in borrow stack.
+ --> src/main.rs:7:5
+  |
+7 |     *x1 = 11;
+  |     ^^^^^^^^ no item granting write access to tag <2854> at alloc1420+0x4 found in borrow stack.
+  |
+  = help: this indicates a potential bug in the program: it performed an invalid operation, but the rules it violated are still experimental
+  = help: see https://github.com/rust-lang/unsafe-code-guidelines/blob/master/wip/stacked-borrows.md for further information
+          
+  = note: inside `main` at src/main.rs:7:5
+  = note: inside `<fn() as std::ops::FnOnce<()>>::call_once - shim(fn())` at /playground/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/ops/function.rs:227:5
+  = note: inside `std::sys_common::backtrace::__rust_begin_short_backtrace::<fn(), ()>` at /playground/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/sys_common/backtrace.rs:125:18
+  = note: inside closure at /playground/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/rt.rs:63:18
+  = note: inside `std::ops::function::impls::<impl std::ops::FnOnce<()> for &dyn std::ops::Fn() -> i32 + std::marker::Sync + std::panic::RefUnwindSafe>::call_once` at /playground/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/core/src/ops/function.rs:259:13
+  = note: inside `std::panicking::r#try::do_call::<&dyn std::ops::Fn() -> i32 + std::marker::Sync + std::panic::RefUnwindSafe, i32>` at /playground/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/panicking.rs:403:40
+  = note: inside `std::panicking::r#try::<i32, &dyn std::ops::Fn() -> i32 + std::marker::Sync + std::panic::RefUnwindSafe>` at /playground/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/panicking.rs:367:19
+  = note: inside `std::panic::catch_unwind::<&dyn std::ops::Fn() -> i32 + std::marker::Sync + std::panic::RefUnwindSafe, i32>` at /playground/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/panic.rs:129:14
+  = note: inside closure at /playground/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/rt.rs:45:48
+  = note: inside `std::panicking::r#try::do_call::<[closure@std::rt::lang_start_internal::{closure#2}], isize>` at /playground/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/panicking.rs:403:40
+  = note: inside `std::panicking::r#try::<isize, [closure@std::rt::lang_start_internal::{closure#2}]>` at /playground/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/panicking.rs:367:19
+  = note: inside `std::panic::catch_unwind::<[closure@std::rt::lang_start_internal::{closure#2}], isize>` at /playground/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/panic.rs:129:14
+  = note: inside `std::rt::lang_start_internal` at /playground/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/rt.rs:45:20
+  = note: inside `std::rt::lang_start::<()>` at /playground/.rustup/toolchains/nightly-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library/std/src/rt.rs:62:5
+
+error: aborting due to previous error
+```
+
+ああ~……結局そうなのですね。肝心の検証 3-1, 3-2 は失敗でした。
+
+## 失敗 ~~検証 3-1: `&mut T` → `*mut T` → `&mut T` は重なりが無いなら sound~~
+
+**誤解でした** 。上の検証 3 (追記) もご参照ください
 
 これが sound だと明確に書いてあるのを見た記憶は無いのですが、現在の `miri` としては sound でした。
 
@@ -255,7 +306,9 @@ $ cargo +nightly miri run
 
 `x0`, `x1` の参照を重ねると、 [miri] はエラーを出します。
 
-## 検証 3-2: `&mut T` → `*mut T` → `&mut T` の `*mut T` は `&T` と同じ扱い
+## 失敗 ~~検証 3-2: `&mut T` → `*mut T` → `&mut T` の `*mut T` は `&T` と同じ扱い~~
+
+**誤解でした** 。上の検証 3 (追記) もご参照ください
 
 同じ値の `*mut T` と `&mut T` を取ります。 `*mut T` は後でデリファレンスします。デリファレンスするまでの間、同じ値への他の参照を作ったとき、 aliasing rules (実行時の borrow rules と解釈) に違反するしょうか？
 
@@ -367,7 +420,10 @@ fn main() {
 * Borrow rules: コンパイル時に borrow checker が課すルール。
 * Aliasing rules: Unsafe で borrow rules を掻い潜ったとしても、実行時に borrow rules を守られなければ unsound とするルール。
 * `UnsafeCell<T>` は interior mutability を提供する特殊な型である。
-* `&mut T` → `*mut T` → `&mut T` において、 `*mut T` は aliasing rules 上 `&T` と同じ扱い
+* ~~`&mut T` → `*mut T` → `&mut T` において、 `*mut T` は aliasing rules 上 `&T` と同じ扱い~~
+* 追記: **やっぱりコンテナから複数の可変参照を取るのは非常に厳しい**
+    * TODO: `split_at_mut` の実装を見る
+    * TODO: `split_at_mut` 他の方法で強引に借用の分割ができるか調べる
 
 [miri] を通して、 `UnsafeCell` への理解が進みました。今日の [miri] の aliasing モデルは、 Rust が (将来的に) 想定するモデルとは別物ですが、今は miri が通したら sound だと思うことにします。
 
