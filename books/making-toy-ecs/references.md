@@ -37,7 +37,7 @@ Component ストレージは `Vec<Option<T>>` による SoA で、 [hibitset] �
 Component ストレージは `SparseSet<T>` による SoA です。
 
 3. Archetype-based
-Component ストレージは component の組み合わせ (archetype) 毎に作り、 `Vec<T>` の SoA ストレージを使います。
+Component ストレージは archetype (component の組み合わせ) 毎に作り、 `Vec<T>` の SoA ストレージを使います。
 
 ## ECS 関連の記事
 
@@ -69,7 +69,7 @@ Rust に限らず有名な ECS を列挙します。
   Plugin ベースのゲームエンジンで、 ECS もプラグインとして実装されています。課金するとリポジトリにアクセスできます。
 
 * [Unity DOTS][dots] (C++ と C# ?)
-  ほぼ何も知らないのですが、大量のオブジェクトを出すデモは見たことがあります。
+  Unity の ECS です。大量のオブジェクトを出すデモだけ見たことがあります。
 
 ### Hybrid (sparse set + archetype)
 
@@ -87,22 +87,22 @@ Rust に限らず有名な ECS を列挙します。
 
 # ECS 以外のオブジェクト管理法
 
-## 継承を使う場合
+## 1. 継承を使う場合
 
 `Vec<Actor>` 的な Array of Structs ストレージを使います。
 
-### E (node や actor とも)
+### 1-1. E (node や actor とも)
 
 `Entity` は scene graph 上のノードです。
 
-### EC or C
+### 1-2. EC or C
 
 `Entity` は `Component` の anymap です。
 
 * C: ユーザは `Component` のみ継承できます
 * EC: ユーザは `Entity` または `Component` を継承できます
 
-## 継承を使わない場合
+## 2. 継承を使わない場合
 
 いわゆる [generational arena][gen] が大活躍します。
 
@@ -129,7 +129,7 @@ pub struct Arena<T> {
 }
 ```
 
-* 空欄毎に `Generation` は単調増加します。
+* 欄毎に `Generation` は単調増加します。
   既に破棄されたデータへの `Index` は無効です。
 
 様々なオブジェクトを `Actor` にアップキャストして `Arena<Actor>` の中に入ります:
@@ -143,5 +143,5 @@ Optional なフィールドを活かして 1 つの型で複数種類のオブ�
 1. `Box<dyn Any>`
 ダウンキャストします。これは不便だと思います。
 
-`Arena<T>` は複数種類持ってもよくて、たとえば見た目のデータを `Arena<Node>` に入れて、 `Actor` が `Index<Node>` を持ったりします。
+`Arena<T>` は複数種類作ってもよくて、たとえば見た目のデータを `Arena<Node>` に入れて、 `Actor` が `Index<Node>` を持ったりします。
 

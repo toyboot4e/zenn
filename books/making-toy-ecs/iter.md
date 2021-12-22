@@ -20,7 +20,7 @@ fn add_system(mut us: CompMut<usize>, is: Comp<isize>, add: Res<usize>) {
 add_system.run(&world);
 ```
 
-`&CompMut<T>` は `&Comp<T>` と同じ扱いとし、 `&mut CompMut<T>` から区別します。
+なお `&CompMut<T>` は `&Comp<T>` と同じ扱いとし、 `&mut CompMut<T>` から区別します。
 
 # 1 種類の component のイテレータ
 
@@ -35,6 +35,8 @@ add_system.run(&world);
 pub unsafe trait View<'a> {
     type Binding: AnyBinding;
     fn into_parts(self) -> (&'a [Entity], Self::Binding);
+    //                       ^                  ^
+    //                       +- 疎な部分        +- 密な部分
 }
 
 /// Shorthand
@@ -47,6 +49,7 @@ pub trait AnyBinding {
     unsafe fn get_by_slot_unchecked(&mut self, slot: usize) -> Self::Item;
 }
 
+// `SparseSet<T>` の密な部分
 #[derive(Clone)]
 pub struct Binding<'a, Slice> {
     to_dense: &'a [Option<DenseIndex>],
@@ -101,7 +104,7 @@ pub trait Iter<'a> {
 
 > 複数種類の component の高速なイテレーションは『グループ』の章で扱います。
 
-## 関連型でコンパイルが通らないときは generics を使う
+## 関連型を使ってコンパイルが通らないときは generics を使う
 
 もう Rust 分からないですね……
 

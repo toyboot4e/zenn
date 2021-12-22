@@ -47,7 +47,7 @@ pub trait BorrowWorld<'w> {
 
 WIP
 
-Send な関数に `ParallelSystem` を実装する
+Send な関数の組に `ParallelSystemSet` を実装する？
 
 # `Iter::iter_par`
 
