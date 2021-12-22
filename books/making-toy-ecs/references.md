@@ -91,7 +91,6 @@ Rust に限らず有名な ECS を列挙します。
 
 `Vec<Actor>` 的な Array of Structs ストレージを使います。
 
-
 ### E (node や actor とも)
 
 `Entity` は scene graph 上のノードです。
@@ -144,5 +143,5 @@ Optional なフィールドを活かして 1 つの型で複数種類のオブ�
 1. `Box<dyn Any>`
 ダウンキャストします。これは不便だと思います。
 
-`Arena<T>` は複数種類持っても良くて、たとえば見た目のデータを `Arena<Node>` に入れて、 `Actor` が `Index<Node>` を持ったりします。
+`Arena<T>` は複数種類持ってもよくて、たとえば見た目のデータを `Arena<Node>` に入れて、 `Actor` が `Index<Node>` を持ったりします。
 
