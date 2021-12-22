@@ -77,7 +77,7 @@ pub(crate) trait ErasedComponentPool: Downcast {
 
 リファレンス実装: [65ce774](https://github.com/toyboot4e/toecs/commit/65ce7747b87aba3f6f401ffce948c611d6ed3add)
 
-これで `Entity` の component を一括削除できます:
+`ComponentPool` を `dyn ErasedComponentPool` として持つことで、 component を一括削除ができるようにできます:
 
 ```rust:lib.rs(疑似コード)
 component_pools_mut()

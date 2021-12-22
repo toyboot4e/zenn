@@ -4,7 +4,7 @@ title: "ストレージ 4: Components"
 
 Component の型毎に `SparseSet<T>` を用意します。
 
-この単純な component ストレージは resource の親戚だと捉えることができます。
+実は resource の親戚だとも捉えられます。
 
 # `ComponentPoolMap`
 
