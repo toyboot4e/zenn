@@ -55,8 +55,8 @@ component_pools_mut()
 
 ここで `component_pool` に必要なのは:
 
-* 従来の機能
-  [`Any`] の機能 (`ComponentPool<T>` へダウンキャストする機能)
+* 従来の機能 ([`Any`])
+  `ComponentPool<T>` へダウンキャストする機能
 
 * 追加したい機能
   アップキャストされたまま `remove(Entity)` する機能
@@ -75,6 +75,8 @@ use downcast_rs::Downcast;
 pub(crate) trait ErasedComponentPool: Downcast {
     fn erased_remove(&mut self, entity: Entity);
 }
+
+// `dyn ErasedComponent` が `dyn Any + ErasedComponentPool` のように使えるようになる
 ```
 
 リファレンス実装: [65ce774](https://github.com/toyboot4e/toecs/commit/65ce7747b87aba3f6f401ffce948c611d6ed3add)

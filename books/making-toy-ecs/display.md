@@ -108,11 +108,11 @@ World {
 1. 全体的に冗長
 2. `AtomicRefCell` の中身が見えない
 
-もっと debug に役立つ表示を可能にします。
+もっと debug に役立つ表示をします。
 
 ## Entity の pretty print
 
-`Entity(slot, generation)` の形で表示されるようにしました。
+`Debug` trait を手動実装し、 `Entity(slot, generation)` の形で表示されるようにしました。
 
 リファレンス実装: [997d2c6](https://github.com/toyboot4e/toecs/commit/997d2c6dca83bc44cf9d6257c79e5eb1f5b46972)
 
@@ -120,12 +120,12 @@ World {
 
 ### `Debug` を要求
 
-中身を表示できるように制約を加えました。
+中身を表示できるよう制約を加えました:
 
-* `trait Resource: Debug`
-* `trait Component: Debug`
+* `trait Resource: 'static + Debug`
+* `trait Component: 'static + Debug`
 
-ただしユーザ型に `#[derive(Debug)]` を忘れると `Component` となされないため、謎のエラーが出るようになります。デメリットの大きなトレードオフです。
+ただしユーザ型に `#[derive(Debug)]` を忘れると `Component` とみなされないため、謎のエラーが出るようになります。デメリットの大きなトレードオフです。
 
 リファレンス実装: [ec35607](https://github.com/toyboot4e/toecs/commit/ec35607fb3d2efe71a74c3cca14dc56121fd05c5)
 
