@@ -125,7 +125,7 @@ pub struct ResMut<'r, T> {
 
 あとは `impl` ブロックを書いてテストが通るようにします。
 
-リファレンス実装: [c031004](https://github.com/toyboot4e/toecs/commit/c031004c7ba08ebfd2757faec1e186c379bcbcea)
+リファレンス実装: [1a3ee73](https://github.com/toyboot4e/toecs/commit/1a3ee7337716989ea24438a5c378175710f1eb29)
 
 # System に resource を割り当てる
 
