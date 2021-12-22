@@ -8,9 +8,9 @@ title: "World の API - 2"
 
 # `ComponentSet`
 
-『複数の component』を抽象します。
+『複数の component』 (`(T0, T1, T2, ..)`) を抽象します。
 
-`System` 実装の時は `impl_run!(P15, P14, ..);` と引数の順番が逆になっていましたが、今回は `0, 1, 2..` という正しい順番にする必要があったため、マクロを工夫しています。
+`System` 実装の時は `impl_run!(P15, P14, ..);` と引数の順番が逆になっていましたが、今回は `0, 1, 2..` という正しい順番にしてタプルのフィールドにアクセスするため、マクロを工夫しています。
 
 リファレンス実装: [18b6cd0](https://github.com/toyboot4e/toecs/commit/18b6cd0d5c5601c978789e228a94da7632377c82)
 
@@ -26,7 +26,7 @@ Component を追加しない場合は `spawn_empty` を呼びます。
 
 # `World::*_many` を追加
 
-`ComponentSet` のメソッドに繋ぎます。
+`ComponentSet` のメソッドに繋ぎます。 `trait` によるオーバーロードです。
 
 リファレンス実装: [c84283f](https://github.com/toyboot4e/toecs/commit/c84283f4ce000abd4ccfb2036844701dd57bc45e)
 

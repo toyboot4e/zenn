@@ -150,7 +150,7 @@ impl World {
 
 ### 内部共変性の一時的付与
 
-[`Display`] は `&self` を引数に取りますが、今は `Display` 実装のために可変参照が必要な場面です。そこで、データを一時的に奪って `RefCell<T>` に包み、内部共変性を与えます:
+[`Display`] は `&self` を引数に取りますが、今は `Display` 実装のために可変参照が必要な場面です。そこで、元のデータを一時的に奪って `RefCell<T>` に包み、内部共変性を与えます:
 
 [`Display`]: https://doc.rust-lang.org/std/fmt/trait.Display.html
 
@@ -158,9 +158,11 @@ impl World {
 impl World {
     /// Returns a debug display. This is safe because it has exclusive access.
     pub fn display(&mut self) -> WorldDisplay {
+        // 空データと交換することで所有権を奪う
         let mut world = World::default();
         mem::swap(self, &mut world);
         WorldDisplay {
+            // 奪ったデータを `RefCell` に包んで利用する
             world: RefCell::new(world),
             original_world: self,
         }
@@ -175,6 +177,7 @@ pub struct WorldDisplay<'w> {
 
 impl<'w> Drop for WorldDisplay<'w> {
     fn drop(&mut self) {
+        // drop 時に元のデータを元の位置に返す
         mem::swap(self.original_world, self.world.get_mut());
     }
 }
