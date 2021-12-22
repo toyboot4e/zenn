@@ -12,7 +12,7 @@ title: "ストレージ 3: Entity"
 #[repr(transparent)]
 pub struct Entity(SparseIndex);
 
-// SparseIndex { Generation, u32 }
+// SparseIndex { u32, Generation }
 ```
 
 後で `&SparseIndex` → `&Entity` のキャストができるように [#\[transparent\]][tr] にしました。

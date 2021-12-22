@@ -4,7 +4,7 @@ title: "ストレージ 4: Components"
 
 Component の型毎に `SparseSet<T>` を用意します。
 
-実は resource の親戚だとも捉えられます。
+これらのストレージは、実は resource の親戚として捉えられます。
 
 # `ComponentPoolMap`
 
@@ -73,7 +73,7 @@ pub struct CompMut<'r, T: 'static> {
 >
 > 一方 `CompMut` が `deref_mut` するタイミングまで `borrow_mut` を遅延すれば、 `deref_mut` のログを取ることで中のデータが変更された (可能性があるか) を後から調べることができます。
 >
-> * 変更フラグを持つよりも、変更されたタイミングのゲームのフレーム数 (`Tick`) を持った方が楽かもしれません (`false` への初期化が不要なため) 。
+> * `deref_mut` が呼ばれたフラグを持つよりも、変更された時のゲームのフレーム数 (`Tick`) を持った方が楽かもしれません (`false` への初期化が不要なため) 。
 
 ## `BorrowWorld` 実装
 
