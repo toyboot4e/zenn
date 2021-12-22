@@ -12,8 +12,11 @@ title: "World の API - 1"
 
 ## Integration test を追加する
 
-* `src/tests.rs` は `lib.rs` の中身と `pub(crate)` なアイテムが見えます。
-* 一方 `tests/` 以下のファイルは外部クレートとして扱われるため、 public API のテストに適しています。
+* `src/tests.rs` からは `lib.rs` の中身と `pub(crate)` なアイテムが見えます。
+  内部実装のテストに適しています。
+
+* 一方 `tests/` 以下のファイルは外部クレートとして扱われるため、 public なアイテムしか見えません。
+  API のテストに適しています。
 
 ```
 .
@@ -22,19 +25,18 @@ title: "World の API - 1"
     └── main.rs
 ```
 
-Integration test は外部クレートなので `it` 1 つに集約しました [^1] 。
+Integration test は外部クレートなので、コンパイル時間短縮のために `it` 1 つに集約します [^1] 。
 
 > `toecs` は `tests/` 以下に 1  つしかファイルを持ちませんが、良い習慣として `tests/it/main.rs` にしました。
 
 ## 内部共変性を使ったアクセサを公開
 
-`&World` から内部データ `impl DerefMut<T>` が取れます。
+* `&World` から内部データ `impl DerefMut<T>` が取れます。
+* ただしデータの追加・削除には必ず `&mut World` が必要であるとしました。
 
-ただしデータの追加・削除には必ず `&mut World` を必要としました。
+> `ComponentPool::insert` などはユーザから隠しています。
 
-> `ComponentPool::insert` などは隠しています。
-
-`prelude` も追加しました。
+`prelude` モジュールも追加しました。
 
 リファレンス実装: [0651328](https://github.com/toyboot4e/toecs/commit/06513283310260fdc9decbd97ae25f1896488a62)
 
