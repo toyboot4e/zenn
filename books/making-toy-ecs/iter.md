@@ -2,9 +2,9 @@
 title: "イテレータ"
 ---
 
-ポイントだけメモします。
+`Entity` 経由のイテレータを作ります。
 
-何を言っているのか伝わらないかもしれません。実装も酷いものですみません 🙇
+ポイントだけメモしたので、何を言っているのか伝わらないかもしれません。実装も酷いものですみません 🙇
 
 # 例
 
@@ -36,6 +36,7 @@ pub unsafe trait View<'a> {
     type Binding: AnyBinding;
     fn into_parts(self) -> (&'a [Entity], Self::Binding);
     //                       ^                  ^
+    //                       |                  |
     //                       +- 疎な部分        +- 密な部分
 }
 
@@ -57,7 +58,7 @@ pub struct Binding<'a, Slice> {
 }
 ```
 
-> `sparsey` や `shipyard` では、そもそも `Comp<T>` と `CompMut<T>` を `struct ComponentView<T>` で表しています。
+> `sparsey` や `shipyard` では、そもそも `Comp<T>` と `CompMut<T>` を同じ `struct ComponentView<T>` で表しています。
 
 ## Lifetime を誤魔化す
 
