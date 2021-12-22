@@ -143,7 +143,7 @@ impl World {
 
 この後は `AtomicRefCell` の中身を借りても安全なので、 `WorldDisplay` は `Debug` か `Display` で中のデータをすべて表示します。
 
-> `World` のフィールドについても `&mut self` を取って `*Display` を返すようにします。
+> 同様のパターンで:
 > 
 > * `ResourceMap::display(&mut self)` → `ResourceMapDisplay`
 > * `ComponentPoolMap::display(&mut self)` → `ComponenPoolMap`
