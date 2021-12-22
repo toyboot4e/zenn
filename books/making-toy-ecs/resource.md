@@ -137,7 +137,7 @@ pub unsafe trait System<'w, Params> {
 }
 ```
 
-trat 実装後は`run` が呼べるようになります:
+trait 実装後は`run` が呼べるようになります:
 
 ```rust:例
 fn simple_system(u: ResMut<usize>) {
@@ -211,7 +211,6 @@ where
 ```
 
 * [繰り返し - Rust By Example 日本語版](http://doc.rust-jp.rs/rust-by-example-ja/macros/repeat.html) の構文を知っていれば読めます。
-* `$xs:ty` を取るとエラーが出るので `$xs:ident` にします。
 
 マクロを使って `System` trait を実装します:
 

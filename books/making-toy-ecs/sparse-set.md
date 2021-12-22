@@ -60,10 +60,10 @@ Component は密なデータ列 (`Vec<T>`) であり、最速でイテレート�
 ### 複数種類の `SparseSet<T>` をイテレートする場合
 
 1. `SparseIndex` 経由でイテレートする場合
-  間接層を経由したアクセスのため、キャッシュミスが増えますがイテレート可能です。
+  間接層を経由したアクセスのため、キャッシュミスは増えます。
 
 2. `usize` 経由でイテレートする場合
-  後の章に登場する『グループ』のトリックを使えば、共通の `usize` で複数の `SparseSet<T>` にアクセスできます。効率が必要なときに使います。
+  後の章に登場する『グループ』の仕組みを使えば、共通の `usize` で複数の `SparseSet<T>` にアクセスできます。効率が必要なときに使います。
 
 # `SparseSet<T>` の実装
 
@@ -128,7 +128,7 @@ impl<T> SparseSet<T> {
 
 ## `swap_remove`
 
-* [`Vec::remove`][rm] は右側の要素をシフトするため重そうです。
+* [`Vec::remove`][rm] は削除した要素より右側の要素をすべてシフトするため重そうです。
 * [`Vec::swap_remove`][swap_rm] を使って要素を削除します。
 
 [rm]: https://doc.rust-lang.org/std/vec/struct.Vec.html#method.remove
