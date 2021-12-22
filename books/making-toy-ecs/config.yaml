@@ -1,0 +1,25 @@
+title: "[WIP] Entity-Component-System 実装！"
+summary: "Rust で sparse set-based な ECS を作ります"
+topics: ["ゲーム開発", "Rust"]
+published: true
+price: 0 # 有料の場合200〜5000
+# 本に含めるチャプターを順番に並べましょう
+chapters:
+  - intro
+  - ecs-example
+  - toecs-summary
+  - resource
+  - sparse-set
+  - entity
+  - comp-map
+  - world-1
+  - display
+  - world-2
+  - iter
+  - toecs-1
+  - parallel
+  - groups
+  - toecs-2
+  - parallel
+  - references
+  - end
