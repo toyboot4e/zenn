@@ -19,7 +19,7 @@ Sparse set は 2 段構えの配列です。
 * メモリ消費量が多い
 たとえばパーティクルみたいな `Entity` がいると、大量の空欄でメモリが埋まります。
 
-* 巡回 (イテレーション) が遅い
+* イテレーションが遅い
 空欄が多いとキャッシュミスが増えます。 (AAA ゲームでもなければ問題にならないようですが) 。
 
 そこで図の横列に相当するストレージを作り直します。
@@ -63,7 +63,7 @@ Component は密なデータ列 (`Vec<T>`) であり、最速でイテレート�
   間接層を経由したアクセスのため、キャッシュミスは増えます。
 
 2. `usize` 経由でイテレートする場合
-  後の章に登場する『グループ』の仕組みを使えば、共通の `usize` で複数の `SparseSet<T>` にアクセスできます。効率が必要なときに使います。
+  後の章に登場する『グループ』の仕組みを使えば、共通の `usize` で複数の `SparseSet<T>` にアクセスできます。パフォーマンスが重要な場面で使います。
 
 # `SparseSet<T>` の実装
 
@@ -101,14 +101,14 @@ pub struct SparseIndex {
 pub struct SparseSet<T> {
     // SparseIndex → DenseIndex
     to_dense: Vec<Option<SparseIndex>>,
-    // iter_with_index() の実装に使う
+    // iter_with_index() の実装などに使う
     to_sparse: Vec<SparseIndex>,
-    // dense vec, packed array
+    // DenseVec 経由でアクセスする
     data: Vec<T>,
 }
 ```
 
-アクセサでは添字の世代を考慮します。世代が不一致な添字は無効な添字です。
+アクセサでは添字の世代を考慮します。世代が不一致な添字は無効な添字 (破棄されたデータへの添字) です。
 
 ```rust:sparse.rs
 impl<T> SparseSet<T> {
