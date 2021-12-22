@@ -1,5 +1,5 @@
 ---
-title: "[WIP] toecs の API - 2"
+title: "[WIP] ライブラリとしての API - 2"
 ---
 
 # WIP

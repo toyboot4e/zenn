@@ -1,5 +1,5 @@
 ---
-title: "toecs の API - 1"
+title: "ライブラリとしての API - 1"
 ---
 
 # System の返値
