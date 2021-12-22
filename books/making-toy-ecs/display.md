@@ -146,11 +146,11 @@ impl World {
 > `World` のフィールドについても `&mut self` を取って `*Display` を返すようにします。
 > 
 > * `ResourceMap::display(&mut self)` → `ResourceMapDisplay`
-> * `ComponenPoolMap::display(&mut self)` → `ComponenPoolMap`
+> * `ComponentPoolMap::display(&mut self)` → `ComponenPoolMap`
 
-### 内部共変性の一時的付与
+### 内部可変性の一時的付与
 
-[`Display`] は `&self` を引数に取りますが、今は `Display` 実装のために可変参照が必要な場面です。そこで、元のデータを一時的に奪って `RefCell<T>` に包み、内部共変性を与えます:
+[`Display`] は `&self` を引数に取りますが、今は `Display` 実装のために可変参照が必要な場面です。そこで、元のデータを一時的に奪って `RefCell<T>` に包み、内部可変性を与えます:
 
 [`Display`]: https://doc.rust-lang.org/std/fmt/trait.Display.html
 
