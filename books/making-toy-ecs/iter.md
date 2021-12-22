@@ -4,7 +4,7 @@ title: "イテレータ"
 
 ポイントだけメモします。
 
-何を言っているのか伝わらないかもしれません。遅刻ギリギリの投稿なのですみません 🙇
+何を言っているのか伝わらないかもしれません。遅刻ギリギリの投稿なってしまったのですみません 🙇
 
 # 例
 
@@ -28,7 +28,7 @@ add_system.run(&world);
 
 ## `Comp<T>` と `CompMut<T>` を抽象する
 
-`View` を足しました。 `SparseSet<T>` の疎な部分と密な部分に分解できます:
+`trait View` を追加しました。 `Comp<T>` を `SparseSet<T>` の疎な部分と密な部分に分解できます:
 
 ```rust
 /// `&Comp<T>` | `&CompMut<T>` | `&mut CompMut<T>`
@@ -93,7 +93,7 @@ pub trait Iter<'a> {
 
 > `IntoIterator` を実装する良いトリックがあるかもしれませんが、 Bevy の API もこんな感じだったので無理かもしれません。
 
-参照実装: [e293607](https://github.com/toyboot4e/toecs/commit/e2936079b55c16290b94823db055643f294278a4)
+リファレンス実装: [6b94be6](https://github.com/toyboot4e/toecs/commit/6b94be632116360120b17191d9858f8a18c2daf1)
 
 # 複数種類の component のイテレータ
 
@@ -109,5 +109,5 @@ pub trait Iter<'a> {
 
 Const generics で脳筋しました。
 
-リファレンス実装: [d93bdf4](https://github.com/toyboot4e/toecs/commit/d93bdf48849b29a8c2a95acd4fb5e7a31233e389)
+リファレンス実装: [fdd3534](https://github.com/toyboot4e/toecs/commit/fdd3534bd1013036e481c9c6459b5b1ef41d915b)
 

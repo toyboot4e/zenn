@@ -10,7 +10,7 @@ title: "World の API - 2"
 
 『複数の component』を抽象します。
 
-マクロを頑張りました。
+`System` 実装の時は `impl_run!(P15, P14, ..);` と引数の順番が逆になっていましたが、今回は `0, 1, 2..` という正しい順番にする必要があったため、マクロを工夫しています。
 
 リファレンス実装: [18b6cd0](https://github.com/toyboot4e/toecs/commit/18b6cd0d5c5601c978789e228a94da7632377c82)
 
@@ -20,7 +20,7 @@ title: "World の API - 2"
 
 Component を追加しない場合は `spawn_empty` を呼びます。
 
-> `sparsey` では、 `spawn(())` で空の `Entity` を作れるようにしています。 `toecs` では、 `spawn(())` は `()` を component として追加する風にも読めるので止めました。
+> `sparsey` では、 `spawn(())` で空の `Entity` を作れるようにしています。 `toecs` では、 `spawn(())` は `()` を component として追加する風にも読めるためメソッドを分けました。
 
 リファレンス実装: [7458c41](https://github.com/toyboot4e/toecs/commit/7458c41194915dd67b77782f38a8a16cce3c295d)
 

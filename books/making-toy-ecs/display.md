@@ -125,7 +125,7 @@ World {
 * `trait Resource: Debug`
 * `trait Component: Debug`
 
-ただし `#[derive(Debug)]` を忘れると謎のエラーが出るようになります。デメリットの大きなトレードオフです。
+ただしユーザ型に `#[derive(Debug)]` を忘れると `Component` となされないため、謎のエラーが出るようになります。デメリットの大きなトレードオフです。
 
 リファレンス実装: [ec35607](https://github.com/toyboot4e/toecs/commit/ec35607fb3d2efe71a74c3cca14dc56121fd05c5)
 
@@ -141,10 +141,12 @@ impl World {
 }
 ```
 
-`World` のフィールドについても `&mut self` を取って `*Display` を返すようにします。
+`WorldDisplay` は `Debug` か `Display` で中のデータをすべて表示します。
 
-* `ResourceMap::display(&mut self)` → `ResourceMapDisplay`
-* `ComponenPoolMap::display(&mut self)` → `ComponenPoolMap`
+> `World` のフィールドについても `&mut self` を取って `*Display` を返すようにします。
+> 
+> * `ResourceMap::display(&mut self)` → `ResourceMapDisplay`
+> * `ComponenPoolMap::display(&mut self)` → `ComponenPoolMap`
 
 ### 内部共変性の一時的付与
 
