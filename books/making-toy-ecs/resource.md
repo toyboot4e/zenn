@@ -110,13 +110,13 @@ struct AnyResource {
 [Deref]: https://doc.rust-lang.org/std/ops/trait.Deref.html
 
 ```rust:res.rs
-// ResourceMap::borrow<T>(&self) で帰ってくる型。 Deref<T> を実装する
+// ResourceMap::borrow<T>(&self) で返ってくる型。 Deref<T> を実装する
 #[derive(Debug)]
 pub struct Res<'r, T> {
     borrow: AtomicRef<'r, T>,
 }
 
-// ResourceMap::borrow_mut<T>(&self) で帰ってくる型。 DerefMut<T> を実装する
+// ResourceMap::borrow_mut<T>(&self) で返ってくる型。 DerefMut<T> を実装する
 #[derive(Debug)]
 pub struct ResMut<'r, T> {
     borrow: AtomicRefMut<'r, T>,
@@ -173,6 +173,8 @@ impl<'w, T: 'static> BorrowWorld<'w> for ResMut<'w, T> {
 }
 ```
 
+これで `System` を実装できます。
+
 ## `System` の手動実装
 
 まずは手書きしてみます:
@@ -223,7 +225,7 @@ impl_run!(P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15);
 
 ## マクロの再帰呼び出し
 
-`impl_run!` が 16 行並ぶのは気持ち悪いので、 1 行で実装できるようにします:
+`impl_run!` が 16 行並ぶのは気持ち悪いので、 1 行で書けるようにします:
 
 ```rust:sys.rs
 macro_rules! recursive {
@@ -263,5 +265,5 @@ recursive! {
 }
 ```
 
-[^1]: `Params` が関連型 (`type Params;`) でない理由は、 `System` 実装で unconstraint うんたらとエラーが出たためです。 Rust 分からないなぁ……
+[^1]: `Params` が関連型 (`type Params;`) でない理由は、 `System` 実装で unconstraint ~ とエラーが出たためです。 Rust 難しいですね。
 
