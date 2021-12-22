@@ -25,7 +25,7 @@ title: "World の API - 1"
     └── main.rs
 ```
 
-Integration test は外部クレートなので、コンパイル時間短縮のために `it` 1 つに集約します [^1] 。
+Integration test は外部クレートとして扱われるので、コンパイル時間短縮のために `it` 1 つに集約します [^1] 。
 
 > `toecs` は `tests/` 以下に 1  つしかファイルを持ちませんが、良い習慣として `tests/it/main.rs` にしました。
 
