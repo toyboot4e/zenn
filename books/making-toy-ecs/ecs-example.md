@@ -103,5 +103,5 @@ Rust の文脈で ECS の主な機能をお伝えしました。 [`toecs`] で�
 
 [`toecs`]: https://github.com/toyboot4e/toecs
 
-[^1]: SoA (Struct of Arrays) はオブジェクトを複数の配列に分けて保存する方法です。対してオブジェクトを 1 つの配列を持つ方法を AoS (Array of Structs) と呼びます。 ECS と非 ECS の最大の違いは、 SoA と AoS の違いだと思います。
+[^1]: SoA (Struct of Arrays) はオブジェクトを複数の配列に分けて保存する方法です。対して 1 種類のオブジェクトを 1 つの配列に入れる方法を AoS (Array of Structs) と呼びます。 ECS と非 ECS の最大の違いは、 SoA と AoS の違いだと思います。
 
