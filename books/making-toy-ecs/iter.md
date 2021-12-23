@@ -28,16 +28,13 @@ add_system.run(&world);
 
 ## `Comp<T>` と `CompMut<T>` を抽象する
 
-`trait View` を追加しました。 `Comp<T>` を `SparseSet<T>` の疎な部分と密な部分に分解できます:
+`trait View` を追加しました。 `View` は `Comp<T>` (`SparseSet<T>`) を 2 つに分解します:
 
 ```rust
 /// `&Comp<T>` | `&CompMut<T>` | `&mut CompMut<T>`
 pub unsafe trait View<'a> {
     type Binding: AnyBinding;
     fn into_parts(self) -> (&'a [Entity], Self::Binding);
-    //                       ^                  ^
-    //                       |                  |
-    //                       +- 疎な部分        +- 密な部分
 }
 
 /// Shorthand
@@ -59,6 +56,8 @@ pub struct Binding<'a, Slice> {
 ```
 
 > `sparsey` や `shipyard` では、そもそも `Comp<T>` と `CompMut<T>` を同じ `struct ComponentView<T>` で表しています。
+
+`AnyBinding` を通じてイテレータを実装しました。
 
 ## Lifetime を誤魔化す
 

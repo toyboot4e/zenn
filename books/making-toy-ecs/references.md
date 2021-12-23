@@ -37,7 +37,7 @@ Component ストレージは `Vec<Option<T>>` による SoA で、 [hibitset] �
 Component ストレージは `SparseSet<T>` による SoA です。
 
 3. Archetype-based
-Component ストレージは archetype (component の組み合わせ) 毎に作り、 `Vec<T>` の SoA ストレージを使います。
+Component ストレージは archetype (component の組み合わせ) 毎に作り、それぞれ `Vec<T>` による SoA を使います。
 
 ## ECS 関連の記事
 
@@ -82,7 +82,7 @@ Rust に限らず有名な ECS を列挙します。
 [machinery]: https://ourmachinery.com/
 [dots]: https://unity.com/dots
 
-[^1]: C 言語は (比較的 [^2] ) 安定した ABI を持っており、 C への FFI を定義できる言語が多いです。 C ライブラリが揃っているおかげで、新興の言語でも進んだライブラリを使ってゲーム開発ができます。
+[^1]: C 言語は (比較的 [^2] ) 安定した ABI を持っており、 C の FFI を定義できる言語がほとんどです。 C ライブラリが揃っているおかげで、新興の言語でも進んだライブラリを使ってゲーム開発ができます。
 [^2]: たとえば `bool` が `u8` か `i8` かでブレたりします。
 
 # ECS 以外のオブジェクト管理法
