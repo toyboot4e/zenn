@@ -8,7 +8,7 @@ Resource は World が持つ最も単純なデータです。
 
 # Resource とは
 
-* Anymap (`TypeId` → `T`) に入ったデータ、型毎にユニークなインスタンス
+* Anymap (`TypeId` → `T`) に入ったデータ、型毎のユニークなインスタンス
 * いわば World の動的フィールド
 
 Resource を引数に取る関数に対して `run` メソッドを実装します:
@@ -110,13 +110,13 @@ struct AnyResource {
 [Deref]: https://doc.rust-lang.org/std/ops/trait.Deref.html
 
 ```rust:res.rs
-// ResourceMap::borrow<T>(&self) で返ってくる型。 Deref<T> を実装する
+// ResourceMap::borrow<T>(&self) で返ってくる型。 Deref を実装する
 #[derive(Debug)]
 pub struct Res<'r, T> {
     borrow: AtomicRef<'r, T>,
 }
 
-// ResourceMap::borrow_mut<T>(&self) で返ってくる型。 DerefMut<T> を実装する
+// ResourceMap::borrow_mut<T>(&self) で返ってくる型。 DerefMut を実装する
 #[derive(Debug)]
 pub struct ResMut<'r, T> {
     borrow: AtomicRefMut<'r, T>,
@@ -135,16 +135,6 @@ pub struct ResMut<'r, T> {
 pub unsafe trait System<'w, Params> {
     unsafe fn run(&mut self, w: &'w World);
 }
-```
-
-trait 実装後は`run` が呼べるようになります:
-
-```rust:例
-fn simple_system(u: ResMut<usize>) {
-    *u += 20;
-}
-
-simple_system.run(&world);
 ```
 
 ## `Res<T>` と `ResMut<T>` を抽象する
@@ -222,6 +212,8 @@ impl_run!(P1, P0);
 // ~~
 impl_run!(P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15);
 ```
+
+これで N 個の resource を引数に取る関数に対して `trait System` を実装できました。
 
 ## マクロの再帰呼び出し
 
