@@ -120,7 +120,7 @@ World {
 
 ### `Debug` を要求
 
-中身を表示できるよう制約を加えました:
+中のデータが表示可能でないと意味がないので、制約を加えました:
 
 * `trait Resource: 'static + Debug`
 * `trait Component: 'static + Debug`
@@ -146,23 +146,22 @@ impl World {
 > 同様のパターンで:
 > 
 > * `ResourceMap::display(&mut self)` → `ResourceMapDisplay`
-> * `ComponentPoolMap::display(&mut self)` → `ComponenPoolMap`
+> * `ComponentPoolMap::display(&mut self)` → `ComponentPoolMapDisplay`
 
 ### 内部可変性の一時的付与
 
-[`Display`] は `&self` を引数に取りますが、今は `Display` 実装のために可変参照が必要な場面です。そこで、元のデータを一時的に奪って `RefCell<T>` に包み、内部可変性を与えます:
+[`Display::fmt`] は `&self` を引数に取りますが、今は `Display` 実装のために可変参照が必要な場面です。そこで、元のデータを一時的に奪って `RefCell<T>` に包み、内部可変性を与えます:
 
-[`Display`]: https://doc.rust-lang.org/std/fmt/trait.Display.html
+[`Display::fmt`]: https://doc.rust-lang.org/std/fmt/trait.Display.html#tymethod.fmt
 
 ```rust:lib.rs
 impl World {
-    /// Returns a debug display. This is safe because it has exclusive access.
     pub fn display(&mut self) -> WorldDisplay {
         // 空データと交換することで所有権を奪う
         let mut world = World::default();
         mem::swap(self, &mut world);
         WorldDisplay {
-            // 奪ったデータを `RefCell` に包んで利用する
+            // 奪ったデータを `RefCell` に包んで `WorldDisplay` で利用する
             world: RefCell::new(world),
             original_world: self,
         }
@@ -181,6 +180,10 @@ impl<'w> Drop for WorldDisplay<'w> {
         mem::swap(self.original_world, self.world.get_mut());
     }
 }
+
+
+// `Debug` や `Display` の実装で `&mut World` を使うことができる
+// (`ResourceMap::display(&mut self)` や `ComponentMapPool::display(&mut self)` が呼べる)
 ```
 
 元ネタは Bevy の [`WorldCell`][wc] でした。

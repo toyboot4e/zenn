@@ -28,7 +28,7 @@ add_system.run(&world);
 
 ## `Comp<T>` と `CompMut<T>` を抽象する
 
-`trait View` を追加しました。 `View` は `Comp<T>` (`SparseSet<T>`) を 2 つに分解します:
+`trait View` を追加しました。 `View` は `SparseSet<T>` を 2 つに分解します:
 
 ```rust
 /// `&Comp<T>` | `&CompMut<T>` | `&mut CompMut<T>`
@@ -41,13 +41,14 @@ pub unsafe trait View<'a> {
 type ViewItem<'a, V> = <<V as View<'a>>::Binding as AnyBinding>::Item;
 
 /// `Binding<&[T]>` | `Binding<&mut [T]>`
+///
+/// `usize` か `Entity` で中のデータにアクセスできる
 pub trait AnyBinding {
     type Item;
     fn get(&mut self, ent: Entity) -> Option<Self::Item>;
     unsafe fn get_by_slot_unchecked(&mut self, slot: usize) -> Self::Item;
 }
 
-// `SparseSet<T>` の密な部分
 #[derive(Clone)]
 pub struct Binding<'a, Slice> {
     to_dense: &'a [Option<DenseIndex>],
@@ -57,7 +58,7 @@ pub struct Binding<'a, Slice> {
 
 > `sparsey` や `shipyard` では、そもそも `Comp<T>` と `CompMut<T>` を同じ `struct ComponentView<T>` で表しています。
 
-`AnyBinding` を通じてイテレータを実装しました。
+`AnyBinding` を通じてイテレータを実装します。
 
 ## Lifetime を誤魔化す
 

@@ -4,12 +4,14 @@ title: "ライブラリとしての API - 1"
 
 # System の返値
 
-今までは返値なしの system しか書けませんでしたが、 `SystemResult<T>` を返す関数も使えるようにします:
+今までは返値なしの system しか書けませんでしたが、 `SystemResult<()>` を返す関数も使えるようにします:
 
 ```rust
 /// Alias of [`anyhow::Result`]
 pub type SystemResult<T = ()> = anyhow::Result<T>;
 ```
+
+返値なしの system は、実行すると必ず `Ok(())` を返します。
 
 リファレンス実装: [6f724b6](https://github.com/toyboot4e/toecs/commit/6f724b67378624226409c4e1b2717022bcd211d6)
 
