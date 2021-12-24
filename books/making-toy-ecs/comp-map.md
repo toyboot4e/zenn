@@ -33,9 +33,9 @@ pub struct ComponentPool<T> {
 ```
 
 * プールは `ComponentPoolMap::register` を呼んで明示的に追加することにしました。
-* Component を削除する機能はひとまず実装しません。
+* `ComponentPool::swap_remove` は、ひとまず `pub(crate)` にしてユーザから隠しました。
 
-`&[SparseIndex]` を `&[Entity]` にキャストするシーンがありました:
+地道にメソッドを追加します。 `&[SparseIndex]` を `&[Entity]` にキャストするシーンがありました:
 
 ```rust:comp.rs
 impl<T> ComponentPool<T> {
@@ -77,7 +77,7 @@ pub struct CompMut<'r, T: 'static> {
 
 ## `BorrowWorld` 実装
 
-Resource の章で定義した `BorrowWorld` を実装すれば、 system が `Comp<T>` や `CompMut<T>` を引数に取ることができるようになります。
+Resource の章で定義した `BorrowWorld` を実装すれば、 system が `Comp<T>` や `CompMut<T>` を引数に取ることができるようになります。 `ComponentPool` は特殊な resource であるともとれますね。
 
 イテレータの実装は後の章に回します。
 
