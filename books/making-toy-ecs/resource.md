@@ -44,7 +44,7 @@ $ cargo add atomic_refcell
 Anymap の実装に使います。 `HashMap` よりも ~~名前がかっこいい~~ [速い][p] です。
 
 * [atomic_refcell] は `AtomicRefCell` を提供します。
-`Rc<RefCell<T>>` のマルチスレッド版と読めます。 `Arc<RwLock<T>>` と比べて ~~違いが分からない~~ 便利で速いです。
+`RefCell<T>` のマルチスレッド版と読めます。 `RwLock<T>` と比べて ~~違いが分からない~~ 便利で速いです。
 
 [h]: https://qiita.com/hatoo@github/items/1c627987991a0156d26c
 [p]: https://nnethercote.github.io/perf-book/hashing.html
@@ -187,18 +187,20 @@ where
 上記実装を一般化して、任意の `(P0, P1, .., PN)` について `System` を実装するマクロを組みます:
 
 ```rust:sys.rs
-unsafe impl<'w, $($xs),+, F> System<'w, ($($xs,)+), ()> for F
-//                                      ※ (T,) は 1 要素のタプル、 (T) は T と同じ
-//                                        T に実装すると他の impl と衝突するため注意
-where
-    F: FnMut($($xs),+),
-    $($xs: BorrowWorld<'w>),+
-{
-    unsafe fn run(&mut self, w: &'w World) {
-        (self)(
-            $(<$xs as BorrowWorld>::borrow(w),)+
-        );
-    }
+macro_rules! impl_run {
+    ($($xs:ident),+ $(,)?) => {
+        unsafe impl<'w, $($xs),+, F> System<'w, ($($xs,)+)> for F
+        where
+            F: FnMut($($xs),+),
+            $($xs: BorrowWorld<'w>),+
+        {
+            unsafe fn run(&mut self, w: &'w World) {
+                (self)(
+                    $(<$xs as BorrowWorld>::borrow(w),)+
+                )
+            }
+        }
+    };
 }
 ```
 
