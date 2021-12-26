@@ -14,7 +14,7 @@ Sparse set は 2 段構えの配列です。
 
 > 横列が `Vec<Option<T>>` です。
 
-これは ECS の概念としては完全に正しいのですが、 ECS ではすべての `Entity` を 1 つの SoA [^1] に保存しますから、実用上は問題が出ます [^2]:
+これは ECS の概念としては完全に正しいのですが、 ECS ではすべての `Entity` を 1 つの SoA に保存しますから、実用上は問題が出ます [^1]:
 
 * メモリ消費量が多い
 たとえばパーティクルみたいな `Entity` がいると、大量の空欄でメモリが埋まります。
@@ -124,7 +124,7 @@ impl<T> SparseSet<T> {
 }
 ```
 
-世代番号の増加は次章の `EntityPool` で行います。
+世代番号の増加は次章の `EntityPool` で新規 `Entity` を作る際に行います。
 
 ## `swap_remove`
 
@@ -136,7 +136,5 @@ impl<T> SparseSet<T> {
 
 リファレンス実装: [f5b49aa](https://github.com/toyboot4e/toecs/commit/f5b49aae3dbcb6d3a22a94f04fa91c4dd618422e)
 
-[^1]: SoA (Struct of Arrays) は (ECS の文脈では) component の種類毎に `Storage<T>` を作ることです。一方、 AoS (Array of Structs) では `Vec<Actor>` (`Actor { Body, Intelligent, Combat }`) のように 1 種類のストレージを使います。一部のデータにのみ関心がある場合、 AoS はキャッスミスが増えて遅くなる傾向があります。
-
-[^2]: `Vec<Option<T>>` にも component の挿入・削除の自由度が高いなどのメリットがあります。またページ制ストレージを導入すれば極端にメモリを使い過ぎることも無いらしく、シンプルでイケてるんじゃないかと思います。
+[^1]: `Vec<Option<T>>` にも component の挿入・削除の自由度が高いなどのメリットがあります。またページ制ストレージを導入すれば極端にメモリを使い過ぎることも無いらしく、シンプルでイケてるんじゃないかと思います。
 
