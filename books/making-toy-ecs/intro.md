@@ -24,7 +24,7 @@ ECS はゲーム開発の有名設計です。具体例は、
 
 元ネタをあたりたい方は [資料室] をご覧ください。
 
-[資料室]: ./references.html
+[資料室]: ./references
 
 [^1]: [EnTT (C++ 製 ECS)](https://github.com/skypjack/entt)
 [^2]: [Overwatch Gameplay Architecture and Netcode (Youtube)](https://www.gdcvault.com/play/1024001/-Overwatch-Gameplay-Architecture-and)
