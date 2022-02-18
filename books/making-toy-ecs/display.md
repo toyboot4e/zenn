@@ -143,11 +143,6 @@ impl World {
 
 この後は `AtomicRefCell` の中身を借りても安全なので、 `WorldDisplay` は `Debug` か `Display` で中のデータをすべて表示します。
 
-> 同様のパターンで:
-> 
-> * `ResourceMap::display(&mut self)` → `ResourceMapDisplay`
-> * `ComponentPoolMap::display(&mut self)` → `ComponentPoolMapDisplay`
-
 ### 内部可変性の一時的付与
 
 [`Display::fmt`] は `&self` を引数に取りますが、今は `Display` 実装のために可変参照が必要な場面です。そこで、元のデータを一時的に奪って `RefCell<T>` に包み、内部可変性を与えます:
@@ -186,7 +181,48 @@ impl<'w> Drop for WorldDisplay<'w> {
 // (`ResourceMap::display(&mut self)` や `ComponentMapPool::display(&mut self)` が呼べる)
 ```
 
-元ネタは Bevy の [`WorldCell`][wc] でした。
+> 『所有権を一時的に奪う』の元ネタは Bevy の [`WorldCell`][wc] でした。
+
+`World::display` を print するとこんな感じです:
+
+```json
+WorldDisplay {
+    res: [
+        AnyResource {
+            of_type: "usize",
+            any: 100,
+        },
+        AnyResource {
+            of_type: "isize",
+            any: -100,
+        },
+    ],
+    ents: EntityPool {
+        entries: [
+            ToDense(0, 1),
+            ToDense(2, 2),
+            ToDense(2, 1),
+        ],
+        data: [
+            Entity(0, 1),
+            Entity(2, 1),
+            Entity(2, 2),
+        ],
+    },
+    comp: {
+        "it::U": [
+            U(
+                30,
+            ),
+        ],
+        "it::I": [
+            I(
+                -30,
+            ),
+        ],
+    },
+}
+```
 
 [wc]: https://docs.rs/bevy/latest/bevy/ecs/world/struct.WorldCell.html
 

@@ -37,7 +37,7 @@ Sparse set は 2 段構えの配列です。
 ECS で言えば `ComponentPool<T>` に対する `Entity` が sparse index です。
 
 * Component は密なデータ列 (`Vec<T>`) に入れます。
-* Component は疎な添字 (`SparseIndex`) 経由でアクセスできるようにします。
+* Component は疎な添字 (`SparseIndex`) 経由でもアクセスできるようにします。
 
 ## 添字のマッピング
 
@@ -45,9 +45,7 @@ ECS で言えば `ComponentPool<T>` に対する `Entity` が sparse index で�
 
 ![](/images/toecs/sparse-set.png)
 
-> データが密な配列に入るため、 sparse set は `DenseVec` としても知られています。
-
-*  `(SparseIndex, &T)` のイテレータも作れるように `Vec<SparseIndex>` を持っています。
+*  `Vec<SparseIndex>` を持つ理由は `(SparseIndex, &T)` のイテレータも作れるようにするためです。
 
 ## イテレーション効率
 
@@ -99,9 +97,9 @@ pub struct SparseIndex {
 pub struct SparseSet<T> {
     // `SparseIndex` → `DenseIndex`
     to_dense: Vec<Option<SparseIndex>>,
-    // `iter_with_index()` の実装などに使う
+    // `Iterator<(SparseIndex, &T)>` の作成などに使う
     to_sparse: Vec<SparseIndex>,
-    // `DenseIndex` で (`to_dense` 経由で) アクセスする
+    // `DenseIndex` でアクセスする
     data: Vec<T>,
 }
 ```
@@ -134,5 +132,5 @@ impl<T> SparseSet<T> {
 
 リファレンス実装: [f5b49aa](https://github.com/toyboot4e/toecs/commit/f5b49aae3dbcb6d3a22a94f04fa91c4dd618422e)
 
-[^1]: `Vec<Option<T>>` にも component の挿入・削除の自由度が高いなどのメリットがあります。またページ制ストレージを導入すれば極端にメモリを使い過ぎることも無いらしく、シンプルでイケてるんじゃないかと思います。
+[^1]: `Vec<Option<T>>` にも component の挿入・削除の自由度が高いなどのメリットがあります。またページ制ストレージを導入すれば極端にメモリを使い過ぎることも無いらしく、実はシンプルでイケてるんじゃないかと思います。
 

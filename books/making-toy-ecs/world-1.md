@@ -53,21 +53,12 @@ component_pools_mut()
     });
 ```
 
-## 問題
+この `component_pool` には 2 つの機能が必要です:
 
-ここで `component_pool` に必要なのは:
+. `dyn Any` のようにアップキャストする機能
+. Component　を削除する機能
 
-* 従来の機能 ([`Any`])
-  `ComponentPool<T>` へダウンキャストする機能
-
-* 追加したい機能
-  アップキャストされたまま `remove(Entity)` する機能
-
-[`Any`]: https://doc.rust-lang.org/beta/core/any/trait.Any.html
-
-## 解決策
-
-[downcast_rs] を使いました:
+[downcast_rs] を使って上 2 つを満たす型 (`dyn ErasedComponentPool`) を作りました:
 
 [downcast_rs]: https://github.com/marcianx/downcast-rs
 
@@ -77,8 +68,6 @@ use downcast_rs::Downcast;
 pub(crate) trait ErasedComponentPool: Downcast {
     fn erased_remove(&mut self, entity: Entity);
 }
-
-// `dyn ErasedComponent` が `dyn Any + ErasedComponentPool` のように使えるようになる
 ```
 
 リファレンス実装: [65ce774](https://github.com/toyboot4e/toecs/commit/65ce7747b87aba3f6f401ffce948c611d6ed3add)

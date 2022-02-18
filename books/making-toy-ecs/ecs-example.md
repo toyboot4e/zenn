@@ -70,11 +70,8 @@ System は component だけではなく resource も借りることができま�
 fn decrease_iq(
     // IQ 低下フィールドへの不変参照
     iq_field: Res<IqDecreaseField>,
-    // Intelligent 配列への可変参照
     mut intelligent: CompMut<Intelligent>,
-    // Combat 配列への不変参照
     combat: Comp<Combat>,
-    // Body 配列への不変参照
     body: Comp<Body>,
 ) {
     // IQ 低下フィールドが生じていなければ終了

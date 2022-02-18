@@ -68,12 +68,6 @@ pub struct CompMut<'r, T: 'static> {
 }
 ```
 
-> [`toecs`] では `CompMut` を作るときに `AtomicRefCell::borrow_mut` を呼びました。干渉するようなデータの借り方をした場合、即 panic します。
->
-> 一方 `CompMut` が `deref_mut` するタイミングまで `borrow_mut` を遅延すれば、 `deref_mut` のログを取ることで中のデータが変更された (可能性があるか) を後から調べることができます。
->
-> * `deref_mut` が呼ばれたフラグを持つよりも、変更された時のゲームのフレーム数 (`Tick`) を持った方が楽なようです (`false` への初期化が不要なため) 。
-
 ## `BorrowWorld` 実装
 
 Resource の章で定義した `BorrowWorld` を実装すれば、 system が `Comp<T>` や `CompMut<T>` を引数に取ることができるようになります。 `ComponentPool` は特殊な resource であるともとれますね。

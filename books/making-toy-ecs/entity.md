@@ -25,7 +25,7 @@ pub struct Entity(SparseIndex);
 
 ![](/images/toecs/entity-pool.png)
 
-前章よりも 1 行少ない理由は、保存するデータ自体が sparse index であるためです。
+前章の `SparseSet<T>` の違いとしては、保存するデータ (`Entity`) 自体が sparse index であるため `Vec<SparseIndex>` がありません。
 
 ## 世代番号の引き継ぎ
 
