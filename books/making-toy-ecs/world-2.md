@@ -20,7 +20,7 @@ title: "World の API - 2"
 
 `Entity` の生成時に一括で component を追加します。 Component 無しの `Entity` を作るためには `spawn_empty` を呼びます。
 
-> `sparsey` では、 `spawn(())` で空の `Entity` を作れるようにしています。 `toecs` では、 `spawn(())` は `()` を component として追加する風にも読めるため、メソッドを分けました。
+> `sparsey` では `spawn(())` で空の `Entity` を作れるようにしています。
 
 リファレンス実装: [7458c41](https://github.com/toyboot4e/toecs/commit/7458c41194915dd67b77782f38a8a16cce3c295d)
 

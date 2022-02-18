@@ -2,7 +2,7 @@
 title: "ライブラリとしての API - 1"
 ---
 
-# System の返値
+# System の返値 (`SystemResult`)
 
 今までは返値なしの system しか書けませんでしたが、 `SystemResult<()>` を返す関数も使えるようにします:
 
@@ -20,4 +20,11 @@ pub type SystemResult<T = ()> = anyhow::Result<T>;
 例によって `trait ResourceSet` を追加して、マクロでタプルに実装しました。
 
 リファレンス実装: [3057bae](https://github.com/toyboot4e/toecs/commit/3057bae689953dca07180a9ea2141f229d860625)
+
+# データ借用の間接層 (`SystemParam`)
+
+`Res<T>` は対象のデータを直接公開しますが、 `Res<T>` をラッピングした型が欲しい時もあります:
+
+* read/write で API を分けたい
+* 複数のデータを束ねて扱いたい
 

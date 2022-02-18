@@ -2,9 +2,9 @@
 title: "ストレージ 1: Resource"
 ---
 
-Resource は World が持つ最も単純なデータです。
+Resource は World が持つ最も単純なデータです。 Anymap の中に内部可変性をつけてデータを入れます。
 
-この章の 200 行を経験すれば system へのデータ割り当てが分かり、 ECS を自作する見通しが立つと思います。
+またこの章の 200 行を経験すれば system へのデータ割り当てが分かり、 ECS を自作する見通しが立つと思います。
 
 # Resource とは
 
@@ -110,13 +110,13 @@ struct AnyResource {
 [Deref]: https://doc.rust-lang.org/std/ops/trait.Deref.html
 
 ```rust:res.rs
-// ResourceMap::borrow<T>(&self) で返ってくる型。 Deref を実装する
+// `ResourceMap::borrow<T>(&self)` で返ってくる型。 `Deref` を実装する
 #[derive(Debug)]
 pub struct Res<'r, T> {
     borrow: AtomicRef<'r, T>,
 }
 
-// ResourceMap::borrow_mut<T>(&self) で返ってくる型。 DerefMut を実装する
+// `ResourceMap::borrow_mut<T>(&self)` で返ってくる型。 `DerefMut` を実装する
 #[derive(Debug)]
 pub struct ResMut<'r, T> {
     borrow: AtomicRefMut<'r, T>,
@@ -215,7 +215,7 @@ impl_run!(P1, P0);
 impl_run!(P0, P1, P2, P3, P4, P5, P6, P7, P8, P9, P10, P11, P12, P13, P14, P15);
 ```
 
-これで N 個の resource を引数に取る関数に対して `trait System` を実装できました。
+これで N 個の resource を引数に取る関数に対して `System` を実装できました。
 
 ## マクロの再帰呼び出し
 

@@ -22,7 +22,7 @@ struct AnyPool {
 }
 ```
 
-`AnyPool` は `ComponentPool<T>` のアップキャストです:
+`AnyPool` は `ComponentPool<T>` のアップキャストです。 `ComponentPool<T>` は:
 
 ```rust:comp.rs
 /// Sparse set of components of type T
@@ -32,7 +32,6 @@ pub struct ComponentPool<T> {
 }
 ```
 
-* プールは `ComponentPoolMap::register` を呼んで明示的に追加することにしました。
 * `ComponentPool::swap_remove` は、ひとまず `pub(crate)` にしてユーザから隠しました。
 
 地道にメソッドを追加します。 `&[SparseIndex]` を `&[Entity]` にキャストするシーンがありました:
@@ -73,7 +72,7 @@ pub struct CompMut<'r, T: 'static> {
 >
 > 一方 `CompMut` が `deref_mut` するタイミングまで `borrow_mut` を遅延すれば、 `deref_mut` のログを取ることで中のデータが変更された (可能性があるか) を後から調べることができます。
 >
-> * `deref_mut` が呼ばれたフラグを持つよりも、変更された時のゲームのフレーム数 (`Tick`) を持った方が楽かもしれません (`false` への初期化が不要なため) 。
+> * `deref_mut` が呼ばれたフラグを持つよりも、変更された時のゲームのフレーム数 (`Tick`) を持った方が楽なようです (`false` への初期化が不要なため) 。
 
 ## `BorrowWorld` 実装
 

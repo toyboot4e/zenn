@@ -14,7 +14,7 @@ Sparse set は 2 段構えの配列です。
 
 > 横列が `Vec<Option<T>>` です。
 
-これは ECS の概念としては完全に正しいのですが、 ECS ではすべての `Entity` を 1 つの SoA に保存しますから、実用上は問題が出ます [^1]:
+これは ECS の概念としては完全に正しいのですが、 ECS ではすべての component を 1 つの SoA に保存しますから、実用上は問題が出ます [^1]:
 
 * メモリ消費量が多い
 たとえばパーティクルみたいな `Entity` がいると、大量の空欄でメモリが埋まります。
@@ -28,8 +28,6 @@ Sparse set は 2 段構えの配列です。
 
 [`toecs`] では sparse set を使います。
 
-Sparse set に興味が無い場合は、並列実行の章まで飛んでください。
-
 [`toecs`]: https://github.com/toyboot4e/toecs
 
 ## 疎な添字、密なデータ列
@@ -38,7 +36,7 @@ Sparse set に興味が無い場合は、並列実行の章まで飛んでくだ
 
 ECS で言えば `ComponentPool<T>` に対する `Entity` が sparse index です。
 
-* Compoment は密なデータ列 (`Vec<T>`) に入れます。
+* Component は密なデータ列 (`Vec<T>`) に入れます。
 * Component は疎な添字 (`SparseIndex`) 経由でアクセスできるようにします。
 
 ## 添字のマッピング
@@ -99,11 +97,11 @@ pub struct SparseIndex {
 ```rust:sparse.rs
 #[derive(Debug, Clone)]
 pub struct SparseSet<T> {
-    // SparseIndex → DenseIndex
+    // `SparseIndex` → `DenseIndex`
     to_dense: Vec<Option<SparseIndex>>,
-    // iter_with_index() の実装などに使う
+    // `iter_with_index()` の実装などに使う
     to_sparse: Vec<SparseIndex>,
-    // DenseVec 経由でアクセスする
+    // `DenseIndex` で (`to_dense` 経由で) アクセスする
     data: Vec<T>,
 }
 ```

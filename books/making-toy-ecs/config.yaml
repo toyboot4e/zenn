@@ -17,8 +17,8 @@ chapters:
   - world-2
   - iter
   - toecs-1
-  - parallel
   - groups
+  - parallel
   - toecs-2
   - parallel
   - references
