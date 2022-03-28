@@ -61,3 +61,17 @@ pub struct World {
 
 リファレンス実装: [0359776](https://github.com/toyboot4e/toecs/commit/0359776806715424ae59e8ca23c52be3c668ac89)
 
+## 備考: 連結リストで空きスロット管理
+
+以下を初期状態とします:
+
+![](/images/toecs/free-slot.png)
+
+挿入時はルートが指す空きスロットを使います。ルートは 2 番目の空きスロットを指すように書き換えます:
+
+![](/images/toecs/free-slot-insert.png)
+
+削除時はルートが新たな空きスロットを指します。また新たな空きスロットは以前のルートが指すスロットを指します:
+
+![](/images/toecs/free-slot-remove.png)
+
