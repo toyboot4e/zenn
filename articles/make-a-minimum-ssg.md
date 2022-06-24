@@ -1,5 +1,5 @@
 ---
-title: "初心者用 2 日分の短期研修"
+title: "初心者用 2 日分の短期研修 (最小の SSG)"
 emoji: "🙂"
 type: "idea"
 topics: ["初心者"]
