@@ -1,7 +1,7 @@
 ---
 title: "AtCoder 用 Haskell 逆引き (環境構築編)"
 emoji: "⛳"
-type: "tech" # tech: 技術記事 / idea: アイデア
+type: "idea" # tech: 技術記事 / idea: アイデア
 topics: ["haskell", "atcoder"]
 published: true
 ---
@@ -241,7 +241,7 @@ https://scrapbox.io/magurofly/AtCoder%E3%82%92%E3%81%99%E3%82%8B%E3%81%A8%E3%81%
 
 ### 人の成績が見たい
 
-順位表にある「⚙️カスタマイズ」のアイコンをクリックして、お気に入りユーザーの順位が確認できます:
+順位表にある「⚙️カスタマイズ」のアイコンをクリックして、お気に入りユーザーの順位を確認できます:
 
 ![](/images/atcoder/atcoder-favorites.png)
 *Haskell 界で A 問題最速を目指す図*
