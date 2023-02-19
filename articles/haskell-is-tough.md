@@ -44,7 +44,7 @@ xs VU.! i
 
 ## 3. 永遠に処理が戻ってこない (タイポ再帰)
 
-Haskell では遅延評価ができます。再帰的な変数を定義してしまい、制御が戻らなくなることがあります。
+Haskell では遅延評価ができます。再帰的な変数を作ってしまうと、制御が戻らなくなることがあります。
 
 ```hs:問題のコード
 let xs = 3 : xs
@@ -145,7 +145,7 @@ ST (state thread) モナドの範囲で別の変数を書き換えようとし�
 
 ## 10. `Unbox` を実装できない
 
-昔の `vector` は `Unbox` の実装が異様に難しいです。
+昔の `vector` は `Unbox` の実装が異様に難しいです。そのため他のパッケージを頼るのが無難です。
 
 - `vector` の代わりに [unboxing-vector](https://www.stackage.org/lts-16.11/package/unboxing-vector-0.1.1.0) を使う
   [Sum type に対しては `Unboxable` を実装できない](https://github.com/minoki/unboxing-vector/commit/889462f6a69a6be8f117748da6fe22263aac6f8e) 点は留意します。
@@ -158,7 +158,7 @@ import Data.Vector.Unboxed.Deriving (derivingUnbox)
 
 newtype UnionFind = UnionFind (VU.Vector UFNode)
 
--- | `Child parent | Root size`. Not `Unbox` :(
+-- | `Child parent | Root size`
 data UFNode = UFChild {-# UNPACK #-} !Int | UFRoot {-# UNPACK #-} !Int
 
 _ufrepr1 :: UFNode -> (Bool, Int)
