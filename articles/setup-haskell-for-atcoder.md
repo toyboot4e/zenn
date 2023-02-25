@@ -25,11 +25,13 @@ AtCoder 環境の Haskell は古いため気をつけます。
 - HLS (haskell language server)
   [バージョン表](https://haskell-language-server.readthedocs.io/en/latest/support/ghc-version-support.html) を見るに、 HLS 1.5.1 が GHC 8.8.3  に対応します。バージョンが古いためか変数のリネームはできません。
 
-> あるいは、ローカルでは GHC 8.8.4, HLS 1.8.0.0, lts-16.31 を使っても良いかもしれません。
+> ローカルでは GHC 8.8.4, HLS 1.8.0.0, lts-16.31 を使っても良いかもしれません。 HLS 1.8.0.0 では変数のりネームができますし、特に Windows では GHC 8.8.3 に致命的なバグがあるそうです。
 
 ## 2. ライブラリのドキュメントが見たい
 
 `repa` 以外は [lts-16.11](https://www.stackage.org/lts-16.11) に入っているのでそちらを参照します。
+
+> [lts-16.31](https://www.stackage.org/lts-16.31)
 
 ## 3. HLS を動かしたい
 
@@ -59,6 +61,7 @@ abc256/ # AtCoder Beginner Contest 256 のためのプロジェクト
 ```hs:stack.yaml
 # `PATH` 中の GHC を使用する
 system-ghc: true
+# resolver: lts-16.31
 resolver: lts-16.11
 packages:
 - .
@@ -177,19 +180,58 @@ cradle:
 
 ### それでも動かない場合は
 
-LSP のルートディレクトリが `abc256` のようなプロジェクトのディレクトリと一致するかを確かめます。不一致の場合はなんとかします。
+- プロジェクトの `.stack-work/`, `package.lock` や `~/.stack` を吹き飛ばしてみます。
+- LSP のルートディレクトリが `abc256` のようなプロジェクトのディレクトリと一致するかを確かめます。不一致の場合はなんとかします。
 
 ## 4. 個別のファイルをビルドしたい (プロジェクト全体をビルドしたくない)
 
 `stack run a-exe` を実行すると、全問題の実行ファイルがビルドされてしまいます。 A 問題のプログラムの動きを見たいのに、 B 問題のエラーが表示されたりします。
 
-対策としては、 `stack run` を使わなれば良いです。プロジェクトファイルは、あくまで HLS を動かすためのものだと割り切りましょう。
+対策としては、 `stack run` を使わなれば良いと思います。
 
 ### `ghc` でビルドする
 
-公式環境では `ghc -o a.out -O2 {dirname}/{filename}` でビルドしています。同じコマンドが使えるかもしれません。
+公式環境では `ghc -o a.out -O2 {dirname}/{filename}` でビルドしています。
 
-> GHC はどこからパッケージを取ってくるのか、などを調べておりません……
+Stack ユーザとしては、 `stack ghc -- a/Main.hs` のような形で stack 指定のパッケージを取り込んだ GHC でビルドできます:
+
+```sh
+$ ls a67/
+Main.hs*  test-cases/
+
+$ stack ghc -- a67/Main.hs
+[1 of 1] Compiling Main             ( a67/Main.hs, a67/Main.o )
+Linking a67/Main ...
+
+$ cat a67/test-cases/sample-1.in | ./a67/ghc/Main
+55
+```
+
+ただし `ghc` は `Main.hs` と同じ階層に中間ファイルと実行ファイルを生成します:
+
+```sh
+$ ls a67
+Main*  Main.dyn_hi  Main.dyn_o  Main.hi  Main.hs*  Main.o  test-cases/
+```
+
+GHC のオプションを使うと、生成ファイルをコントロールできます:
+
+- `-outputdir`: 中間ファイルを出力するディレクトリを設定できます。
+- `-o`: 実行ファイルの出力先を設定できます。
+
+```sh
+$ mkdir a67/ghc
+
+$ stack ghc -- a67/Main.hs -outputdir a67/ghc -o a67/ghc/Main
+[1 of 1] Compiling Main             ( a67/Main.hs, a67/ghc/Main.o )
+Linking a67/ghc/Main ...
+
+$ ls a67/
+ghc/  Main.hs*  test-cases/
+
+$ ls a67/ghc
+Main*  Main.dyn_hi  Main.dyn_o  Main.hi  Main.o
+```
 
 ### Stack script として実行する、 REPL で読み込む
 
@@ -200,6 +242,8 @@ LSP のルートディレクトリが `abc256` のようなプロジェクトの
 {- stack script --resolver lts-16.11
 --package array --package bytestring --package containers --package vector --package vector-algorithms --package primitive --package transformers
 -}
+
+{-# OPTIONS_GHC -O2 #-}
 
 main = putStrLn "Hello, world!"
 ```
