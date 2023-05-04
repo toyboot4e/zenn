@@ -133,19 +133,35 @@ Prelude> n
 
 使わないほうが無難かもしれません。
 
-## 9. `runST` の中から複数の値を返せない
+## 9. n 回ループで `iterate` を使ってTLE
 
-ST (state thread) モナドの範囲で別の変数を書き換えようとして失敗しました。モナドをほぼ理解していなかった頃ですね。
+問題です。次のループ処理のうち、 TLE の危機に有るコードはどれですか？
 
-対策としては、
+1. `(!! n) $ iterate f s0`
+2. `snd $ until ((== n) . fst) (bimap succ f) (0, s0)`
+3. `foldl' (\x _ -> f x) s0 [1 .. n]`
+4. `VU.foldl' (\x _ -> f x) s0 (VU.replicate n False)`
 
-- モナドを合成する
-- それぞれの可変変数を IO モナドに入れる
-- 『別の変数』は `foldM` のループで更新する
+[PAST #8 I](https://atcoder.jp/contests/past202109-open/tasks/past202109_i) では以下となりました。圧倒的に `iterate` が遅いです:
+
+1. `iterate`: TLE
+2. `until`: 684 ms
+3. `foldl'`: 632 ms
+4. `VU.foldl'`: 626 ms
+
+戒めにテンプレートを追加しました:
+
+```hs
+-- | Runs the given function `n` times.
+times :: Int -> (a -> a) -> a -> a
+times !n !f !s0 = snd $ until ((== n) . fst) (bimap succ f) (0 :: Int, s0)
+```
+
+他にも 3 次元の `range` が遅かったりします。
 
 ## 10. `Unbox` を実装できない
 
-昔の `vector` は `Unbox` の実装が異様に難しいです。そのため他のパッケージを頼るのが無難です。
+昔の `vector` は `Unbox` の実装が異様に難しいです。自力で実装するよりも、他のパッケージを頼るのが無難です。
 
 - `vector` の代わりに [unboxing-vector](https://www.stackage.org/lts-16.11/package/unboxing-vector-0.1.1.0) を使う
   [Sum type に対しては `Unboxable` を実装できない](https://github.com/minoki/unboxing-vector/commit/889462f6a69a6be8f117748da6fe22263aac6f8e) 点は留意します。
