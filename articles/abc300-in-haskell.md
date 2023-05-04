@@ -2,13 +2,17 @@
 title: "ABC 300 解説 (Haskell)"
 emoji: "🐙"
 type: "tech" # tech: 技術記事 / idea: アイデア
-topics: []
+topics: ["atcoder", "haskell"]
 published: true
 ---
 
 # 概要
 
 この記事では [ユニークビジョンプログラミングコンテスト2023 春 (AtCoder Beginner Contest 300)](https://atcoder.jp/contests/abc300/tasks) の A ~ E 問題を Haskell で解説します。
+
+## 想定読者
+
+Haskell の入門書を 1/3 くらい読んだ人に、構文や演算子の具体例として楽しんでいただけたら幸いです。
 
 ## 感想
 
@@ -386,5 +390,5 @@ https://atcoder.jp/contests/abc300/submissions/41161500
 
 # 感想
 
-模範的な記事は書けませんでした。あまり大変だったので、解説を書くのは最初で最後にしようと思います。
+かなり時間をかけたのですが、模範的な記事は書けませんでした。毎週書くには無理なので、解説を書くのは最初で最後にしようと思います。
 
