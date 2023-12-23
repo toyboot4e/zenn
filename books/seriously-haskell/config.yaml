@@ -1,0 +1,42 @@
+title: "AtCoder ガチ言語 Haskell 🔥"
+summary: "Haskell で AtCoder に入門しましょう"
+topics: []
+published: true
+price: 0 # 有料の場合200〜5000
+# 本に含めるチャプターを順番に並べましょう
+chapters:
+  - cover
+  - intro
+  - toc
+
+  - 1-getting-started
+  - 1-1-hello-world
+  - 1-2-abs
+  - 1-3-projects
+  - 1-3-1-hls
+  - 1-3-2-oj
+
+  - 2-haskell-for-atcoder
+  - 2-1-stderr
+  - 2-2-loops
+  - 2-3-arrays
+  - 2-3-1-ix
+  - 2-3-2-iarray
+  - 2-3-3-marray
+  - 2-4-vectors
+  - 2-4-1-vector
+  - 2-4-2-mvector
+
+  - 3-seriously-haskell
+  - 3-1-typical-io
+  - 3-2-dp
+  - 3-3-graphs
+
+  - 4-misc
+  - 4-1-real-world
+  # - 4-2-state
+  # - 4-3-libraries-and-bundling
+  # - 4-4-benchmarking
+
+  - end
+  - a-judge-env
