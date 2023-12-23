@@ -39,7 +39,7 @@ ghci> y
 
 [『Haskellのassertを文っぽく使う』](https://qiita.com/mod_poppo/items/b3b415ea72eee210d222) という記事では、このように副作用を持つ式を逐次評価するために、 `BangPatterns` (`!`) を使用する方法が示されています。同様に、ここでは `traceShow` を文のように使う例を紹介します。
 
-> ここで Haskell の遅延評価・正格評価が初耳である方は『[Haskellで戦う競技プログラミング](https://booth.pm/ja/items/1577541)』などをご参照ください。
+> Haskell の遅延評価・正格評価が初耳である方は『[Haskellで戦う競技プログラミング](https://booth.pm/ja/items/1577541)』などをご参照ください。
 
 ### 1-1. `let` の中で使う
 

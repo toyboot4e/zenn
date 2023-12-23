@@ -6,7 +6,7 @@ title: "[2-3] 2. IArray の使い方"
 
 # [`IArray`] への 1 点アクセス
 
-型クラス [`Ix`] が分かっていれば、 [`IArray`] を半分理解したようなものです。いきなり典型 90 問の [004 - Cross Sum（★2）](https://atcoder.jp/contests/typical90/tasks/typical90_d) を解いてみます。
+型クラス [`Ix`] が分かっていれば、 [`IArray`] を半分理解したようなものです。いきなりですが、典型 90 問の [004 - Cross Sum（★2）](https://atcoder.jp/contests/typical90/tasks/typical90_d) を解いてみます。
 
 > AI に聞けば十分に実装が見れますが、以下では考え方を重視して解説します。
 
@@ -158,7 +158,7 @@ ghci> elems $ accumArray @UArray (flip (-)) (0 :: Int) (0, 3) [(0, 1), (3, 1), (
 
 [`accumArray`] の内部実装をたどっていくと、 [`GHC.Arr`] の [`unsafeAccumArray'`] が見つかります。 [`unsafeAccumArray'`] は `adjust'` を呼び、 `adjust'` は [prim-ops] の `writeArray#` を呼び出しています。これは GHC に組み込まれた真の可変操作です。
 
-内部実装を聞くと、結局手続き的プログラミングと変わり無いのではないかと落胆しませんか。 [4] 1. RealWorld の章にて Haskell には可変配列など存在しない！！　と掌を返します。お楽しみに！
+内部実装を聞くと、結局手続き的プログラミングと変わり無いのではないかと落胆しませんか。 [4-1] RealWorld の章では、 Haskell には可変配列など存在しないという解釈を紹介します。
 
 # Tips
 
@@ -233,11 +233,7 @@ main = do
 
 この例ならば、むしろ配列を抽象化せず、常に `UArray` を引数に取った方が良いかもしれません。
 
-実は型制約において `IArray UArray e` のように具体的な型を型パラメータを当てはめることができます。
-
-> なんなら、 `IArray UArray Int` のような無意味な制約を課すこともできます。
-
-`IArray UArray e` の形で制約を書けば、返値は常に `UArray` となり、 `@UArray` の記述を省くことができます ([playground](https://play.haskell.org/saved/bsEpHMy8)):
+実は型制約において `IArray UArray e` のように具体的な型を型パラメータを当てはめることができます。 `IArray UArray e` の形で制約を書けば、返値は常に `UArray` となり、 `@UArray` の記述を省くことができます ([playground](https://play.haskell.org/saved/bsEpHMy8)):
 
 ```hs
 main :: IO ()
@@ -248,9 +244,7 @@ main = do
 
 ## ユーザー定義型を array に保存するには？
 
-よく配列に入れたくなるデータ型としては [`ModInt`](https://atcoder.github.io/ac-library/production/document_ja/modint.html) があります。 `ModInt` は自動的に mod 計算を行ってくれるデータ型で、特に素数を法とする問題 [^2] においては、フェルマーの小定理によって逆元を計算するプログラムと組み合わせると便利です [^3] 。
-
-`ModInt` のようなユーザー定義型を配列に保存するためには、 `IArray` や `MArray` といった型クラスを実装する必要があるようです。僕は `array` から逃げて `vector` を使っているため助言できませんが、実装方法を探してみてください。もしくは、都度手動で mod 計算を挿入すれば良いでしょう。
+よく配列に入れたくなるデータ型としては [`ModInt`](https://atcoder.github.io/ac-library/production/document_ja/modint.html) があります。 `ModInt` のようなユーザー定義型を配列に保存するためには、 `IArray` や `MArray` といった型クラスを実装する必要があるようです。僕は `array` から逃げて `vector` を使っているため助言できませんが、実装方法を探してみてください。もしくは、都度手動で mod 計算を挿入すれば良いでしょう。
 
 # まとめ
 

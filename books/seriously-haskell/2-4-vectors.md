@@ -28,7 +28,7 @@ import Data.Vector.Unboxed qualified as U -- VU -> U
 import Data.Vector.Generic qualified as G -- VG -> G
 ```
 
-理由は僕の好みと、タイプ数を減らすことが心理的抵抗を減らすことができる期待からです。合わない人には申し訳ありません。
+理由は僕の好みと、タイプ数を減らすことで心理的抵抗を減らすことができる期待からです。合わない人には申し訳ありません。
 
 [`vector`]: https://github.com/haskell/vector
 

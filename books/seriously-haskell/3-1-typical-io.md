@@ -273,11 +273,11 @@ lineN n st = unfoldrExactN n (runStateT st) <$> BS.getLine
 
 `stdin` 全体を `ByteString` に読み込んでおくと、改行区切りに囚われず、入力をデータストリームとみなすことができます。 C++ で `cin` を使うのと同じ感覚で入力データを読み取っていけるのではないでしょうか。
 
-さらに [`cojna/iota`] の `runSolver` は出力も `ByteString` 型としており、解答プログラムは `IO` モナドに依存しません。最後に 1 度だけ `IO` モナドを使って print するようです。出力を含めて純粋な関数となるのは興味深いですし、都度 `stdout` に書き込むよりも効率が良いのではないかと思います。
+さらに [`cojna/iota`] の `runSolver` は出力も `ByteString` 型としており、解答のコードは `IO` モナドに依存しません。最後に 1 度だけ `IO` モナドを使って print するようです。出力を含めて純粋な関数となるのは興味深いですし、都度 `stdout` に書き込むよりも効率が良いのではないかと思います。
 
 # まとめ
 
-AtCoder 典型の入出力を Haskell で書く方法を確認しました。意外と工夫の余地があるため、事前に入出力の方法を練っておくとコンテストでも活躍してくれると思います。モナドを上手く使えば、より美しいコードにもできそうです。
+AtCoder 典型の入出力を Haskell で書く方法を確認しました。事前に入出力の方法を練っておくとコンテストでも活躍してくれると思います。モナドを上手く使えば、より美しいコードにもできそうです。
 
 [`bool`]: https://hackage.haskell.org/package/base-4.17.1.0/docs/Data-Bool.html#v:bool
 [`unwords`]: https://hackage.haskell.org/package/base-4.17.1.0/docs/Prelude.html#v:unwords
