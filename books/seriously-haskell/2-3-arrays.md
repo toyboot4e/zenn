@@ -2,7 +2,7 @@
 title: "[2-3] 📜 array の使い方"
 ---
 
-配列を使えば、大抵の問題は解けるようになります。ついに B 問題で TLE しなくていい時代がやってくるのでしょうか。 [^1] 長い道のりですが進んでいきましょう。
+配列を使えば、大抵の問題は解けるようになります。ついに B 問題で TLE しなくていい時代がやってくるのです (!?) 。 [^1] 長い道のりですが進んでいきましょう。
 
 # 概観
 
@@ -23,14 +23,14 @@ title: "[2-3] 📜 array の使い方"
 
 ## 3. [`MArray`] (Mutable Arra)
 
-可変配列の API が型クラス [`MArray`] です。 [`MArray`] を実装するデータ型は、モナドの種類 (IO/ST モナド) と boxed/unboxed かで 4 種類に分けられます。 `IO` モナドは `main` 関数の直下で使用できますから、横着したい時に便利です。 `ST` (state thread) モナドを使うと、区切られた一部のコードで可変変数が使用できます。純粋な文脈でも使用できる点が便利です。 やはりパフォーマンスのため、可能な限り unboxed なデータ型 ([`IOUArray`] および [`STUArray`]) を使います。
+可変配列の API が型クラス [`MArray`] です。 [`MArray`] を実装するデータ型は、モナドの種類 (IO/ST モナド) と boxed/unboxed かで 4 種類に分けられます。 `IO` モナドは `main` 関数の直下で使用できますから、横着したい時に便利です。 `ST` (state thread) モナドを使うと、区切られた一部のコードで可変変数を使用できます。純粋な文脈でも使用できる点が便利です。 やはりパフォーマンスのため、可能な限り unboxed なデータ型 ([`IOUArray`] および [`STUArray`]) を使います。
 
 | インスタンス | Monad | Boxed / Unboxed |
 |--------------|-------|-----------------|
-| `IOArray`    | `IO`  | Boxed           |
-| `IOUArray`   | `IO`  | Unboxed         |
-| `STArray`    | `ST`  | Boxed           |
-| `STUArray`   | `ST`  | Unboxed         |
+| [`IOArray`]  | `IO`  | Boxed           |
+| [`IOUArray`] | `IO`  | Unboxed         |
+| [`STArray`]  | `ST`  | Boxed           |
+| [`STUArray`] | `ST`  | Unboxed         |
 
 # どの配列型を使うべきなのか
 

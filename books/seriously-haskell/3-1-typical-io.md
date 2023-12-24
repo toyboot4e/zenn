@@ -88,15 +88,15 @@ ghci> forM_ [1, 2, 3] print
 
 出力するデータ型としては `[Int]` や `UArray` を使います。 `vector` を使う場合も、やり方は大体同じです。
 
-| 入力          | 行数 | データ型                    | 作成関数名              |
-|---------------|------|-----------------------------|-------------------------|
-| 1. 整数列     | 1    | `[Int]`                     | `ints`                  |
-| 2. 2 個の整数 | 1    | `(Int, Int)`                | `ints2` (, `ints3`, ..) |
-| 3. 巨大整数   | 1    | `[Int]`                     | `digitsL`               |
-| 4. グリッド   | `h`  | `UArray (Int, Int) Char`    | `getGrid`               |
-| 5. 行列       | `h`  | `UArray (Int, Int) Int`     | `getMatInt`             |
-| 6. 異種混合   | 1    | `(Int, String, [Int])` など | `auto`                  |
-| 7. 対称行列   | `h`  | `UArray (Int, Int) Int`     | `getDiagMat`            |
+| No | 入力     | 行数 | データ型                    | 作成関数名              |
+|----|----------|------|-----------------------------|-------------------------|
+| 1  | 整数列   | 1    | `[Int]`                     | `ints`                  |
+| 2  | 個の整数 | 1    | `(Int, Int)`                | `ints2` (, `ints3`, ..) |
+| 3  | 巨大整数 | 1    | `[Int]`                     | `digitsL`               |
+| 4  | グリッド | `h`  | `UArray (Int, Int) Char`    | `getGrid`               |
+| 5  | 行列     | `h`  | `UArray (Int, Int) Int`     | `getMatInt`             |
+| 6  | 異種混合 | 1    | `(Int, String, [Int])` など | `auto`                  |
+| 7  | 対称行列 | `h`  | `UArray (Int, Int) Int`     | `getDiagMat`            |
 
 ## 1. 整数列
 
@@ -109,6 +109,13 @@ A_1 A_2 .. A_N
 ```hs
 ints :: IO [Int]
 ints = map read . words <$> getLine
+```
+
+`bytestring` を使うと、より高速になります:
+
+```hs
+ints :: IO [Int]
+ints = L.unfoldr (BS.readInt . BS.dropWhile isSpace) <$> BS.getLine
 ```
 
 ## 2. 2 個の整数
@@ -200,7 +207,7 @@ main = do
 ```
 
 ```txt:出力
-[1,1,0,1,1,1,1,0,1,1]
+[0,0,0,1,0,1,0,0,0,0,0,0]
 ```
 
 ## 5. 行列
@@ -233,7 +240,7 @@ getMatInt h w = listArray ((0, 0), (h - 1, w - 1)) . concat <$> replicateM h int
 ```hs
 -- @n@ 行を @[(Int, String, [Int])]@ として読み取る:
 queries <- replicateM n $ do
-  xs <- ints
+  xs <- words . BS.unpack <$> BS.getLine
   return (read @Int (xs !! 0), xs !! 1, map (read @Int) (drop 2 xs))
 ```
 

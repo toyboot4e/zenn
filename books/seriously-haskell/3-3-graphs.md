@@ -166,9 +166,9 @@ genericBfs gr nVerts start = U.create $ do
         !d1 <- UM.unsafeRead dist v1
         -- @v1@ の隣接頂点 @v2@ を調べる
         U.forM_ (gr v1) $ \v2 -> do
-          -- @v2@ は訪問済み？
-          !visited <- (== undef) <$> UM.unsafeRead dist v2
-          unless visited $ do
+          -- @v2@ は未訪問？
+          !notVisited <- (== undef) <$> UM.unsafeRead dist v2
+          when notVisited $ do
             -- 未訪問であれば距離を保存してキューに追加する
             UM.unsafeWrite dist v2 $! d1 + 1
             pushBack queue v2

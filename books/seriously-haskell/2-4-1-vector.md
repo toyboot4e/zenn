@@ -81,7 +81,7 @@ https://haskell.jp/slack-log/html/C4M4TT8JJ/104.html#message-1698841366.259449
 {-# LANGUAGE CPP #-}
 
 -- import
-import import Control.DeepSeq
+import Control.DeepSeq
 
 -- 関数および rewrite rules
 {-# RULES "Force inline VAI.sort" VAI.sort = VAI.sortBy compare #-}
@@ -129,7 +129,7 @@ accumulate  op   vec0   input
 
 ## 多次元配列
 
-`vector` をラップして [`Ix`] クラス越しにアクセスすれば、 `vector` を使いつつ快適な多次元配列の API を提供できます。僕以外にやっている人を見たことがありませんが、アリだと思っています。 `constructN` との組み合わせで活躍するため、アリかと思います。
+`vector` をラップして [`Ix`] クラス越しにアクセスすれば、 `vector` を使いつつ快適な多次元配列の API を提供できます。僕以外にやっている人を見たことがありませんが、 `constructN` との組み合わせなどで活躍するため、アリかと思います。
 
 https://toyboot4e.github.io/toy-lib/Data-Vector-IxVector.html
 
@@ -177,7 +177,7 @@ ghci> U.unfoldrExactN 3 (swap . (`divMod` 10)) 123
 
 ## `HT.groupBy`
 
-`groupBy` は (隣接要素ではなく) グループの先頭要素との比較によってグループ分けを行います:
+`groupBy` は (隣接要素ではなく) グループの先頭要素と後続の要素を比較してグループ分けを行います。
 
 ```hs
 ghci> U.groupBy (\a b -> abs (a - b) <= 1) [0, 1, 2, 10, 0, 1]
@@ -193,7 +193,7 @@ ghci> HT.groupBy (\a b -> abs (a - b) <= 1) [0, 1, 2, 10, 0, 1]
 [[0,1,2],[10],[0,1]]
 ```
 
-`vector` において隣接要素の比較によってグループ分けを実施したいなら、一旦 `toList` でリストに変換し、 `HT.groupBy` を使うと良いでしょう。
+`vector` において隣接要素の比較によってグループ分けを実施したいなら、やはり一旦 `toList` でリストに変換し、 `HT.groupBy` を使うと良いでしょう。
 
 ## 順列・組み合わせ・直積・素数列挙などの列挙
 
