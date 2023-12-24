@@ -6,18 +6,7 @@ AtCoder における Haskell のジャッジ環境 (プログラムのコンパ�
 
 # ソース
 
-AtCoder では、不定期にユーザから意見を募ってコンパイル環境を更新します。これは『言語アップデート』と呼ばれています。
-
-## 結果
-
-AtCoder は Google Spreadsheet を使って意見を募集します。以下が 2023 年における意見募集と結果です:
-
-- [2023 年 12 月における AtCoder のジャッジ環境](https://img.atcoder.jp/file/language-update/language-list.html)
-  GHC 9.4.5
-- [スプレッドシート](https://docs.google.com/spreadsheets/d/1HXyOXt5bKwhKWXruzUvfMFHQtBxfZQ0047W7VVObnXI)
-- [スプレッドシート > Haskell](https://docs.google.com/spreadsheets/d/1HXyOXt5bKwhKWXruzUvfMFHQtBxfZQ0047W7VVObnXI/edit#gid=408033513&range=F38)
-
-2023 年の言語アップデートにおいてはジャッジに使用されるコンピュータの性能が上がり、実行速度も速まりました。
+AtCoder では不定期にコンパイル環境を更新しており、『言語アップデート』と呼ばれます。言語アップデートの際は、 Google Spreadsheet を使ってユーザの意見が募集されます。
 
 ## 経緯
 
@@ -25,9 +14,24 @@ AtCoder は Google Spreadsheet を使って意見を募集します。以下が 
 
 > 当時の僕はいいねを押しているだけでした。次回があれば、もう少し議論に参加したいところです。
 
-# インストールコマンド
+## 結果
 
-スプレッドシートに記載のコマンドを確認していきます。 Ubuntu において [GHCup](https://www.haskell.org/ghcup/) をダウンロードすると同時に、 GHC 9.4.5 と Cabal 3.8.1.0 をインストールしています:
+以下が 2023 年における意見募集の結果です:
+
+- [2023 年 12 月における AtCoder のジャッジ環境](https://img.atcoder.jp/file/language-update/language-list.html)
+  GHC 9.4.5
+- [スプレッドシート](https://docs.google.com/spreadsheets/d/1HXyOXt5bKwhKWXruzUvfMFHQtBxfZQ0047W7VVObnXI)
+- [スプレッドシート > Haskell](https://docs.google.com/spreadsheets/d/1HXyOXt5bKwhKWXruzUvfMFHQtBxfZQ0047W7VVObnXI/edit#gid=408033513&range=F38)
+
+また 2023 年の言語アップデートにおいてはジャッジに使用されるコンピュータの性能が上がり、実行速度も速まりました。
+
+# 内容確認
+
+以下ではスプレッドシートに記載の内容を確認します。
+
+## インストールコマンド
+
+Ubuntu (の仮想環境) において [GHCup](https://www.haskell.org/ghcup/) をダウンロードすると同時に、 GHC 9.4.5 と Cabal 3.8.1.0 をインストールしています:
 
 ```sh
 # Install prerequisites
@@ -40,7 +44,7 @@ sudo apt-get install -y --no-install-recommends build-essential curl libffi-dev 
 curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | BOOTSTRAP_HASKELL_NONINTERACTIVE=1 BOOTSTRAP_HASKELL_GHC_VERSION=9.4.5 BOOTSTRAP_HASKELL_CABAL_VERSION=3.8.1.0 BOOTSTRAP_HASKELL_INSTALL_NO_STACK=1 sh
 ```
 
-# `submission.cabal`
+## `submission.cabal`
 
 依存パッケージのバージョンが確認できます。また AtCoder においては `ATCODER` フラグが有効になり、 Haskell プログラム中の `#ifdef` (`CPP` 言語拡張) に利用できることが分かります:
 
@@ -158,7 +162,7 @@ executable main
       cpp-options: -DATCODER
 ```
 
-# `cabal.project`
+## `cabal.project`
 
 GHC の LLVM バックエンドを使用し、高速化が図られています。 Haskell の提出が 1 ページ目にくることもしばしばありますが、この辺りの設定も一役買っているかも知れません:
 
@@ -179,7 +183,7 @@ https://downloads.haskell.org/ghc/latest/docs/users_guide/codegens.html
 
 ローカル環境においては、ベンチマークの際などはこの設定を真似ると良いでしょう。
 
-# コンパイルコマンド
+## コンパイルコマンド
 
 コンパイルコマンドは、単なる `cabal v2-build` (現在は `cabal build` と等価) の実行です:
 
