@@ -57,7 +57,7 @@ ghci> U.modify (VAI.sortBy (comparing Down)) xs
 [4,3,2,1]
 ```
 
-この辺りも『Haskell で挑む競技プログラミング』に言及があります:
+この辺りも『Haskell で戦う競技プログラミング』に言及があります:
 
 https://booth.pm/ja/items/1577541
 
