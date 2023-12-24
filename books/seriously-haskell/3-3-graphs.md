@@ -124,11 +124,11 @@ API も良いと思います。重みが型パラメータ `w` で抽象化さ�
 ```hs
 type Vertex = Int
 
--- | . と # で構成されるグリッドにおいて、ある点と隣接する . を返す関数を作る
+-- | . と # で構成されるグリッドにおいて、ある点と隣接する . を返す関数を作る (はず……)
 gridFn :: UArray (Int, Int) Char -> Vertex -> U.Vector Vertex
-gridFn grid = index bnd . filter p . around . unindex
+gridFn grid = U.map (index bnd) . U.filter p . around . unindex
   where
-    unindex = (`divMod`) w
+    unindex = (`divMod` w)
     around yx@(!_, !_) = U.filter (inRange bnd) $ U.map (add2 yx) dir4
     bnd = bounds grid
     w = snd (snd bnd) - snd (fst bnd) + 1
