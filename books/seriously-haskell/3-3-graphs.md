@@ -181,7 +181,7 @@ genericBfs gr nVerts start = U.create $ do
 
 # まとめ
 
-グラフ探索におけるおすすめのスタイルを紹介しました。可変データ型を使うこと、 CSR 形式の [`SparseGraph`] 、関数をグラフとみなすことがおすすめです。あまりにもグラフ問題が苦手だという人には、特に手続き的なスタイルもアリなのだとご認識頂ければ幸いです。
+グラフ探索におけるおすすめのスタイルを紹介しました。可変データ型の利用、 CSR 形式の [`SparseGraph`] 、関数をグラフとみなすことがおすすめです。あまりにもグラフ問題が苦手だという人には、特に手続き的なスタイルもアリなのだとご認識頂ければ幸いです。
 
 [`cojna/iota`]: https://github.com/cojna/iota
 [`Data.Buffer`]: https://cojna.github.io/iota/Data-Buffer.html
