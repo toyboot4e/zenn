@@ -202,7 +202,7 @@ getGrid h w = listArray ((0, 0), (h - 1, w - 1)) . concatMap BS.unpack <$> repli
 main :: IO ()
 main = do
   (!h, !w) <- ints2
-  grid <- amap (bool (0 :: Int) 1 . (== '.')) <$> getGrid h w
+  grid <- amap (bool (0 :: Int) 1 . (== '#')) <$> getGrid h w
   print $ elems grid
 ```
 

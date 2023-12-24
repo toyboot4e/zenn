@@ -106,7 +106,7 @@ U.generate w $ \x -> U.sum (U.generate h $ \y -> arr ! (y, x))
 
 # `vector` による `array` の置換
 
-[`vector`] はほぼ完全に [`array`] を置換します。 API の違いは改良であり、多次元配列でさえもその気になれば `vector` で書けます。
+[`vector`] はほぼ完全に [`array`] を置換します。 API の違いは改良です。その気になれば多次元配列も `vector` で書けます。
 
 ## 型クラス
 

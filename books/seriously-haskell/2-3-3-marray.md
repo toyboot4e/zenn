@@ -384,7 +384,7 @@ eg2 n = runST $ do
 
 # まとめ
 
-[`MArray`] の主なコンパイルエラーを確認しました。型制約に `forall` を書きたいときは言語拡張の [QuantifiedConstraints] を有効化する必要があり、 [TypeFamilies] が有効な場合は推論が上手く働かない場合があることを確認しました。エラーで詰まったときには確認してみてください。
+[`MArray`] の主なコンパイルエラーを確認しました。型制約に `forall` を書きたいときは言語拡張の [QuantifiedConstraints] を有効化する必要がありました。また [TypeFamilies] 拡張が有効な場合は推論が上手く働かない場合があることを確認しました。エラーで詰まったときには確認してみてください。
 
 [`array`]: https://www.stackage.org/lts-21.7/package/array-0.5.4.0
 [`IArray`]: https://www.stackage.org/haddock/lts-21.7/array-0.5.4.0/Data-Array-IArray.html
