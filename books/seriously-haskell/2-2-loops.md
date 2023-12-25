@@ -312,7 +312,7 @@ ghci> mapAccumL' (\x lastX -> (x - lastX, lastX)) (0 :: Int) [1 :: Int, 3, 6]
 
 標準的な Haskell にはキューがありません。複数のデータを出力する際は、基本的にリストを使います。たとえば:
 
-- `mapAccumL` を使う
+- `map` や `mapAccumL` を使う
 
 - `unfoldr` を使う
 
