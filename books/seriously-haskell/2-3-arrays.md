@@ -34,7 +34,7 @@ title: "[2-3] 📜 array の使い方"
 
 # どの配列型を使うべきなのか
 
-[`array`] パッケージだけで主な配列の型が 6 つもありました。概観で述べた通り、基本は unboxed な array ([`UArray`], [`IOUArray`], [`STUArray`]) を使います。可変性が必要無いならば [`UArray`] を使い、可変性が必要なら [`STUArray`] を使います。可変性は必要だが横着したいとき、使い捨てのコードを書くときは [`IOUArray`] を使います。
+[`array`] パッケージだけで主な配列の型が 6 つもありました。概観で触れた通り、基本は unboxed な array ([`UArray`], [`IOUArray`], [`STUArray`]) を使います。可変性が必要無いならば [`UArray`] を使い、可変性が必要なら [`STUArray`] を使います。可変性は必要だが横着したいとき、使い捨てのコードを書くときは [`IOUArray`] を使います。
 
 Unboxed な array に保存して使用できるデータ型は非常に限られており、タプルやリストなどを格納したい時は boxed な array ([`Array`], [`STArray`], [`IOArray`]) を使います。ここは Haskell のちょっと面倒くさいところだなと思います。
 

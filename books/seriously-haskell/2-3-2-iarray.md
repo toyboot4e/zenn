@@ -89,7 +89,7 @@ https://atcoder.jp/contests/typical90/submissions/48521367
 
 # [`accumArray`]
 
-最後に、 [`accumArray`] が強力な関数です。これが使えると [関数プログラミング 珠玉のアルゴリズムデザイン](https://shop.ohmsha.co.jp/shopdetail/000000004066/) の第一章が読める他、コンテストにおいても序盤から終盤まで終始大活躍するでしょう。
+最後に、 [`accumArray`] が強力な関数です。これが使えると [関数プログラミング 珠玉のアルゴリズムデザイン](https://shop.ohmsha.co.jp/shopdetail/000000004066/) の第一章が読める他、コンテストにおいても序盤から終盤まで大活躍するでしょう。
 
 ## [`accumArray`] のメンタルモデル
 
@@ -107,7 +107,7 @@ foldl'      step s0     input
              +-- 演算子
 ```
 
-> なお [`vector`] パッケージにおける `accumArray` とは [`accumulate`] 関数ですが、 [`foldl'`] と完全に同じシグネチャを持っています。このような細かい点も後発の [`vector`] は良いです。お楽しみに！
+> なお [`vector`] パッケージにおける `accumArray` とは [`accumulate`] 関数ですが、 [`foldl'`] と完全に同じシグネチャを持っています。やはり後発のパッケージのため API が良いのだと思います。お楽しみに！
 > ```
 > accumulate op vec0 input
 > ```
