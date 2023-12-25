@@ -2,7 +2,7 @@
 title: "[2-3] 2. IArray の使い方"
 ---
 
-[`IArray`] の主な API は [`!` 演算子][`!`] および [`accumArray`] です。それぞれ多次元配列への 1 点アクセスと多次元畳み込みの関数です。配列全体をイテレートする際にはリストに変換します。配列の一部をイテレートする際には、まず添字を作り、添字を配列の要素に写します。
+[`IArray`] の主な API は [`!` 演算子][`!`] および [`accumArray`] です。それぞれ多次元配列への 1 点アクセスと多次元畳み込みの関数です。配列全体をイテレートする際には配列をリストに変換します。配列の一部をイテレートする際には、まず添字を作り、添字を配列の要素に写します。
 
 # [`IArray`] への 1 点アクセス
 
@@ -23,8 +23,8 @@ import Data.Array.Unboxed (UArray)
 
 [`IArray`] を [`UArray`] および [`Array`] 共通の API とします。 [`Data.Array`] および [`Data.UArray`] からは配列のデータ型のみを import します。
 
-- [`Data.UArray`] からは関数のエクスポートがありません。 [`UArray`] にアクセスするときは、必然的に型クラス [`IArray`] の関数を使用します。
-- [`Data.Array`] からは関数のエクスポートがありますが、 [`IArray`] の関数名と衝突します。したがって [`IArray`] の関数を使います ([`UArray`] と使い方を統一するという意味もあります) 。
+- [`Data.UArray`] には関数がありません。 [`UArray`] にアクセスするときは、必然的に型クラス [`IArray`] の関数を使用します。
+- [`Data.Array`] には関数がありますが、 [`IArray`] の関数名と衝突します。したがって [`IArray`] の関数を使います ([`UArray`] と使い方を統一するという意味もあります) 。
 
 ## 行列のパース
 
@@ -89,7 +89,7 @@ https://atcoder.jp/contests/typical90/submissions/48521367
 
 # [`accumArray`]
 
-最後に、 [`accumArray`] が強力な関数です。これが使えると [関数プログラミング 珠玉のアルゴリズムデザイン](https://shop.ohmsha.co.jp/shopdetail/000000004066/) の第一章が読める他、コンテストにおいても序盤から終盤まで大活躍するでしょう。
+[`accumArray`] は強力な関数です。これが使えると [関数プログラミング 珠玉のアルゴリズムデザイン](https://shop.ohmsha.co.jp/shopdetail/000000004066/) の第一章が読める他、コンテストにおいても序盤から終盤まで大活躍するでしょう。
 
 ## [`accumArray`] のメンタルモデル
 
@@ -132,7 +132,7 @@ ghci> elems $ accumArray @UArray (+) (0 :: Int) (0, 3) []
 
 入力は空の配列 `[]` にしましたから、初期配列の作成結果が確認できました。
 
-入力は `(index, value)` ペアの列です。 `index` が畳み込み先のスロットを指定し、 `value` が畳み込み演算子への第二項となります。
+入力は `(index, value)` ペアの列です。 `index` が畳み込み先のスロットを指定し、 `value` が畳み込み演算子への第二項となります。指定スロットに畳み込まれる様子が確認できます:
 
 ```hs
 ghci> elems $ accumArray @UArray (+) (0 :: Int) (0, 3) [(0, 1)]
@@ -154,11 +154,9 @@ ghci> elems $ accumArray @UArray (flip (-)) (0 :: Int) (0, 3) [(0, 1), (3, 1), (
 
 ## [`accumArray`] の内部実装
 
-[`accumArray`] が多次元畳み込みであると表現するならば、その実装は `foldl'` の wrapper なのでしょうか？　もちろん配列全体をコピーすると計算量が膨れ上がりますから、 [`accumArray`] の内部では可変配列が使用されています。
+[`accumArray`] が多次元畳み込みであると表現するならば、その実装は `foldl'` の wrapper として表現されるのでしょうか？　もちろんそうはなく、配列全体をコピーすると計算量が膨れ上がりますから、 [`accumArray`] の内部では可変配列が使用されています。 [`accumArray`] の内部実装をたどっていくと、 [`unsafeAccumArray'`] を経由し、最終的に [prim-ops] の `writeArray#` に辿り付きます。これは GHC に組み込まれた真の可変操作です。
 
-[`accumArray`] の内部実装をたどっていくと、 [`GHC.Arr`] の [`unsafeAccumArray'`] が見つかります。 [`unsafeAccumArray'`] は `adjust'` を呼び、 `adjust'` は [prim-ops] の `writeArray#` を呼び出しています。これは GHC に組み込まれた真の可変操作です。
-
-内部実装を聞くと、結局手続き的プログラミングと変わり無いのではないかと落胆しませんか。 [4-1] RealWorld の章では、 Haskell には可変配列など存在しないという解釈を紹介します。
+[`accumArray`] が可変操作を使っていると聞くと、結局手続き的プログラミングと変わり無いのではないかと、がっかりしませんか。 [4-1] RealWorld の章では、 Haskell には可変配列など存在しないという解釈を紹介します。
 
 # Tips
 
@@ -192,7 +190,7 @@ ghci> elems $ accumArray @UArray (flip (:)) [] (0, 3) [(0, 1), (3, 2), (0, 3)]
       In a stmt of an interactive GHCi command: print it
 ```
 
-`IArray UArray [Integer]` の実装は無いとのことです。確かにその通りですが、当然 `Array` を指定したつもりで `UArray` を指定していたり、たまにやってしまうエラーです。
+`IArray UArray [Integer]` の実装は無いとのことです。確かにその通りですが、たまにやってしまうエラーです。
 
 ## 配列を引数に取る関数を作るには
 
@@ -248,7 +246,7 @@ main = do
 
 # まとめ
 
-[`Data.Ix`] および [`IArray`] の使い方を確認しました。 [`UArray`] と [`Array`] の使い分けにも軽く言及しました。 API ドキュメントこそ短いものの、 array は重めのモジュールです。その他ハマり所などあればコメントください。
+[`IArray`] の使い方を確認しました。 `!` 演算子による 1 点アクセスと `accumArray` による多次元畳み込みが `array` の主な API です。 [`Ix`] クラスによる添字の抽象化を挟むため、意外とヘビーな API だと思います。
 
 [`array`]: https://www.stackage.org/lts-21.7/package/array-0.5.4.0
 [`IArray`]: https://www.stackage.org/haddock/lts-21.7/array-0.5.4.0/Data-Array-IArray.html

@@ -94,7 +94,7 @@ ghci> forM_ [1, 2, 3] print
 | 2  | 個の整数 | 1    | `(Int, Int)`                | `ints2` (, `ints3`, ..) |
 | 3  | 巨大整数 | 1    | `[Int]`                     | `digitsL`               |
 | 4  | グリッド | `h`  | `UArray (Int, Int) Char`    | `getGrid`               |
-| 5  | 行列     | `h`  | `UArray (Int, Int) Int`     | `getMatInt`             |
+| 5  | 行列     | `h`  | `UArray (Int, Int) Int`     | `getMat`                |
 | 6  | 異種混合 | 1    | `(Int, String, [Int])` など | `auto`                  |
 | 7  | 対称行列 | `h`  | `UArray (Int, Int) Int`     | `getDiagMat`            |
 
@@ -229,8 +229,8 @@ aH,1​ … aH,W​
 ```
 
 ```hs
-getMatInt :: Int -> Int -> IO (UArray (Int, Int) Int)
-getMatInt h w = listArray ((0, 0), (h - 1, w - 1)) . concat <$> replicateM h ints
+getMat :: Int -> Int -> IO (UArray (Int, Int) Int)
+getMat h w = listArray ((0, 0), (h - 1, w - 1)) . concat <$> replicateM h ints
 ```
 
 ## 6. 複数のデータ型が混じった行

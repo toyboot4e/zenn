@@ -90,7 +90,7 @@ type STRep s a = State# s -> (# State# s, a #)
 
 内部実装に関して、 `ST` モナドに関連した操作の背後には、 `writeMutVar#` のような真に mutable なネイティブ実装がある点が `State` モナドと異なります。しかしそれらは [prim-ops] の中で実装されており、表面部分の Haskell は関知しません。除外して考えます。
 
-また `ST` モナドを使ったコードを、 `State` モナドのものと比較してみます。 `State` モナドの例は以下とします:
+`ST` モナドと `State` モナドの API を比較してみます。 `State` モナドの例は以下とします:
 
 ```hs
 stateExample :: Int -> Int
@@ -121,7 +121,7 @@ stExample s0 = runST $ do
   -- これに @runST@ によって @s@ を与えて実行する
 ```
 
-ここで `stExample` の不思議な点は、文脈に乗せた型 `s` (state thread) とは何なのか、そして変数 `ref` とは何かということです。これらをアロケータ (コンテナ) および識別子であると捉えれば、 `State` モナドにおいても似た機能を実現できることに気付きます。
+ここで `stExample` の不思議な点は、文脈に乗せた型 `s` (state thread) とは何か、変数 `ref` とは何かということです。これらをアロケータ (コンテナ) および識別子であると捉えれば、 `State` モナドにおいても似た機能を実現できることに気付きます。
 
 ![STRef](/images/seriously-haskell/STRef.png =520x)
 *`STRef` と `s` (state thread) のメンタルモデル
@@ -156,7 +156,7 @@ newtype IO a = IO (State# RealWorld -> (# State# RealWorld, a #))
 ![IO モナドと RealWorld](/images/seriously-haskell/IOMonad.png =360x)
 *Haskell の外に世界があるのではない、 RealWorld は Haskell が持つデータ領域上の 1 点に過ぎない ?!*
 
-これならばいかなる副作用を書いたとて、関数の出力を次の関数の入力に繋いだいうだけのことであり、純粋性は保たれています。『ループ処理』の章で扱った状態更新と同じ表現です。
+これならばいかなる副作用を書いたとて、関数の出力を次の関数の入力に繋いだだけのことであり、純粋性は保たれています。『ループ処理』の章で扱った状態更新と同じ表現です。
 
 なお `IO`, `ST` は `State` モナドとは異なり、コンパイラから特別扱いされているようです。記事『[IO モナドと副作用](https://haskell.jp/blog/posts/2020/io-monad-and-sideeffect.html)』では `IO` が `State` モナドとは異なる特別な制約を課されることが説明されています。また [続くといいな日記 – GHC IO モナドの中身](https://mizunashi-mana.github.io/blog/posts/2019/05/ghc-io-inside/) においては `IO` の概要と GHC における扱いが紹介されています。
 

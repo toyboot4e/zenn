@@ -8,7 +8,7 @@ title: "[2-4] 📜 vector の使い方"
 
 また `vector` は Haskeller の共通言語ではないという面もあります。実際 [Richard Bird 先生](https://www.amazon.co.jp/s?i=stripbooks&rh=p_27%3ARichard+Bird&s=relevancerank&text=Richard+Bird&ref=dp_byline_sr_book_1) が書いた本では、リストと `array` でプログラムを構成します。正統派 Haskeller は `vector` を使わないという感覚があります。
 
-以上の背景を踏まえた上で、本書では `vector` パッケージを使うメリットを優先します。 `vector` の実行速度や豊富 API は素晴らしいものです。そして `vector` 使いの中にも匠の技を持つ人たちはいて、そう簡単に真似できるものではないため、そうした意味でも心配ありません。
+以上の背景を踏まえた上で、本書では `vector` パッケージを使うメリットを優先します。 `vector` の実行速度や豊富な API は素晴らしいです。それに `vector` 使いの中にも匠の技を持つ人たちはいて、そう簡単に真似できるものではないため、そうした意味でも心配ありません。
 
 # Qualified import の名前
 

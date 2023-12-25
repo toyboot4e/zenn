@@ -162,16 +162,6 @@ dbg :: (Show a) => a -> ()
 dbg = (`traceShow` ())
 ```
 
-`dbg` 関数の使い方は次の通りです:
-
-```hs
-main :: IO ()
-main = do
-  xs <- ints
-  let !_ = dbg xs
-  print "TODO"
-```
-
 ## 2. AtCoder 環境では空の関数にする
 
 AtCoder サーバー上でのテストでは、巨大な入力が与えられる問題も多いです。これを標準エラー出力に流してしまうと、まず間違いなく TLE を起こします。
@@ -198,11 +188,11 @@ dbg = const ()
 
 ### 注. `#ifdef` は code action で消える
 
-HLS の code action を実行すると、 `#ifdef` が消えて無くなるという現象があります。 `#ifdef` を使用する場合は、 code action を実行しない運用になります。変数のリネームなどは問題無く使用できます。
+HLS の code action を実行すると、 `#ifdef` が消えて無くなるという現象があります。 `#ifdef` を使用する場合は、 code action を実行しない運用になります。変数のリネームなど、他の機能は問題無く使用できます。
 
 ## おまけ: その他のデバッグ出力関数
 
-`dbg` の他、デバッグ用の関数を [playground](https://play.haskell.org/saved/pefpeuV1) にまとめました。以下のように使用できます。特にグリッドの表示のようなデバッグの関数は、早めに作っておくと活躍の機会が多いと思います:
+`dbg` の他、デバッグ用の関数を [playground](https://play.haskell.org/saved/pefpeuV1) にまとめました。次のように使用できます。特にグリッドのデバッグ表示は、活躍の機会も多いのではないかと思います:
 
 ```hs
 main :: IO ()

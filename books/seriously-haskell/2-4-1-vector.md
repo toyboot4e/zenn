@@ -30,7 +30,7 @@ solve k xs = inner xs
 
 まず再帰処理を畳み込み (`foldl'`) や展開 (`unfoldr`) で表現できないかを考えてみます。もしも当てはまる関数があれば、きっと [`vector`] パッケージにも同名の関数がありますから、コードの形を保ったまま [`vector`] へ移行できます。
 
-どうしても再帰関数が書きたいという場合は、 `(x : xs)` のようなパターンマッチを `uncons` に置き換えることも可能です。上記のパターンマッチを `uncons` を使って書き表すと、以下の通りです。 [`vector`] においても同名の関数があり、同様に書けます:
+どうしても再帰関数が書きたいという場合は、 `(x : xs)` のようなパターンマッチを `uncons` に置き換えることも可能です。 [`vector`] においても同名の関数があり、同様に書けます:
 
 ```hs
 solve :: Int -> [Int] -> Int
@@ -139,7 +139,7 @@ https://toyboot4e.github.io/toy-lib/Data-Vector-IxVector.html
 
 ## ユーザー定義型の unbox 化
 
-`vector` においては型クラスの [`Unbox`] が分かれており、ユーザー定義型を unboxed vector に保存するのが比較的簡単です。たとえば自動的に mod 計算を行う `ModInt` 型を unboxed vector に保存できます。
+`vector` においては型クラスの [`Unbox`] が配列の型クラスから分かれており、ユーザー定義型を unboxed vector に保存するのが比較的簡単です。たとえば自動的に mod 計算を行う `ModInt` 型を unboxed vector に保存できます。
 
 ## 部分列へのアクセス
 
