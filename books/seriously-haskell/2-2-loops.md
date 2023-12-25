@@ -286,7 +286,7 @@ ghci> -- 累積和
 ghci> L.scanl1 (+) [1, 2, 3]
 [1,3,6]
 ghci> -- 逆累積和
-ghci> invCSum [1, 3, 6] $ L.scanl1 (+) [1, 2, 3]
+ghci> invCSum $ L.scanl1 (+) [1, 2, 3]
 (6,[1,2,3])
 ```
 
