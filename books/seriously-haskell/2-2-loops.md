@@ -29,7 +29,7 @@ times n f = inner 0
       | otherwise = inner (i + 1) $! f s
 ```
 
-`可変変数が無くなった点です。可変変数が無くなると、for` ループを再帰に置き換えて嬉しいのは、プログラムの基礎的な表現が変わる点です。たとえば `times` 関数を Rust で書き直した場合は、以下のように `x` を mutable にするのが自然です ([playground](https://play.rust-lang.org/?version=nightly&mode=debug&edition=2024&gist=752b4ab8c723de12922337969d2cdd22)) 。これは Haskell 版の `times` とは少し表現が異なります:
+`for` ループを再帰に置き換えて嬉しいのは、プログラムの基礎的な表現が変わる点です。たとえば `times` 関数を Rust で書き直した場合は、以下のように `x` を mutable にするのが自然です ([playground](https://play.rust-lang.org/?version=nightly&mode=debug&edition=2024&gist=752b4ab8c723de12922337969d2cdd22)) 。これは Haskell 版の `times` とは少し表現が異なります:
 
 ```rust
 fn times<T>(n: usize, f: impl Fn(&T) -> T, mut x0: T) -> T {
