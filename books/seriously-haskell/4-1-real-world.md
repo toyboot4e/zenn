@@ -43,7 +43,7 @@ https://zenn.dev/mod_poppo/articles/unsafeperformio
 ---
 ---
 
-『[すごい Haskell](https://booth.pm/ja/items/1577541)』では `State` モナドは『状態付き計算』であると述べられています。 P333 の `NOTE` をご覧頂ければ、本節で伝えたいことの要約が載っています。すなわち `IO` モナドは `State` モナドにおいて現実世界を状態として持つとみなすことにより、 `RealWorld -> RealWorld` のように現実世界を写し取るという幻想を副作用の表現としています。
+『[すごい Haskell](https://booth.pm/ja/items/1577541)』 P333 `NOTE` に本節で伝えたい内容の要約が載っています。すなわち `IO` モナドは `State` モナドにおいて現実世界を状態とし、 `RealWorld -> RealWorld` のように現実世界を写し取るという幻想を副作用の表現としています。
 
 言い換えると、本節では [IO モナドと副作用 - Haskell-jp #おまけ: IOモナドの実装](https://haskell.jp/blog/posts/2020/io-monad-and-sideeffect.html#%E3%81%8A%E3%81%BE%E3%81%91-io%E3%83%A2%E3%83%8A%E3%83%89%E3%81%AE%E5%AE%9F%E8%A3%85) で触れられる「『Haskell の IO モナドは、現実世界を状態にする State モナドだ』という主張」を直感的に理解するための確認をします。
 
