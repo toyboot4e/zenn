@@ -37,6 +37,7 @@ chapters:
   # - 4-2-state
   # - 4-3-libraries-and-bundling
   # - 4-4-benchmarking
+  - 4-2-benchmarking
 
   - end
   - a-judge-env

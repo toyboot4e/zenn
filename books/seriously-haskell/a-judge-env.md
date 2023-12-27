@@ -31,7 +31,7 @@ AtCoder では不定期にコンパイル環境を更新しており、『言語
 
 ## インストールコマンド
 
-Ubuntu (の仮想環境) において [GHCup](https://www.haskell.org/ghcup/) をダウンロードすると同時に、 GHC 9.4.5 と Cabal 3.8.1.0 をインストールしています:
+Ubuntu (の仮想環境) において [GHCup](https://www.haskell.org/ghcup/) をダウンロードすると同時に、 GHC 9.4.5 と Cabal 3.8.1.0 をインストールしています。 GHC には LLVM バックエンドを選択しています:
 
 ```sh
 # Install prerequisites
