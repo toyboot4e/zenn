@@ -166,7 +166,7 @@ main = do
 
 ## 3. 巨大整数
 
-`Int` に収まらないような巨大な整数が与えられた場合は `[Int]` 列として保存します:
+`Int` に収まらないような巨大な整数が与えられた場合は `[Int]` として保存します:
 
 ```hs
 digitsL :: IO [Int]
@@ -284,7 +284,7 @@ lineN n st = unfoldrExactN n (runStateT st) <$> BS.getLine
 
 # まとめ
 
-AtCoder 典型の入出力を Haskell で書く方法を確認しました。事前に入出力の方法を練っておくとコンテストでも活躍してくれると思います。モナドを上手く使えば、より美しいコードにもできそうです。
+AtCoder 典型の入出力を Haskell で書く方法を確認しました。事前に入出力の方法を練っておくとコンテストでも活躍してくれると思います。 `State` モナドを上手く使えば、より美しいコードにもできそうです。
 
 [`bool`]: https://hackage.haskell.org/package/base-4.17.1.0/docs/Data-Bool.html#v:bool
 [`unwords`]: https://hackage.haskell.org/package/base-4.17.1.0/docs/Prelude.html#v:unwords

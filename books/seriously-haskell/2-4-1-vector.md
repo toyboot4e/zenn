@@ -94,14 +94,14 @@ main = do {- .. -}
 
 複数の `map` 関数をフラットに書けるというモチベーションでリスト内包表記／リストモナドを使っている場合は、 `generate` 関数などで代替できるかもしれません。
 
-行列の各列の和を求める計算を例に取ります:
+2 変数の全探索を例に取ります:
 
 ```hs
-[sum [arr ! (y, x) | x <- [0 . .w - 1]] | y <- [0 .. h - 1]]
+[5 * na + 7 * nb | na <- [0 .. 20], nb <- [0 .. 14]]
 ```
 
 ```hs
-U.generate w $ \x -> U.sum (U.generate h $ \y -> arr ! (y, x))
+U.generate 21 $ \na -> U.generate 15 $ \nb -> 5 * na + 7 * nb
 ```
 
 # `vector` による `array` の置換
@@ -147,7 +147,7 @@ https://toyboot4e.github.io/toy-lib/Data-Vector-IxVector.html
 
 ## `ifilter`, `unfoldrExactN` などの便利関数
 
-偶数版目の要素や奇数番目の要素を抜き出したり:
+偶数番目の要素や奇数番目の要素を抜き出したり:
 
 ```hs
 ghci> U.ifilter (const . even) [0, 2, 1, 3]

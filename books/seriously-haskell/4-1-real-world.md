@@ -127,7 +127,7 @@ stExample s0 = runST $ do
 *`STRef` と `s` (state thread) のメンタルモデル
 `s` (state thread) はコンテナであり更新されていく。 `STRef` は定数だが、参照先の値が更新される。*
 
-たとえば `State` モナドの文脈に [`Map`] を乗せた場合、次のように `STRef` を模したコードが書けます。 `stExample` とそっくりですし、 `s` (state thread) は [`Map`] のすごいやつ (immutable で万能なアロケータ) であると解釈できます:
+たとえば `State` モナドの文脈に [`Map`] を乗せた場合、次のように `STRef` を模したコードが書けます。 `stExample` とそっくりですし、 `stExample` における `s` (state thread) は [`Map`] のすごいやつ (immutable で万能なアロケータ) だと解釈できます:
 
 ```hs
 myArenaExample :: Int -> Int
@@ -151,12 +151,12 @@ myArenaExample s0 = (`evalState` M.empty) $ do
 newtype IO a = IO (State# RealWorld -> (# State# RealWorld, a #))
 ```
 
-`IO` モナドの文脈の元では、 `ST` モナドのように可変変数を扱えることに加えて、標準入出力なども操作可能です。これを `State` モナドと同様に捉えるとしたら、文脈である `RealWorld` の中に標準入出力が含まれていると考えれば良いでしょう。さらに外界すべてが `RealWorld` の中にあると捉えれば、我々の `Hello, world!` は、この世のすべてを新しい世界へ写し替えた結果、ターミナルの出力を生み出すという表現であるとも解釈できます。
+`IO` モナドの文脈の元では、 `ST` モナドのように可変変数を扱えることに加えて、標準入出力なども操作可能です。これを `State` モナドと同様に捉えるとしたら、文脈である `RealWorld` の中に標準入出力が含まれていると考えれば良いでしょう。さらに外界すべてが `RealWorld` の中にあると捉えれば、我々の `Hello, world!` は、この世のすべてを新しい世界へ写し替えた結果、ターミナルの出力を生み出したとも解釈できます。
 
 ![IO モナドと RealWorld](/images/seriously-haskell/IOMonad.png =360x)
 *Haskell の外に世界があるのではない、 RealWorld は Haskell が持つデータ領域上の 1 点に過ぎない ?!*
 
-これならばいかなる副作用を書いたとて、関数の出力を次の関数の入力に繋いだだけのことであり、純粋性は保たれています。『ループ処理』の章で扱った状態更新と同じ表現です。
+これならいかなる副作用を書いたとて、関数の出力を次の関数の入力に繋いだだけのことであり、純粋性は保たれています。『ループ処理』の章で扱った状態更新と同じ表現です。
 
 なお `IO`, `ST` は `State` モナドとは異なり、コンパイラから特別扱いされているようです。記事『[IO モナドと副作用](https://haskell.jp/blog/posts/2020/io-monad-and-sideeffect.html)』では `IO` が `State` モナドとは異なる特別な制約を課されることが説明されています。また [続くといいな日記 – GHC IO モナドの中身](https://mizunashi-mana.github.io/blog/posts/2019/05/ghc-io-inside/) においては `IO` の概要と GHC における扱いが紹介されています。
 

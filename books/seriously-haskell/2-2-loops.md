@@ -217,7 +217,7 @@ intsU :: IO (U.Vector Int)
 intsU = U.unfoldr (BS.readInt . BS.dropWhile isSpace) <$> BS.getLine
 ```
 
-特に [`vector`] においては `:` 演算子のように $O(1)$ でデータを追加する方法が存在しないため、 `unfoldr` による配列生成が必須です。 `unfoldr` のアイデアが実際役に立つことが確認できたと思います。
+特に [`vector`] においては `:` 演算子のように $O(1)$ でデータを追加する方法が存在しないため、 `unfoldr` による生成が必須です。 `unfoldr` のアイデアが実際役に立つことが確認できたと思います。
 
 なお Rust で言えば [`successors`](https://doc.rust-lang.org/std/iter/fn.successors.html) というイテレータのメソッドが [`unfoldr`] に対応すると思います。どのデータ型にも [`collect`](https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.collect) できますね。
 
@@ -240,7 +240,7 @@ intsU = U.unfoldr (BS.readInt . BS.dropWhile isSpace) <$> BS.getLine
 - スキップ (`continue`)  
   何もせず再帰呼び出しすれば要素をスキップできます。
 
-再帰は表現力が高い分だけ、コードの意図が不明確になるかもしれません。 `break`, `continue` に相当する機能が必要無い場合は、畳み込みや `mapAccumL` に置き換えるのがおすすめです。 `break` や `continue` が必要な場合は `unfoldr` に置き換えられることがあります。
+再帰は表現力が高い分だけ、コードの意図が不明確になるかもしれません。 `break`, `continue` に相当する機能が必要無い場合は、畳み込みや `mapAccumL` に置き換えるのがおすすめです。 `break` や `continue` が必要な場合も、 `unfoldr` に置き換えられることがあります。
 
 ## 2-2. 畳み込み (`foldl'`)
 
@@ -385,5 +385,5 @@ main = do
 [^1]: 『すごい Haskell』を読んで、すごい Haskell を生み出してしまった……
 [^2]: `ST` や `IO` モナドを使えば可変変数を使えます。 RealWorld の章では可変操作など存在しないという解釈を紹介します。
 [^3]: 僕は先週のコンテストにおいて 5 問中 2 問で `exitSuccess` を使っていました……
-[^4]: Haskell は制約の強い言語であるため、書きやすさを求めている内に自然とそれらしくなると思います。僕の場合は、ポイントフリースタイルを多用する (ことが楽しい) という方針を得てからは、 Haskell の書き方が安定しました。
+[^4]: Haskell は制約の強い言語であるため、自然とあるべきコードの姿へ近づいていくと思います。僕の場合は、ポイントフリースタイルを多用する (ことが楽しい) という方針を得てからは、 Haskell の書き方が安定しました。
 

@@ -80,7 +80,7 @@ Row-major 行列を作成したことが確認できました。 `elems` の出�
 
 ## 解く
 
-後は行・列ごとに累積和を用意して解くことができます。解答例にリンクしておきます。
+後は行・列ごとに和を用意して解くことができます。解答例にリンクしておきます。
 
 - リスト内包表記を使って走査しました。 `map` を使っても良いと思います。
 - [`listArray`] は型クラス [`IArray`] の関数であるため、型推論のため `@UArray` を書きました。
@@ -107,7 +107,7 @@ foldl'      step s0     input
              +-- 演算子
 ```
 
-> なお [`vector`] パッケージにおける `accumArray` とは [`accumulate`] 関数ですが、 [`foldl'`] と完全に同じシグネチャを持っています。やはり後発のパッケージのため API が良いのだと思います。お楽しみに！
+> なお [`vector`] パッケージにおける `accumArray` とは [`accumulate`] 関数ですが、 [`foldl'`] と完全に同じシグネチャを持っています。やはり後発のパッケージのため API が良いと思います。お楽しみに！
 > ```
 > accumulate op vec0 input
 > ```
@@ -240,13 +240,15 @@ main = do
   print $ csum +! (1, 2)
 ```
 
-## ユーザー定義型を array に保存するには？
+## ユーザー定義型を `UArray` に保存するには？
 
-よく配列に入れたくなるデータ型としては [`ModInt`](https://atcoder.github.io/ac-library/production/document_ja/modint.html) があります。 `ModInt` のようなユーザー定義型を配列に保存するためには、 `IArray` や `MArray` といった型クラスを実装する必要があるようです。僕は `array` から逃げて `vector` を使っているため助言できませんが、実装方法を探してみてください。もしくは、都度手動で mod 計算を挿入すれば良いでしょう。
+よく配列に入れたくなるデータ型としては [`ModInt`](https://atcoder.github.io/ac-library/production/document_ja/modint.html) があります。 `ModInt` のようなユーザー定義型を `UArray` に保存するためには、 `IArray` や `MArray` といった型クラスを実装する必要があるようです。
+
+`ModInt` を `UArray` に入れてみるぞという人は、実装方法を探してみてください (僕は `array` から逃げているため助言できません) 。もしくは、都度手動で mod 計算を挿入するなど、既存の実装のみで戦うこともできます。
 
 # まとめ
 
-[`IArray`] の使い方を確認しました。 `!` 演算子による 1 点アクセスと `accumArray` による多次元畳み込みが `array` の主な API です。 [`Ix`] クラスによる添字の抽象化を挟むため、意外とヘビーな API だと思います。
+[`IArray`] の使い方を確認しました。 `!` 演算子による 1 点アクセスと `accumArray` による多次元畳み込みが `array` の主な API です。 [`Ix`] クラスによる添字の抽象化を挟むため、ややヘビーな API ではありますが、リストとの親和性が高く Haskell らしさを感じるモジュールでもあります。
 
 [`array`]: https://www.stackage.org/lts-21.7/package/array-0.5.4.0
 [`IArray`]: https://www.stackage.org/haddock/lts-21.7/array-0.5.4.0/Data-Array-IArray.html

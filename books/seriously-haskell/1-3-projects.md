@@ -140,11 +140,6 @@ https://github.com/toyboot4e/seriously-haskell/tree/main/cabal-sample
 [`haddock`]: https://github.com/haskell/haddock
 [`doctest`]: https://github.com/sol/doctest
 [`quickcheck`]: https://github.com/nick8325/quickcheck
-[`hunit`]: https://github.com/hspec/HUnit
-[`hspec`]: https://github.com/hspec/hspec
-[`tasty`]: https://github.com/UnkindPartition/tasty
-[`tasty-bench`]: https://hackage.haskell.org/package/tasty-bench
-[`criterion`]: https://github.com/haskell/criterion
 
 [^1]: (ネイティブコードへの) コンパイル実行
 
