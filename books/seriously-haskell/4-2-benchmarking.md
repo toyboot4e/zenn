@@ -193,4 +193,3 @@ MUT, GC の時間比はベンチマークのライブラリでは収集できな
 
 [`hunit`]: https://github.com/hspec/HUnit
 [`hspec`]: https://github.com/hspec/hspec
-
