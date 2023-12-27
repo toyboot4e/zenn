@@ -166,7 +166,7 @@ $ cabal run --ghc-options '-with-rtsopts="-s -A1G"'
 
 なぜか MUT が長くなっていますが、 GC の時間が 0 になりました。これならギリギリ AC できそうです。ただし `Main.hs` からは RTS (runtime system) の設定変更はできないため、 AtCoder 環境ではこのようにヒープサイズを変更できません。
 
-ちなみに unboxed な vector の実行結果は以下で、 GC を抑制しても 100 倍近く速いです。アルゴリズムのオーダーは変わりませんが、実行速度にはこれほどの差が付くものなのですね:
+ちなみに unboxed な vector の実行結果は以下で、 GC を抑制しても boxed な vector より 100 倍近く速いです。アルゴリズムのオーダーは変わらないのに、実行速度にはこれほどの差が付くものなのですね:
 
 ```sh
   MUT     time    0.006s  (  0.006s elapsed)
