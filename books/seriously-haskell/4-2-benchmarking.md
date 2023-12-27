@@ -102,14 +102,14 @@ https://github.com/toyboot4e/seriously-haskell/blob/main/benchmarks/src/Knapsack
 
 面白かった結果としては、
 
-- Boxed vs unboxed
-  Boxed な vector を使用した場合、 unboxed な vector よりも 100 倍以上遅くなっていました。それほどでしたか。
+- Boxed vs unboxed  
+  Boxed な vector を使用した場合、 unboxed な vector よりも 100 倍以上遅くなっていました。
 
-- リストでも通る
+- リストでも通る  
   疎なリストを DP 配列の代わりとした場合も、 DeepSeq パッケージの `force` 関数を適用すると AC できました。ベンチマーク結果としてもそこそこ速いのが確認できます。
 
-- 単調増加リストを使うと
-  `(w, v)` が単調増加するリストを持つと、枝刈りによって大幅な高速化ができます。
+- 単調増加リストを使う  
+  `(w, v)` が単調増加するリストを状態とすると、枝刈りによって大幅な高速化ができます。
 
 # 備考: GC
 
@@ -166,7 +166,7 @@ $ cabal run --ghc-options '-with-rtsopts="-s -A1G"'
 
 なぜか MUT が長くなっていますが、 GC の時間が 0 になりました。これならギリギリ AC できそうです。ただし `Main.hs` からは RTS (runtime system) の設定変更はできないため、 AtCoder 環境ではこのようにヒープサイズを変更できません。
 
-ちなみに unboxed な vector の実行結果は以下で、 GC を抑制しても 100 倍近く速いです。そんな……:
+ちなみに unboxed な vector の実行結果は以下で、 GC を抑制しても 100 倍近く速いです。アルゴリズムのオーダーは変わりませんが、実行速度にはこれほどの差が付くものなのですね:
 
 ```sh
   MUT     time    0.006s  (  0.006s elapsed)
