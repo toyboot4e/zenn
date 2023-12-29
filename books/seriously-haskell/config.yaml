@@ -34,10 +34,9 @@ chapters:
 
   - 4-misc
   - 4-1-real-world
-  # - 4-2-state
-  # - 4-3-libraries-and-bundling
   # - 4-4-benchmarking
   - 4-2-benchmarking
+  - 4-3-split-your-library
 
   - end
   - a-judge-env
