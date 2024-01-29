@@ -34,9 +34,12 @@ chapters:
 
   - 4-misc
   - 4-1-real-world
-  # - 4-4-benchmarking
   - 4-2-benchmarking
   - 4-3-split-your-library
+  - 4-4-verification-helper
+  # - 4-4-interactive-judge
+  # - 4-5-view-patterns
+  # - 4-6-state
 
   - end
   - a-judge-env
