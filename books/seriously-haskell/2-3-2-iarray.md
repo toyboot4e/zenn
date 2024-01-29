@@ -65,7 +65,7 @@ main = do
   -- 配列中の (添字, 値) の一覧
   print $ assocs mat
 
-  -- show <array> は bounds および assocs の組み合わせを表示する
+  -- bounds および assocs の組み合わせ
   print mat
 ```
 
@@ -83,7 +83,7 @@ Row-major 行列を作成したことが確認できました。 `elems` の出�
 後は行・列ごとに和を用意して解くことができます。解答例にリンクしておきます。
 
 - リスト内包表記を使って走査しました。 `map` を使っても良いと思います。
-- [`listArray`] は型クラス [`IArray`] の関数であるため、型推論のため `@UArray` を書きました。
+- [`listArray`] は型クラス [`IArray`] の関数であるため、配列型のインスタンスを確定させるため `@UArray` を書きました。
 
 https://atcoder.jp/contests/typical90/submissions/48521367
 
@@ -156,7 +156,7 @@ ghci> elems $ accumArray @UArray (flip (-)) (0 :: Int) (0, 3) [(0, 1), (3, 1), (
 
 [`accumArray`] が多次元畳み込みであると表現するならば、その実装は `foldl'` の wrapper として表現されるのでしょうか？　もちろんそうはなく、配列全体をコピーすると計算量が膨れ上がりますから、 [`accumArray`] の内部では可変配列が使用されています。 [`accumArray`] の内部実装をたどっていくと、 [`unsafeAccumArray'`] を経由し、最終的に [prim-ops] の `writeArray#` に辿り付きます。これは GHC に組み込まれた真の可変操作です。
 
-[`accumArray`] が可変操作を使っていると聞くと、結局手続き的プログラミングと変わり無いのではないかと、がっかりしませんか。 [4-1] RealWorld の章では、 Haskell には可変配列など存在しないという解釈を紹介します。
+[`accumArray`] が可変操作を使っていると聞くと、結局手続き的プログラミングと変わり無いのではとがっかりしませんか。 [4-1] RealWorld の章では、 Haskell には可変配列など存在しないという解釈を紹介します。 𝓜𝓪𝓰𝓲𝓬..！
 
 # Tips
 
