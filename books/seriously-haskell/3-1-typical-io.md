@@ -86,17 +86,17 @@ ghci> forM_ [1, 2, 3] print
 
 ここでは [`bytestring`] パッケージの [`getLine`] 関数をベースに、行単位で入力を処理します。複数行をひとまとめに読み込む際は、 `forM` や `replicateM` で行の読み込みを繰り返します。
 
-出力するデータ型としては `[Int]` や `UArray` を使います。 `vector` を使う場合も、やり方は大体同じです。
+作成するデータ型としては `[Int]` や `UArray` を例とします。 `vector` を使う場合も、やり方は大体同じです。
 
-| No | 入力     | 行数 | データ型                    | 作成関数名              |
-|----|----------|------|-----------------------------|-------------------------|
-| 1  | 整数列   | 1    | `[Int]`                     | `ints`                  |
-| 2  | 個の整数 | 1    | `(Int, Int)`                | `ints2` (, `ints3`, ..) |
-| 3  | 巨大整数 | 1    | `[Int]`                     | `digitsL`               |
-| 4  | グリッド | `h`  | `UArray (Int, Int) Char`    | `getGrid`               |
-| 5  | 行列     | `h`  | `UArray (Int, Int) Int`     | `getMat`                |
-| 6  | 異種混合 | 1    | `(Int, String, [Int])` など | `auto`                  |
-| 7  | 対称行列 | `h`  | `UArray (Int, Int) Int`     | `getDiagMat`            |
+| No | 入力       | 行数 | データ型                    | 作成関数名                        |
+|----|------------|------|-----------------------------|-----------------------------------|
+| 1  | 整数列     | 1    | `[Int]`                     | `ints`                            |
+| 2  | 2 個の整数 | 1    | `(Int, Int)`                | `ints2` (, `ints3`,  `ints4`, ..) |
+| 3  | 巨大整数   | 1    | `[Int]`                     | `digitsL`                         |
+| 4  | グリッド   | `h`  | `UArray (Int, Int) Char`    | `getGrid`                         |
+| 5  | 行列       | `h`  | `UArray (Int, Int) Int`     | `getMat`                          |
+| 6  | 異種混合   | 1    | `(Int, String, [Int])` など | `auto`                            |
+| 7  | 対称行列   | `h`  | `UArray (Int, Int) Int`     | `getDiagMat`                      |
 
 ## 1. 整数列
 
@@ -159,14 +159,15 @@ main = do
   (!nVerts, !nEdges) <- ints2
   edges <- concatMap swapDupe <$> replicateM nEdges ints2
   let gr = accumArray (flip (:)) [] (1, n) edges
+  -- ~~
   return ()
 ```
 
-[`Data.Tuple.Extra`] の `both` 関数と組み合わせると、 `(both pred <$> ints2)` のように 1-based index を 0-based index に変換することもできます。 [`Data.Bifunctor`] の `first` / `second` を使うとタプルの左側／右側のみの値を更新できます。
+[`Data.Tuple.Extra`] の `both` 関数と組み合わせると、 `(both pred <$> ints2)` のように 1-based index を 0-based index に変換することもできます。 [`Data.Bifunctor`] の `first` / `second` を使うとタプルの左側／右側の値を更新できます。
 
 ## 3. 巨大整数
 
-`Int` に収まらないような巨大な整数が与えられた場合は `[Int]` として保存します:
+`Int` に収まらないような巨大な整数が与えられた場合は、各桁の値を `[Int]` として保存します:
 
 ```hs
 digitsL :: IO [Int]
@@ -250,7 +251,7 @@ queries <- replicateM n $ do
 queries <- replicateM n (auto @(Int, String, [Int]))
 ```
 
-僕の時間の都合で省略します……
+実装は、僕の時間の都合で省略します……
 
 ## 7. 対称行列
 

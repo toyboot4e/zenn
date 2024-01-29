@@ -33,10 +33,10 @@ solve k xs = inner xs
 どうしても再帰関数が書きたいという場合は、 `(x : xs)` のようなパターンマッチを `uncons` に置き換えることも可能です。 [`vector`] においても同名の関数があり、同様に書けます:
 
 ```hs
-solve :: Int -> [Int] -> Int
-solve k xs = inner xs
+solveU :: Int -> U.Vector Int -> Int
+solveU k xs = inner xs
   where
-    inner xs = case uncons xs of
+    inner xs = case U.uncons xs of
       Nothing -> 0
       Just (x, xs') -> {- .. -}
 ```
@@ -97,11 +97,11 @@ main = do {- .. -}
 2 変数の全探索を例に取ります:
 
 ```hs
-[5 * na + 7 * nb | na <- [0 .. 20], nb <- [0 .. 14]]
+[sum $ 5 * na + 7 * nb | na <- [0 .. 20], nb <- [0 .. 14]]
 ```
 
 ```hs
-U.generate 21 $ \na -> U.generate 15 $ \nb -> 5 * na + 7 * nb
+U.generate 21 $ \na -> U.sum . U.generate 15 $ \nb -> 5 * na + 7 * nb
 ```
 
 # `vector` による `array` の置換
