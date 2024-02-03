@@ -150,9 +150,9 @@ https://toyboot4e.github.io/toy-lib/Data-Vector-IxVector.html
 偶数番目の要素や奇数番目の要素を抜き出したり:
 
 ```hs
-ghci> U.ifilter (const . even) [0, 2, 1, 3]
+ghci> U.ifilter ((const .) . even) [0, 2, 1, 3]
 [0,1]
-ghci> U.ifilter (const . odd) [0, 2, 1, 3]
+ghci> U.ifilter ((const .) . odd) [0, 2, 1, 3]
 [2,3]
 ```
 
