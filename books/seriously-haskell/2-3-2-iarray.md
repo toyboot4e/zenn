@@ -242,9 +242,22 @@ main = do
 
 ## ユーザー定義型を `UArray` に保存するには？
 
-よく配列に入れたくなるデータ型としては [`ModInt`](https://atcoder.github.io/ac-library/production/document_ja/modint.html) があります。 `ModInt` のようなユーザー定義型を `UArray` に保存するためには、 `IArray` や `MArray` といった型クラスを実装する必要があるようです。
+よく配列に入れたくなるデータ型としては [`ModInt`](https://atcoder.github.io/ac-library/production/document_ja/modint.html) があります。 `ModInt` のようなユーザー定義型を `UArray` に保存するためには、 `IArray` や `MArray` といった型クラスを実装する必要があります。
 
-`ModInt` を `UArray` に入れてみるぞという人は、実装方法を探してみてください (僕は `array` から逃げているため助言できません) 。もしくは、都度手動で mod 計算を挿入するなど、既存の実装のみで戦うこともできます。
+しかし型クラス `IArray` は、中の関数が公開されていません。したがって **新たなデータ型を `UArray` に保存することはできません** :
+
+```hs:IArray.hs
+module Data.Array.IArray (
+    -- * Array classes
+    IArray,     -- :: (* -> * -> *) -> * -> class
+```
+
+> `Monoid` などの型クラスはその関数まで公開されているため、新たな instance を作成できます:
+> ```hs:Monoid.hs
+> module Data.Monoid (
+>         -- * 'Monoid' typeclass
+>         Monoid(..),
+> ```
 
 # まとめ
 
