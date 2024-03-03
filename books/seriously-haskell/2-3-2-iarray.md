@@ -23,7 +23,7 @@ import Data.Array.Unboxed (UArray)
 
 [`IArray`] を [`UArray`] および [`Array`] 共通の API とします。 [`Data.Array`] および [`Data.UArray`] からは配列のデータ型のみを import します。
 
-- [`Data.UArray`] には関数がありません。 [`UArray`] にアクセスするときは、必然的に型クラス [`IArray`] の関数を使用します。
+- [`Data.UArray`] には関数がありません。 [`UArray`] にアクセスするときは、必然的に [`IArray`] モジュールの関数を使用します。
 - [`Data.Array`] には関数がありますが、 [`IArray`] の関数名と衝突します。したがって [`IArray`] の関数を使います ([`UArray`] と使い方を統一するという意味もあります) 。
 
 ## 行列のパース
@@ -83,7 +83,7 @@ Row-major 行列を作成したことが確認できました。 `elems` の出�
 後は行・列ごとに和を用意して解くことができます。解答例にリンクしておきます。
 
 - リスト内包表記を使って走査しました。 `map` を使っても良いと思います。
-- [`listArray`] は型クラス [`IArray`] の関数であるため、配列型のインスタンスを確定させるため `@UArray` を書きました。
+- [`listArray`] は型クラス [`IArray`] に対する関数であるため、配列型のインスタンスを確定させるため `@UArray` を書きました。
 
 https://atcoder.jp/contests/typical90/submissions/48521367
 
