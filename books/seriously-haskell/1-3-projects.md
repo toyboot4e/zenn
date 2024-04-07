@@ -69,7 +69,7 @@ HLS を動作させるため、 Cabal プロジェクトまたは Stack プロ�
 
 ## ビルドツールの選択
 
-ビルドツールには [`stack`] および [`cabal`] があります。時代の流れは [`cabal`] (+ [`cabal-fmt`]) に向かっていると思います。
+ビルドツールには [`stack`] および [`cabal`] があります。時代の流れは [`cabal`] (+ [`cabal-fmt`]) に向かっていると思いますが、お好みで選択してください。
 
 - Stack: [The Haskell Tool Stack](https://docs.haskellstack.org/en/stable/)  
   Stack のドキュメントは難解ですが、実際に使ってみるとハマり所は少ないと思います。
@@ -116,7 +116,7 @@ app/Main.hs in the executable cabal-sample.
 | Stack        | なし             | ✅                  | ❌             | ✅  |
 | Stack        | Stack スクリプト | ✅                  | ✅             | ✅  |
 
-ただ僕以外に stack / cabal スクリプトを提出している人を見たことがありません。スクリプト化はあまり重要ではないかもしれません。
+ただ僕以外に stack スクリプトを提出している人を見たことが無く、些細な違いに過ぎません。 `stack`, `cabal` は好きな方を使ったら良いと思います。
 
 # サンプルプロジェクト
 

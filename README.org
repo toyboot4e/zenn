@@ -1,0 +1,20 @@
+#+TITLE: Zenn
+
+* One org file as one book
+
+New book is composed as one org file, using [[https://zenn.dev/conao3/articles/ox-zenn-usage][ox-zenn]]. Here is the export function:
+
+#+BEGIN_SRC elisp
+(defun org-zenn-export-buffer-to-book (&optional org-dir)
+    "Runs subtree export to each level 1 headings. Respects `#+BOOK_DIR'."
+    (interactive)
+    (let* ((dir default-directory)
+           (pub-dir (car (cdr (car (org-collect-keywords '("BOOK_DIR" "XYZ")))))))
+        ;; cd into the target directory, but manually:
+        (when pub-dir (cd pub-dir))
+        ;; export all the top level headings and come back:
+        (unwind-protect
+                (org-map-entries (lambda () (org-zenn-export-to-markdown nil t)) "LEVEL=1")
+            (when pub-dir (cd dir)))))
+#+END_SRC
+

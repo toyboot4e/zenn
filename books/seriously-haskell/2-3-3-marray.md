@@ -4,7 +4,7 @@ title: "[2-3] 3. MArray の使い方"
 
 [`MArray`] は型が複雑で、エラーが出ると泥沼にはまります。長いエラー文が真の原因を表しているとは限らず、意外と単純な原因があるかもしれません。以下では例として、 `ST` モナドに関連した代表的なエラーと、原因・対処方法を紹介します。
 
-なお型で詰まった際には、 [haskell-jp slack](https://haskell.jp/signin-slack.html) で質問するのがおすすめです。以下で紹介する例も、過去に僕が haskell-jp で質問し、手厚く助けて頂けたためにコンパイルできた関数の類型です。
+なお型で詰まった際には、 [haskell-jp slack](https://haskell.jp/signin-slack.html) で質問するのがおすすめです。以下で紹介する例も、過去に僕が haskell-jp で質問し、手厚く助けて頂けたためにコンパイルできた関数の仲間です。
 
 # 例 1. [`runSTUArray`] で 1 次元累積和を計算する
 
@@ -14,7 +14,7 @@ title: "[2-3] 3. MArray の使い方"
 -- | 1 次元の累積和配列を作成する。
 {-# INLINE csum1D #-}
 csum1D :: (IArray a e, Num e) => Int -> [e] -> a Int e
-csum1D n = listArray (0, n - 1) . L.scanl' (+) 0
+csum1D n = listArray (0, n) . L.scanl' (+) 0
 ```
 
 同じ計算を [`runSTUArray`] によって実装してみます。 [`STUArray`] を使う意味はまったくありませんが、単純な例で型に集中しましょう。
@@ -146,7 +146,7 @@ https://qiita.com/aiya000/items/7e2efc378e9fabb1af32
    |          ^^^^^^^^
 ```
 
-このエラーが真の原因を表しており、型パラメータの `s` が `runSTUArray` における別の `s1` と合わないと表示されています。型制約における `s` がどの `s` であるかと言えば、任意の `s` であって欲しいわけです。 Rust でライフタイムに触れているときにもありがちなエラーです。
+このエラーが真の原因を表しており、型パラメータの `s` が `runSTUArray` における別の `s1` と合わないと表示されています。型制約における `s` がどの `s` であるかと言えば、任意の `s` であって欲しいわけです。
 
 実際 [`runSTUArray`] の制約を確認すると、 `forall s.` が書かれています。 `ST` モナドの言葉を借りるならば、 [`runSTUArray`] とは『任意の state thread が与えられた際に `STUArray` を生み出す関数』を実行し、出来上がった `STUArray` を凍結して `UArray` にして返してくれる関数ということになります:
 
@@ -160,8 +160,6 @@ runSTUArray :: (forall s. ST s (STUArray s i e)) -> UArray i e
 - {-# LANGUAGE AllowAmbiguousTypes #-}
 + {-# LANGUAGE QuantifiedConstraints #-}
 ```
-
-> [QuantifiedConstraints] は、ちょうど Rust の [HRTB] に対応するような機能だと思います。こんな簡単なコードで隠し機能みたいなものが必要になって良いのでしょうか。
 
 最後に `mutCSum2` の型制約に `forall s.` を追加して、無事コンパイルできました:
 
@@ -177,6 +175,8 @@ mutCSum2 n xs = runSTUArray $ do
 
   return arr
 ```
+
+> [QuantifiedConstraints] は、ちょうど Rust の [HRTB] に対応するような機能だと思います。こんな簡単なコードで隠し機能みたいなものが必要になって良いのでしょうか。
 
 `Num e` まで拡張できたので、今度は `Int` ではなく `Double` を指定して累積和を計算してみます ([playground](https://play.haskell.org/saved/FWspimeI)):
 
@@ -221,7 +221,7 @@ mutSum1 n xs = runST $ do
   arr <- newArray (0, n) 0 :: ST s (STUArray s Int e)
 ```
 
-あるいは何もしない関数に通して型を付けることもできます [^1]:
+あるいは何もしない関数に通して型を付けることもできます:
 
 ```hs
 asSTU :: ST s (STUArray s i e) -> ST s (STUArray s i e)
@@ -378,9 +378,7 @@ eg2 n = runST $ do
   readArray arr 0
 ```
 
-> あるいは正しく `s` を書ければ良いのかもしれません。
-
-複雑な関数を書いているときには、このように真の原因がコンパイルエラーとして露出しません。ユーザーの認知を超えた謎のエラーが溢れ出るのみです。エラー再現の最小構成を探してみたり、予めエラーのパターンを認識しておくしかないかと思います。
+複雑な関数を書いているときには、このように真のエラーの原因がコンパイルエラーに覆い隠されてしまいます。エラー再現の最小構成を探してみたり、予めエラーのパターンを認識しておくしかないかと思います。
 
 # まとめ
 
@@ -416,6 +414,4 @@ eg2 n = runST $ do
 [TypeFamilies]: https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/type_families.html
 
 [`runST`]: https://www.stackage.org/haddock/lts-21.7/base-4.17.1.0/Control-Monad-ST-Safe.html#v:runST
-
-[^1]: EDPC - F の提出などで見た方法です。
 

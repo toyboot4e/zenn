@@ -21,9 +21,9 @@ import Data.Array (Array)
 import Data.Array.Unboxed (UArray)
 ```
 
-[`IArray`] を [`UArray`] および [`Array`] 共通の API とします。 [`Data.Array`] および [`Data.UArray`] からは配列のデータ型のみを import します。
+[`IArray`] を [`UArray`] および [`Array`] 共通の API とします。 [`Data.Array`] および [`Data.Array.Unboxed`] からは配列のデータ型のみを import します。
 
-- [`Data.UArray`] には関数がありません。 [`UArray`] にアクセスするときは、必然的に [`IArray`] モジュールの関数を使用します。
+- [`Data.Array.Unboxed`] には関数がありません。 [`UArray`] にアクセスするときは、必然的に [`IArray`] モジュールの関数を使用します。
 - [`Data.Array`] には関数がありますが、 [`IArray`] の関数名と衝突します。したがって [`IArray`] の関数を使います ([`UArray`] と使い方を統一するという意味もあります) 。
 
 ## 行列のパース
@@ -56,16 +56,13 @@ main = do
   [h, w] <- ints
   mat <- getMatInt h w
 
-  -- 配列の添字範囲
+  -- 1. 配列の添字範囲
   print $ bounds mat
-
-  -- 配列中の値の一覧 (@listArray@ への引数を表示するとも言えます)
+  -- 2. 配列中の値の一覧 (@listArray@ への引数を表示するとも言えます)
   print $ elems mat
-
-  -- 配列中の (添字, 値) の一覧
+  -- 3. 配列中の (添字, 値) の一覧
   print $ assocs mat
-
-  -- bounds および assocs の組み合わせ
+  -- 4. bounds および assocs の組み合わせ
   print mat
 ```
 
@@ -196,13 +193,13 @@ ghci> elems $ accumArray @UArray (flip (:)) [] (0, 3) [(0, 1), (3, 2), (0, 3)]
 
 [`UArray`], [`Array`] を問わず引数に取る関数を作りたいとします。 [`IArray`] の出番です。
 
-例として、リストを元に 1 次元累積和 (cummulative sum) を作る関数を作ってみましょう。添字型 `i` は `Int` で固定しました:
+例として、リストを元に 1 次元累積和 (cumulative sum) を作る関数を作ってみましょう。添字型 `i` は `Int` で固定しました:
 
 ```hs
 -- | 1 次元の累積和配列を作成する。
 {-# INLINE csum1D #-}
 csum1D :: (IArray a e, Num e) => Int -> [e] -> a Int e
-csum1D n = listArray (0, n - 1) . L.scanl' (+) 0
+csum1D n = listArray (0, n) . L.scanl' (+) 0
 ```
 
 ついでに累積和へのアクセサも定義してみます:
@@ -216,7 +213,7 @@ csum1D n = listArray (0, n - 1) . L.scanl' (+) 0
 (+!) arr (!l, !r) = arr ! succ r - arr ! l
 ```
 
-使ってみると、以下のように `@UArray` を指定する必要があります ([playground](https://play.haskell.org/saved/0c8OUR1C)):
+使ってみると、以下のように `@UArray` を指定する必要があります ([playground](https://play.haskell.org/saved/SzoiV4mm)):
 
 ```hs
 main :: IO ()
@@ -231,7 +228,7 @@ main = do
 
 この例ならば、むしろ配列を抽象化せず、常に `UArray` を引数に取った方が良いかもしれません。
 
-実は型制約において `IArray UArray e` のように具体的な型を型パラメータを当てはめることができます。 `IArray UArray e` の形で制約を書けば、返値は常に `UArray` となり、 `@UArray` の記述を省くことができます ([playground](https://play.haskell.org/saved/bsEpHMy8)):
+実は型制約において `IArray UArray e` のように具体的な型を型パラメータを当てはめることができます。 `IArray UArray e` の形で制約を書けば、返値は常に `UArray` となり、 `@UArray` の記述を省くことができます ([playground](https://play.haskell.org/saved/tVrnmh7f)):
 
 ```hs
 main :: IO ()
@@ -244,7 +241,7 @@ main = do
 
 よく配列に入れたくなるデータ型としては [`ModInt`](https://atcoder.github.io/ac-library/production/document_ja/modint.html) があります。 `ModInt` のようなユーザー定義型を `UArray` に保存するためには、 `IArray` や `MArray` といった型クラスを実装する必要があります。
 
-しかし型クラス `IArray` は、中の関数が公開されていません。したがって **新たなデータ型を `UArray` に保存することはできません** :
+しかし型クラス `IArray` は、中の関数が公開されていません。したがって **新たにデータ型を `UArray` に保存することはできません** 。タプルも `UArray` には保存できません。
 
 ```hs:IArray.hs
 module Data.Array.IArray (
@@ -252,7 +249,7 @@ module Data.Array.IArray (
     IArray,     -- :: (* -> * -> *) -> * -> class
 ```
 
-> `Monoid` などの型クラスはその関数まで公開されているため、新たな instance を作成できます:
+> `Monoid` などの型クラスは中の関数まで公開されているため、新たな instance を作成できます:
 > ```hs:Monoid.hs
 > module Data.Monoid (
 >         -- * 'Monoid' typeclass
@@ -261,13 +258,13 @@ module Data.Array.IArray (
 
 # まとめ
 
-[`IArray`] の使い方を確認しました。 `!` 演算子による 1 点アクセスと `accumArray` による多次元畳み込みが `array` の主な API です。 [`Ix`] クラスによる添字の抽象化を挟むため、ややヘビーな API ではありますが、リストとの親和性が高く Haskell らしさを感じるモジュールでもあります。
+[`IArray`] の使い方を確認しました。 `!` 演算子による 1 点アクセスと `accumArray` による多次元畳み込みが主な API です。 [`Ix`] クラスによる添字の抽象化を挟むため、ややヘビーな API ではありますが、リストとの親和性が高く Haskell らしさを感じるモジュールでもあります。
 
 [`array`]: https://www.stackage.org/lts-21.7/package/array-0.5.4.0
 [`IArray`]: https://www.stackage.org/haddock/lts-21.7/array-0.5.4.0/Data-Array-IArray.html
 [`UArray`]: https://www.stackage.org/haddock/lts-21.7/array-0.5.4.0/Data-Array-Unboxed.html#t:UArray
-[`Data.Array`]: https://www.stackage.org/haddock/lts-21.7/array-0.5.4.0/Data-Array-Array.html
-[`Data.UArray`]: https://www.stackage.org/haddock/lts-21.7/array-0.5.4.0/Data-Array-UArray.html
+[`Data.Array`]: https://www.stackage.org/haddock/lts-21.7/array-0.5.4.0/Data-Array.html
+[`Data.Array.Unboxed`]: https://www.stackage.org/haddock/lts-21.7/array-0.5.4.0/Data-Array-Unboxed.html
 [`Data.Ix`]: https://hackage.haskell.org/package/base-4.17.1.0/docs/Data-Ix.html
 [`Ix`]: https://hackage.haskell.org/package/base-4.17.1.0/docs/Data-Ix.html#t:Ix
 
@@ -291,8 +288,6 @@ module Data.Array.IArray (
 [prim-ops]: https://gitlab.haskell.org/ghc/ghc/-/wikis/commentary/prim-ops
 
 [^1]: 正確には、 `IArray UArray e` が実装されないデータ型 `e` がタプルやリストです。 `vector` パッケージの場合は、配列とは独立してデータ型に対して `Unbox` を実装しますから、 `IArray` はちょっとヘンテコな型クラスだと思います。
-[^2]: 計算結果が非常に大きくなる問題などでは、オーバーフローの防止のためか、素数 `998244353` を法とした答えが問われる場合が多いです。
-[^3]: フェルマーの小定理については [Haskellで戦う競技プログラミング 第2版](https://booth.pm/ja/items/1577541) などをご覧ください。 `ModInt` の実装例、すなわち型クラス `Num` の実装例は AI に聞いてみてください。高度に高速化された実装としては [cojna/iota] の [IntMod] をご覧ください。
 
 [cojna/iota]: https://github.com/cojna/iota
 [IntMod]: https://github.com/cojna/iota/blob/master/src/Data/IntMod.hs
