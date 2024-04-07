@@ -37,7 +37,7 @@ ghci> y
 ()
 ```
 
-[『Haskellのassertを文っぽく使う』](https://qiita.com/mod_poppo/items/b3b415ea72eee210d222) という記事では、このように副作用を持つ式を逐次評価するために、 `BangPatterns` (`!`) を使用する方法が示されています。同様に、ここでは `traceShow` を文のように使う例を紹介します。
+[『Haskellのassertを文っぽく使う』](https://qiita.com/mod_poppo/items/b3b415ea72eee210d222) という記事では、このように副作用を持つ式を逐次評価するために `BangPatterns` (`!`) を使用する方法が示されています。同様に、ここでは `traceShow` を文のように使う例を紹介します。
 
 > Haskell の遅延評価・正格評価が初耳である方は『[Haskellで戦う競技プログラミング](https://booth.pm/ja/items/1577541)』などをご参照ください。
 
@@ -76,13 +76,17 @@ main :: IO ()
 main = do
   let !x1 = traceShowInLet 1
   let !x2 = traceShowInWhere 2
-  let !_ = trace "print" ()
   print $ x1 + x2
 ```
 
 実行結果は次のとおりです ([playground](https://play.haskell.org/saved/XDNGZPdl)):
 
 ```sh
+$ # stdout (1), stderr (2) を両方表示した場合:
+$ runghc TraceShow.hs
+1
+2
+6
 $ # stdout (1) のみを表示した場合:
 $ runghc TraceShow.hs 2>/dev/null
 6
@@ -90,14 +94,9 @@ $ # stderr (2) のみを表示した場合:
 $ runghc TraceShow.hs 1>/dev/null
 1
 2
-$ # stdout (1), stderr (2) を両方表示した場合:
-$ runghc TraceShow.hs
-1
-2
-6
 ```
 
-特に [`online-judge-tools`][`oj`] でテスト実行した場合、ローカルジャッジへの出力を変更せずに、標準エラー出力をデバッグに利用できます:
+特に [`online-judge-tools`][`oj`] でテスト実行した場合、ローカルジャッジへの標準出力を変更せずに、標準エラー出力をデバッグに利用できます:
 
 ![筆者のターミナル画像](/images/seriously-haskell/oj-with-stderr.png)
 *online-judge-tools でテストを実行する様子*
@@ -187,7 +186,7 @@ dbg = const ()
 
 ### 注. `#ifdef` は code action で消える
 
-HLS の code action を実行すると、 `#ifdef` が消えて無くなるという現象があります。 `#ifdef` を使用する場合は、 code action を実行しない運用になります。変数のリネームなど、他の機能は問題無く使用できます。
+HLS の code action を実行すると、 `#ifdef` が消えて無くなる現象があります。 `#ifdef` を使用する場合は、 code action を実行しない運用が必要です。 (変数のリネームなど、他の機能は問題無く使用できます)
 
 ## おまけ: その他のデバッグ出力関数
 
@@ -225,7 +224,7 @@ main = do
 
 ## 備考. その他のデバッグ手法
 
-[Haskellでのデバッグ手法｜Haskellの森](https://zenn.dev/mod_poppo/books/haskell-forest/viewer/debug) では、 [`HasCallStack` 制約](https://downloads.haskell.org/ghc/9.4.5/docs/users_guide/exts/callstack.html) や [`ghci` のデバッガ](https://downloads.haskell.org/ghc/9.4.5/docs/users_guide/ghci.html?highlight=debugger#the-ghci-debugger) について記載があります。 [GHC のユーザーガイド](https://downloads.haskell.org/ghc/9.4.5/docs/users_guide/index.html) なども余裕があれば目を通しておくと役に立つかもしれません。
+[Haskellでのデバッグ手法｜Haskellの森](https://zenn.dev/mod_poppo/books/haskell-forest/viewer/debug) では、 [`HasCallStack` 制約](https://downloads.haskell.org/ghc/9.4.5/docs/users_guide/exts/callstack.html) や [`ghci` のデバッガ](https://downloads.haskell.org/ghc/9.4.5/docs/users_guide/ghci.html?highlight=debugger#the-ghci-debugger) について記載があります。 [GHC のユーザーガイド](https://downloads.haskell.org/ghc/9.4.5/docs/users_guide/index.html) もためになるかもしれません。
 
 [`Debug.Trace`]: https://hackage.haskell.org/package/base-4.17.1.0/docs/Debug-Trace.html
 [`traceShow`]: https://hackage.haskell.org/package/base-4.17.1.0/docs/Debug-Trace.html#v:traceShow

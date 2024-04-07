@@ -26,7 +26,7 @@ solve k xs = inner xs
     inner (x : xs) = {- .. -}
 ```
 
-このような場合はリストを使って問題無いのですが、選択肢を広げるために、あえて `vector` へ置き換える方法を考えてみます。
+この場合リストを使って問題無いですが、選択肢を広げるためあえて `vector` へ置き換える方法を考えてみます。
 
 まず再帰処理を畳み込み (`foldl'`) や展開 (`unfoldr`) で表現できないかを考えてみます。もしも当てはまる関数があれば、きっと [`vector`] パッケージにも同名の関数がありますから、コードの形を保ったまま [`vector`] へ移行できます。
 
@@ -110,7 +110,7 @@ U.generate 21 $ \na -> U.sum . U.generate 15 $ \nb -> 5 * na + 7 * nb
 
 ## 型クラス
 
-`array` においては型クラス [`IArray`] を使用しました。 [`vector`] においては [`Data.Vector.Generic`] モジュールが boxed/unboxed vector 共通の API であり、 [`Data.Vector`] と [`Data.Vector.Unboxed`] は [`Data.Vector.Generic`] の API の型を限定したものとなっています。また型クラス [`Unbox`] が配列の型クラスから分離されています。
+`array` においては型クラス [`IArray`] を使用しました。 [`vector`] においては [`Data.Vector.Generic`] モジュールが boxed/unboxed vector 共通の API です。また型クラス [`Unbox`] が配列の型クラスから分離されています。
 
 ## `accumulate`
 
@@ -129,13 +129,17 @@ accumulate  op   vec0   input
 
 ## 多次元配列
 
-`vector` をラップして [`Ix`] クラス越しにアクセスすれば、 `vector` を使いつつ快適な多次元配列の API を提供できます。僕以外にやっている人を見たことがありませんが、 `constructN` との組み合わせなどで活躍するため、アリかと思います。
+`vector` をラップして [`Ix`] クラス越しにアクセスすれば、 `vector` を使いつつ多次元配列の API を提供できます。僕以外にやっている人を見たことがありませんが、 `constructN` との組み合わせなどで活躍するため、アリかと思います。
 
 https://toyboot4e.github.io/toy-lib/Data-Vector-IxVector.html
 
 # `vector` ならではの機能・利点
 
 `vector` ならではの決定的な利点と細かな良さを紹介します。
+
+## タプルが `Unbox` である
+
+`UArray` にはタプルを保存できませんが、 unboxed vector にはタプルを保存できます。素晴らしいですね。
 
 ## ユーザー定義型の unbox 化
 
@@ -177,23 +181,22 @@ ghci> U.unfoldrExactN 3 (swap . (`divMod` 10)) 123
 
 ## `HT.groupBy`
 
-`groupBy` は (隣接要素ではなく) グループの先頭要素と後続の要素を比較してグループ分けを行います。
+`groupBy` は、グループの先頭要素と後続の要素を比較してグループ分けを行います:
 
 ```hs
 ghci> U.groupBy (\a b -> abs (a - b) <= 1) [0, 1, 2, 10, 0, 1]
 [[0,1],[2],[10],[0,1]]
 ```
 
-リストにおいては `utility-ht` パッケージの `groupBy` を使うと、隣接要素の比較によってグループ分けを実施できました:
+リストにおいては `utility-ht` パッケージの [`groupBy`](https://hackage.haskell.org/package/utility-ht-0.0.17.1/docs/Data-List-HT.html) を使うと、隣接要素の比較によってグループ分けを実施できました:
 
 ```hs
-ghci> groupBy (\a b -> abs (a - b) <= 1) [0, 1, 2, 10, 0, 1]
-[[0,1],[2],[10],[0,1]]
+ghci> import qualified Data.List.HT as HT
 ghci> HT.groupBy (\a b -> abs (a - b) <= 1) [0, 1, 2, 10, 0, 1]
 [[0,1,2],[10],[0,1]]
 ```
 
-`vector` において隣接要素の比較によってグループ分けを実施したいなら、やはり一旦 `toList` でリストに変換し、 `HT.groupBy` を使うと良いでしょう。
+`vector` においては `HT.groupBy` のような関数は提供されていません。やはり一旦 `toList` でリストに変換し、 `HT.groupBy` を使うと良いでしょう。
 
 ## 順列・組み合わせ・直積・素数列挙などの列挙
 
@@ -207,7 +210,7 @@ https://zenn.dev/link/comments/1022553732563c
 
 # まとめ
 
-大雑把に [`vector`] の API を確認しました。リストを [`vector`] で置換する際には、そもそも [`Data.List`] の API に詳しくなると [`vector`] への移行が簡単になります。 [`array`] から [`vector`] への移行の際にはユーザー定義型を [`Unbox`] にできることが決定的なメリットとなり、他の API も改善されます。リストに依存する強力な関数は、引き続き使用すれば良いでしょう。
+大雑把に [`vector`] の API を確認しました。リストを [`vector`] で置換する際には、そもそも [`Data.List`] の API に詳しくなると [`vector`] への移行が簡単になります。 [`array`] から [`vector`] への移行の際にはユーザー定義型を [`Unbox`] にできることが決定的なメリットとなり、他の API も改善されます。リストに対する強力な関数は、引き続き使用すれば良いでしょう。
 
 [`sortOn`]: https://hackage.haskell.org/package/base-4.17.1.0/docs/Data-List.html#v:sortOn
 [`sortBy`]: https://hackage.haskell.org/package/base-4.17.1.0/docs/Data-List.html#v:sortBy
