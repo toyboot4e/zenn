@@ -295,7 +295,7 @@ ghci> invCSum $ L.scanl1 (+) [1, 2, 3]
 状態付き計算と言えば `State` モナドですが、 `mapM` と `State` モナドを組み合わせることで状態付き `map` 関数が出来上がり、それはまるっきり `mapAccumL` です:
 
 ```hs
--- ※ mapAccumL とは @step@ のシグネチャが異なります
+-- ※ mapAccumL とはシグネチャが異なります
 mapAccumL' :: (a -> s -> (b, s)) -> s -> [a] -> ([b], s)
 mapAccumL' step s0 xs = runState (mapM (state . step) xs) s0
 -- step :: 入力 -> 状態 -> (出力, 次の状態)
@@ -303,8 +303,8 @@ mapAccumL' step s0 xs = runState (mapM (state . step) xs) s0
 
 ```hs
 ghci> -- あらためて逆累積和
-ghci> mapAccumL' (\x lastX -> (x - lastX, lastX)) (0 :: Int) [1 :: Int, 3, 6]
-(6,[1,2,3])
+ghci> mapAccumL' (\x lastX -> (x - lastX, x)) (0 :: Int) [1 :: Int, 3, 6]
+([1,2,3],6)
 ```
 
 特に `vector` パッケージにおいては `mapAccumL` 関数が存在しないため、 `State` モナドと `mapM` の組み合わせを使うのが自然かと思います。 `State` モナドは他の章で解説予定です。
