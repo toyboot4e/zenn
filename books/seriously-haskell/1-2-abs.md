@@ -1,5 +1,5 @@
 ---
-title: "[1-2] AtCoder Beginnes Selection"
+title: "[1-2] AtCoder Beginners Selection"
 ---
 
 [AtCoder Beginners Selection](https://atcoder.jp/contests/abs) (ABS) の 10 問 を解きます。これが解けたら、演習込みで Haskell に入門できたと言って良いでしょう。
