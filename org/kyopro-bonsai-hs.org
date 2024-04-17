@@ -7,6 +7,9 @@
 #+LINK: sqrt-decomposition https://cp-algorithms.com/data_structures/sqrt_decomposition.html
 
 * =config.yaml=
+:PROPERTIES:
+:DRAFT:
+:END:
 
 #+BEGIN_SRC yaml :tangle ../books/kyopro-bonsai-hs/config.yaml
 title: "競プロ盆栽.hs"
@@ -33,6 +36,12 @@ price: 0
 <<zenn-headings()>>
 #+END_SRC
 
+* :DRAFT: のテスト
+:PROPERTIES:
+:EXPORT_FILE_NAME: this-is-draft
+:DRAFT:
+:END:
+
 * 始めに
 :PROPERTIES:
 :EXPORT_FILE_NAME: intro
@@ -41,11 +50,6 @@ price: 0
 僕の AtCoder の現状をお届けします。
 
 [[serious][AtCoder ガチ言語 Haskell]] が入門編としたら、こちらはライブラリ整理編、あるいはブログです。
-
-* `StateT` ベースのパーサ
-:PROPERTIES:
-:EXPORT_FILE_NAME: parser
-:END:
 
 * 標準入力と再帰実装
 :PROPERTIES:
@@ -59,6 +63,11 @@ price: 0
 
 - =auto @(Int, String, U.Vector Int)=  
   問題へのリンク
+
+* `StateT` ベースのパーサ
+:PROPERTIES:
+:EXPORT_FILE_NAME: parser
+:END:
 
 * 累積和と群
 SCHEDULED: <2024-02-25 Sun>
