@@ -51,7 +51,7 @@ price: 0
 
 [[serious][AtCoder ガチ言語 Haskell]] が入門編としたら、こちらはライブラリ整理編、あるいはブログです。
 
-* 標準入力と再帰実装
+* 任意のタプルをパースする
 :PROPERTIES:
 :EXPORT_FILE_NAME: stdin
 :END:
@@ -64,7 +64,7 @@ price: 0
 - =auto @(Int, String, U.Vector Int)=  
   問題へのリンク
 
-* `StateT` ベースのパーサ
+* StateT ベースのパーサ
 :PROPERTIES:
 :EXPORT_FILE_NAME: parser
 :END:
