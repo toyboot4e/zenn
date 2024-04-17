@@ -1,0 +1,262 @@
+#+TITLE: 競プロ盆栽.hs
+#+BOOK_DIR: ../books/kyopro-bonsai-hs
+#+PROPERTY: header-args :results output
+#+LINK: serious https://zenn.dev/toyboot4e/books/seriously-haskell
+#+LINK: cojna/iota https://github.com/cojna/iota
+#+LINK: tessoku https://book.mynavi.jp/ec/products/detail/id=131288
+#+LINK: sqrt-decomposition https://cp-algorithms.com/data_structures/sqrt_decomposition.html
+
+* =config.yaml=
+
+#+BEGIN_SRC yaml :tangle ../books/kyopro-bonsai-hs/config.yaml
+title: "競プロ盆栽.hs"
+summary: "Haskell の AtCoder 用自作ライブラリ解説"
+topics: ["haskell", "atcoder"]
+published: false
+price: 0
+#+END_SRC
+
+#+NAME: zenn-headings
+#+BEGIN_SRC elisp
+(princ "chapters:\n")
+
+(org-map-entries
+  (lambda ()
+    (let* ((title (org-entry-get nil "EXPORT_FILE_NAME"))
+           (is-draft (org-entry-get nil "DRAFT")))
+      (when (and title (not is-draft))
+        (princ (concat "- " title "\n")))))
+  "LEVEL=1")
+#+END_SRC
+
+#+BEGIN_SRC yaml :noweb yes :tangle ../books/kyopro-bonsai-hs/config.yaml
+<<zenn-headings()>>
+#+END_SRC
+
+* 始めに
+:PROPERTIES:
+:EXPORT_FILE_NAME: intro
+:END:
+
+僕の AtCoder の現状をお届けします。
+
+[[serious][AtCoder ガチ言語 Haskell]] が入門編としたら、こちらはライブラリ整理編、あるいはブログです。
+
+* `StateT` ベースのパーサ
+:PROPERTIES:
+:EXPORT_FILE_NAME: parser
+:END:
+
+* 標準入力と再帰実装
+:PROPERTIES:
+:EXPORT_FILE_NAME: stdin
+:END:
+
+=auto= 関数の実装
+
+- =auto @(Char, Char)= 
+  [[https://atcoder.jp/contests/abc342/tasks/abc342_c][ABC 342 C - Many Replacement]]
+
+- =auto @(Int, String, U.Vector Int)=  
+  問題へのリンク
+
+* 累積和と群
+SCHEDULED: <2024-02-25 Sun>
+:PROPERTIES:
+:EXPORT_FILE_NAME: csum
+:END:
+
+#+BEGIN_SRC haskell
+import Data.List
+scanl' (+) (0 :: Int) [1, 2, 3, 4, 5]
+#+END_SRC
+
+#+RESULTS:
+: [0,1,3,6,10,15]
+
+* 2 分法と関数渡し
+:PROPERTIES:
+:EXPORT_FILE_NAME: bisect
+:END:
+
+mid
+
+* 尺取り法と unfoldr
+:PROPERTIES:
+:EXPORT_FILE_NAME: two-pointers
+:END:
+
+** Stateless な尺取り法
+
+** Statefull な尺取り法
+
+* 座標変換と行列
+:PROPERTIES:
+:EXPORT_FILE_NAME: transform
+:END:
+
+行列としてを持っておく？
+
+** 原点を中心とする場合
+
+** 長方形を回転させる場合
+
+PAST
+
+*** 座標系の整理
+
+* Mo's algorithm
+:PROPERTIES:
+:EXPORT_FILE_NAME: mo
+:END:
+
+* 場合の数
+:PROPERTIES:
+:EXPORT_FILE_NAME: cases
+:END:
+
+** 組み合わせ
+
+* 整数
+:PROPERTIES:
+:EXPORT_FILE_NAME: integer
+:END:
+
+** 素数列挙
+
+** 素因数分解
+
+** フェルマーの小定理
+
+** 拡張ユークリッドの互助法
+
+** 位取り法、進数変換
+
+Rolling hash と同様に、モノイドで考えるのが良いかも
+
+* 幾何
+:PROPERTIES:
+:EXPORT_FILE_NAME: geom
+:END:
+
+** ベクトル
+
+*** 内積
+
+*** 外積
+
+* セグメント木とモノイド
+:PROPERTIES:
+:EXPORT_FILE_NAME: segtree
+:END:
+
+* 転倒数、辞書順
+:PROPERTIES:
+:EXPORT_FILE_NAME: segtree-algorithms
+:END:
+
+- Chokudai Speedrun 01
+- Chokudai Speedrun 02
+- TDPC のやつ
+
+* グラフ問題
+:PROPERTIES:
+:EXPORT_FILE_NAME: graphs
+:END:
+
+グラフ探索では手続き型プログラミングがおすすめです。
+
+** BFS
+
+** DFS
+
+** Dijkstra
+
+*** 枝刈り
+
+*** Min ヒープ、 Max ヒープ
+
+** 経路復元
+
+** 二部グラフの判定
+
+** トポロジカルソート
+
+** 強連結成分
+
+** Floyd-Warshall
+
+** Bellman-ford
+
+** Kruskall 法 (最小全域木)
+
+* 木
+:PROPERTIES:
+:EXPORT_FILE_NAME: trees
+:END:
+
+** LCA
+
+** 全包囲木 DP
+
+* ネットワークフロー
+:PROPERTIES:
+:EXPORT_FILE_NAME: network-flow
+:END:
+
+* 動的計画法
+:PROPERTIES:
+:EXPORT_FILE_NAME: dp
+:END:
+
+** ナップサック問題と単調増加列
+
+青 diff のやつ
+
+** 集合 DP
+
+*** チーム分けの集合 DP
+
+** 期待値 DP
+
+** 区間 DP
+
+** 挿入 DP
+
+* ダブリングとテーブル
+:PROPERTIES:
+:EXPORT_FILE_NAME: binary-lifting
+:END:
+
+** LCA
+
+* Rolling hash とモノイド
+:PROPERTIES:
+:EXPORT_FILE_NAME: rolling-hash
+:END:
+
+* 遅延セグメント木と半群作用
+:PROPERTIES:
+:EXPORT_FILE_NAME: lazy-segtree
+:END:
+
+** 準同型写像
+
+ACL
+
+** 1 点更新
+
+** 2 分探索
+
+* 平方分割
+:PROPERTIES:
+:EXPORT_FILE_NAME: sqrt-decomposition
+:END:
+
+* 終わりに
+:PROPERTIES:
+:EXPORT_FILE_NAME: end
+:END:
+
+まだ終わってない！
+
