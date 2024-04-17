@@ -10,7 +10,6 @@ New book is composed as one org file, using [[https://zenn.dev/conao3/articles/o
 (defun org-zenn-export-buffer-to-book (&optional org-dir)
     "Runs subtree export to each level 1 headings. Respects `#+BOOK_DIR'."
     (interactive)
-    ;; FIXME: tangle is not working
     (org-babel-tangle)
 
     ;; export all
