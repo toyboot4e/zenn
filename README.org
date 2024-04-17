@@ -40,5 +40,5 @@ The repository structure:
 └── org/
 #+END_SRC
 
-The org book structure is shown in [[./org/kyopro-bonsai.hs]].
+The org book structure is shown in [[./org/kyopro-bonsai-hs.org]].
 
