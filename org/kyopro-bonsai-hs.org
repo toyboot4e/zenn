@@ -6,23 +6,10 @@
 #+LINK: tessoku https://book.mynavi.jp/ec/products/detail/id=131288
 #+LINK: sqrt-decomposition https://cp-algorithms.com/data_structures/sqrt_decomposition.html
 
-* =config.yaml=
-:PROPERTIES:
-:DRAFT:
-:END:
-
-#+BEGIN_SRC yaml :tangle ../books/kyopro-bonsai-hs/config.yaml
-title: "競プロ盆栽.hs"
-summary: "Haskell の AtCoder 用自作ライブラリ解説"
-topics: ["haskell", "atcoder"]
-published: false
-price: 0
-#+END_SRC
+* スクリプト
 
 #+NAME: zenn-headings
 #+BEGIN_SRC elisp
-(princ "chapters:\n")
-
 (org-map-entries
   (lambda ()
     (let* ((title (org-entry-get nil "EXPORT_FILE_NAME"))
@@ -32,9 +19,30 @@ price: 0
   "LEVEL=1")
 #+END_SRC
 
-#+BEGIN_SRC yaml :noweb yes :tangle ../books/kyopro-bonsai-hs/config.yaml
+* =config.yaml=
+:PROPERTIES:
+:DRAFT:
+:END:
+
+#+BEGIN_SRC yaml :tangle ../books/kyopro-bonsai-hs/config.yaml :noweb yes
+title: "競プロ盆栽.hs"
+summary: "Haskell の AtCoder 用自作ライブラリ解説"
+topics: ["haskell", "atcoder"]
+published: false
+price: 0
 <<zenn-headings()>>
 #+END_SRC
+
+#+NAME: test
+#+BEGIN_SRC bash
+echo hello
+#+END_SRC
+
+#+BEGIN_SRC bash :noweb yes
+echo "<<test()>>"
+#+END_SRC
+
+#+RESULTS:
 
 * :DRAFT: のテスト
 :PROPERTIES:
@@ -51,26 +59,74 @@ price: 0
 
 [[serious][AtCoder ガチ言語 Haskell]] が入門編としたら、こちらはライブラリ整理編、あるいはブログです。
 
-* 任意のタプルをパースする
-:PROPERTIES:
-:EXPORT_FILE_NAME: stdin
-:END:
-
-=auto= 関数の実装
-
-- =auto @(Char, Char)= 
-  [[https://atcoder.jp/contests/abc342/tasks/abc342_c][ABC 342 C - Many Replacement]]
-
-- =auto @(Int, String, U.Vector Int)=  
-  問題へのリンク
-
-* StateT ベースのパーサ
+* C++ 風のパーサ (StateT)
 :PROPERTIES:
 :EXPORT_FILE_NAME: parser
 :END:
 
+競技プログラミングにおいては [[https://cpprefjp.github.io/reference/iostream.html][C++ の =iostream=]] のように、
+
+#+BEGIN_SRC cpp
+int n m;
+cin >> n >> m;
+#+END_SRC
+
+** 最小構成のパーサ
+
+** =IO= モナドについて
+
+*** 標準出力を =MonadIO=
+
+* グラフ問題
+:PROPERTIES:
+:EXPORT_FILE_NAME: graphs
+:END:
+
+グラフ探索では手続き型プログラミングがおすすめです。
+
+** BFS
+
+** DFS
+
+** Dijkstra
+
+*** 枝刈り
+
+*** Min ヒープ、 Max ヒープ
+
+** 経路復元
+
+** 二部グラフの判定
+
+** トポロジカルソート
+
+** 強連結成分
+
+** Floyd-Warshall
+
+** Bellman-ford
+
+** Kruskall 法 (最小全域木)
+
+* n 次元 vector
+:PROPERTIES:
+:EXPORT_FILE_NAME: ix-vector
+:END:
+
+** =Ix=
+
+* 動的計画法
+:PROPERTIES:
+:EXPORT_FILE_NAME: dp
+:END:
+
+** 畳み込み
+
+ナップサック問題を始めとした DP の問題は畳み込みによって解くことができます。
+
+** =constructN= 
+
 * 累積和と群
-SCHEDULED: <2024-02-25 Sun>
 :PROPERTIES:
 :EXPORT_FILE_NAME: csum
 :END:
@@ -82,6 +138,10 @@ scanl' (+) (0 :: Int) [1, 2, 3, 4, 5]
 
 #+RESULTS:
 : [0,1,3,6,10,15]
+
+** =+!= 演算子
+
+** 2 次元累積和
 
 * 2 分法と関数渡し
 :PROPERTIES:
@@ -113,11 +173,6 @@ mid
 PAST
 
 *** 座標系の整理
-
-* Mo's algorithm
-:PROPERTIES:
-:EXPORT_FILE_NAME: mo
-:END:
 
 * 場合の数
 :PROPERTIES:
@@ -168,56 +223,26 @@ Rolling hash と同様に、モノイドで考えるのが良いかも
 - Chokudai Speedrun 02
 - TDPC のやつ
 
-* グラフ問題
-:PROPERTIES:
-:EXPORT_FILE_NAME: graphs
-:END:
-
-グラフ探索では手続き型プログラミングがおすすめです。
-
-** BFS
-
-** DFS
-
-** Dijkstra
-
-*** 枝刈り
-
-*** Min ヒープ、 Max ヒープ
-
-** 経路復元
-
-** 二部グラフの判定
-
-** トポロジカルソート
-
-** 強連結成分
-
-** Floyd-Warshall
-
-** Bellman-ford
-
-** Kruskall 法 (最小全域木)
-
 * 木
 :PROPERTIES:
 :EXPORT_FILE_NAME: trees
 :END:
-
 ** LCA
-
 ** 全包囲木 DP
-
+** HLD (Heavy-Light Decomposition)
 * ネットワークフロー
 :PROPERTIES:
 :EXPORT_FILE_NAME: network-flow
 :END:
 
+** 最大流
+
+** 最小費用流
+
 * 動的計画法
 :PROPERTIES:
 :EXPORT_FILE_NAME: dp
 :END:
-
 ** ナップサック問題と単調増加列
 
 青 diff のやつ
@@ -257,9 +282,31 @@ ACL
 
 ** 2 分探索
 
-* 平方分割
+* 平方分割 (sqrt decomposition)
 :PROPERTIES:
 :EXPORT_FILE_NAME: sqrt-decomposition
+:END:
+
+* Mo's algorithm
+:PROPERTIES:
+:EXPORT_FILE_NAME: mo
+:END:
+
+* 区間を set で管理するテクニック
+:PROPERTIES:
+:EXPORT_FILE_NAME: range-map
+:END:
+
+区間を map で管理するテクニック
+
+* NTT (Number-Theorical Transform)
+:PROPERTIES:
+:EXPORT_FILE_NAME: ntt
+:END:
+
+* CHT (Convex Hull Trick)
+:PROPERTIES:
+:EXPORT_FILE_NAME: cht
 :END:
 
 * 終わりに
