@@ -49,7 +49,7 @@ dfsIM gr vStart = inner (0 :: Int) IM.empty vStart
         im' = IM.insert v1 d im
 ```
 
-ここで `State` モナドを使用した場合、 `forM` で書けるため単純になります:
+ここで `State` モナドを使用した場合、隣接頂点の訪問を `forM` で書けるため単純になります:
 
 ```hs
 import Control.Monad

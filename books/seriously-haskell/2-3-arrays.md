@@ -21,7 +21,7 @@ title: "[2-3] 📜 array の使い方"
 | [`Array`]    | Boxed           | x    | 任意のデータ型、特にタプルやリスト   |
 | [`UArray`]   | Unboxed         | o    | `Int`, `Double`, `Bool`, `Char` など |
 
-## 3. [`MArray`] (Mutable Arra)
+## 3. [`MArray`] (Mutable Array)
 
 可変配列の API が型クラス [`MArray`] です。 [`MArray`] を実装するデータ型は、モナドの種類 (IO/ST モナド) と boxed/unboxed かで 4 種類に分けられます。 `IO` モナドは `main` 関数の直下で使用できますから、横着したい時に便利です。 `ST` (state thread) モナドを使うと、区切られた一部のコードで可変変数を使用できます (純粋な文脈でも使用できて便利です) 。 やはりパフォーマンスのため、可能な限り unboxed なデータ型 ([`IOUArray`] および [`STUArray`]) を使います。
 
