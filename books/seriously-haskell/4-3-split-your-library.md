@@ -35,7 +35,7 @@ AtCoder においては単一の `Main.hs` ファイルを提出します。自�
 
 GHC は Haskell に言語拡張という形で新しい構文を追加しています。たとえば `import .. qualified as ..` という構文は [ImportQualifiedPost](https://ghc.gitlab.haskell.org/ghc/doc/users_guide/exts/import_qualified_post.html#extension-ImportQualifiedPost) という言語拡張であり、 [GHC 2021] によって自動的に有効化されます。
 
-[`ghc-lib-parser`] は GHC 自体が使用するパーサですから、こうした最新の構文にすべて対応しています。 [`haskell-src-exts`] は開発が停止しており。 `MultiWayIf` や `ImportQualifiedPost` には対応していません。
+[`ghc-lib-parser`] は GHC 自体が使用するパーサですから、こうした最新の構文にすべて対応しています。 [`haskell-src-exts`] は開発が停止しており、 `MultiWayIf` や `ImportQualifiedPost` には対応していません。
 
 ### 関数定義を 1 行にフォーマットする
 

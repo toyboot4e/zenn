@@ -2,7 +2,7 @@
 title: "[2-3] 2. IArray の使い方"
 ---
 
-[`IArray`] の主な API は [`!` 演算子][`!`] および [`accumArray`] です。それぞれ多次元配列への 1 点アクセスと多次元畳み込みの関数です。配列全体をイテレートする際には配列をリストに変換します。配列の一部をイテレートする際には、添字のリストを配列のリストに写します。
+[`IArray`] の主な API は [`!` 演算子][`!`] および [`accumArray`] です。それぞれ多次元配列への 1 点アクセスと多次元畳み込みの関数です。配列全体をイテレートする際には配列をリストに変換します。配列の一部をイテレートする際には、添字のリストを配列中の値のリストに写します。
 
 # [`IArray`] への 1 点アクセス
 
@@ -73,14 +73,14 @@ main = do
 array ((0,0),(3,3)) [((0,0),3),((0,1),1),((0,2),4),((0,3),1),((1,0),5),((1,1),9),((1,2),2),((1,3),6),((2,0),5),((2,1),3),((2,2),5),((2,3),8),((3,0),9),((3,1),7),((3,2),9),((3,3),3)]
 ```
 
-Row-major 行列を作成したことが確認できました。 `elems` の出力が見やすいと思うので、以降では `elems` で配列の中身を確認することにします。
+Row-major 行列を作成したことが確認できました。デバッグ時には `elems` を使うと比較的見やすいと思います。
 
 ## 解く
 
 後は行・列ごとに和を用意して解くことができます。解答例にリンクしておきます。
 
 - リスト内包表記を使って走査しました。 `map` を使っても良いと思います。
-- [`listArray`] は型クラス [`IArray`] に対する関数であるため、配列型のインスタンスを確定させるため `@UArray` を書きました。
+- [`listArray`] は型クラス [`IArray`] に対する関数であるため、配列型を `@UArray` で指定しました。
 
 https://atcoder.jp/contests/typical90/submissions/48521367
 
@@ -169,9 +169,9 @@ ghci> elems $ accumArray @Array (flip (:)) [] (0, 3) [(0, 1), (3, 2), (0, 3)]
 > 一応 `(:)` 関数の型を確認すると:
 >
 > ```hs
-> ghci> ghci> :t (:)
+> ghci> :t (:)
 > (:) :: a -> [a] -> [a]
-> ghci> ghci> :t flip (:)
+> ghci> :t flip (:)
 > flip (:) :: [a] -> a -> [a]
 > ```
 
@@ -241,20 +241,7 @@ main = do
 
 よく配列に入れたくなるデータ型としては [`ModInt`](https://atcoder.github.io/ac-library/production/document_ja/modint.html) があります。 `ModInt` のようなユーザー定義型を `UArray` に保存するためには、 `IArray` や `MArray` といった型クラスを実装する必要があります。
 
-しかし型クラス `IArray` は、中の関数が公開されていません。したがって **新たにデータ型を `UArray` に保存することはできません** 。タプルも `UArray` には保存できません。
-
-```hs:IArray.hs
-module Data.Array.IArray (
-    -- * Array classes
-    IArray,     -- :: (* -> * -> *) -> * -> class
-```
-
-> `Monoid` などの型クラスは中の関数まで公開されているため、新たな instance を作成できます:
-> ```hs:Monoid.hs
-> module Data.Monoid (
->         -- * 'Monoid' typeclass
->         Monoid(..),
-> ```
+これらの実装例としては [meooow25/haccepted](https://github.com/meooow25/haccepted) の [Array.hs](https://github.com/meooow25/haccepted/blob/e3400fe3e07070f9d71a37844796fdf7448d6639/src/Array.hs#L69) (および [MInt.hs](https://github.com/meooow25/haccepted/blob/e3400fe3e07070f9d71a37844796fdf7448d6639/src/MInt.hs#L57)) があります。ただタプルを `UArray` に載せたくなった時は、いよいよ `vector` への以降時期かもしれません。
 
 # まとめ
 
