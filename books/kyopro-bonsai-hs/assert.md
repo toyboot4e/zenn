@@ -69,7 +69,7 @@ checkIndex funcName i n
   | otherwise = errorIndex funcName i n
 
 {-# INLINE testIndex #-}
-testIndex :: (HasCallStack) => Int -> Int -> Bool
+testIndex :: Int -> Int -> Bool
 testIndex i n = 0 <= i && i < n
 
 {-# INLINE errorIndex #-}

@@ -79,7 +79,7 @@ class (Monoid f) => SegAct f a where
 [`ac-library-hs`](https://github.com/toyboot4e/ac-library-hs) では、 `SegAct` のサンプルを `Extra` モジュールで提供します。これらのモノイドをテストして行きましょう。
 
 -   [`Affine1.hs`](https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Extra/Monoid/Affine1.hs) ($f: x \rightarrow a x + b$)
--   [`RangeSet`](https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Extra/Monoid/RangeSetId.hs) ($f: x \rightarrow x + a$)
+-   [`RangeSet`](https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Extra/Monoid/RangeSet.hs) ($f: x \rightarrow a$)
 
 
 # 型クラスをテストする
@@ -229,7 +229,7 @@ instance (Monoid a) => Monoid (RangeSet a) where
 
 ## `SegAct` 則をテストする
 
-上記の 4 つの性質をコードで表現します。
+さらに冒頭の 4 つの性質をコードで表現します。
 
 ```haskell
 module Tests.Extra.Monoid (tests) where
@@ -253,16 +253,6 @@ segActLaw p =
       ("Linear Monoid Action", segActLinearMonoidAction p)
     ]
 
-segActIdentity :: forall f a. (SegAct f a, QC.Arbitrary f, Eq f, Show f, Monoid a, Eq a, QC.Arbitrary a, Show a) => Proxy (f, a) -> QC.Property
-segActIdentity _ = myForAllShrink True (const True) desc lhsS lhs rhsS rhs
-  where
-    desc :: a -> [String]
-    desc (a :: a) = ["a = " ++ show a]
-    lhsS = "segAct mempty a"
-    lhs = segAct (mempty @f)
-    rhsS = "a"
-    rhs = id
-
 segActMonoidAction :: forall f a. (SegAct f a, QC.Arbitrary f, Eq f, Show f, Monoid a, Eq a, QC.Arbitrary a, Show a) => Proxy (f, a) -> QC.Property
 segActMonoidAction _ = myForAllShrink True (const True) desc lhsS lhs rhsS rhs
   where
@@ -272,6 +262,16 @@ segActMonoidAction _ = myForAllShrink True (const True) desc lhsS lhs rhsS rhs
     lhs (!f2, !f1, !a) = (f2 <> f1) `segAct` a
     rhsS = "f_2 (f_1 a)"
     rhs (!f2, !f1, !a) = f2 `segAct` (f1 `segAct` a)
+
+segActIdentity :: forall f a. (SegAct f a, QC.Arbitrary f, Eq f, Show f, Monoid a, Eq a, QC.Arbitrary a, Show a) => Proxy (f, a) -> QC.Property
+segActIdentity _ = myForAllShrink True (const True) desc lhsS lhs rhsS rhs
+  where
+    desc :: a -> [String]
+    desc (a :: a) = ["a = " ++ show a]
+    lhsS = "segAct mempty a"
+    lhs = segAct (mempty @f)
+    rhsS = "a"
+    rhs = id
 
 segActEndomorphism :: forall f a. (SegAct f a, QC.Arbitrary f, Eq f, Show f, Monoid a, Eq a, QC.Arbitrary a, Show a) => Proxy (f, a) -> QC.Property
 segActEndomorphism _ = myForAllShrink True (const True) desc lhsS lhs rhsS rhs
