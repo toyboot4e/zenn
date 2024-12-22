@@ -1,5 +1,5 @@
 title: "競プロ盆栽.hs"
-summary: "Haskell の AtCoder 用自作ライブラリ解説"
+summary: "Haskell に AtCoder Library を移植した際のブログです"
 topics: ["haskell", "atcoder"]
 published: true
 price: 0

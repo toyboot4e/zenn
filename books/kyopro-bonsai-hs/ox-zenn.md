@@ -44,12 +44,12 @@ https://github.com/conao3/ox-zenn.el
 * =config.yaml=
 
 #+BEGIN_SRC yaml :tangle ../books/kyopro-bonsai-hs/config.yaml :noweb yes
-:title: "競プロ盆栽.hs"
-:summary: "Haskell の AtCoder 用自作ライブラリ解説"
-:topics: ["haskell", "atcoder"]
-:published: false
-:price: 0
-:chapters:
+title: "競プロ盆栽.hs"
+summary: "Haskell に AtCoder Library を移植した際のブログです"
+topics: ["haskell", "atcoder"]
+published: false
+price: 0
+chapters:
 <<zenn-headings()>>
 #+END_SRC
 
