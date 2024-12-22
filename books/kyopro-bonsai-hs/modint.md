@@ -160,7 +160,7 @@ instance Modulus 998244353 where
 
 ## `pow` ($x^n \bmod m$)
 
-`pow` は繰り返し二乗法により計算します。このように何度も $x \cdot y \bmod m$ を計算する場合は、 Barrrtt reduction や Montgomery 乗算が高速であると知られています。 ACL では Barrett reduction を実施しています:
+`pow` は繰り返し二乗法により計算します。このように何度も $x \cdot y \bmod m$ を計算する場合は、 Barrett reduction や Montgomery 乗算が高速であると知られています。 ACL では Barrett reduction を実施しています:
 
 ```haskell
 {-# INLINE pow #-}
@@ -168,7 +168,9 @@ pow :: forall a. (HasCallStack, KnownNat a) => ModInt a -> Int -> ModInt a
 pow (ModInt x0) n0 = ModInt . fromIntegral $ inner n0 1 (fromIntegral x0)
   where
     !_ = ACIA.runtimeAssert (0 <= n0) $ "AtCoder.ModInt.pow: given negative exponential `n`: " ++ show n0 ++ show "`"
+    -- Barrett reduction の前計算
     bt = ACIBT.new64 $ fromIntegral (natVal' (proxy# @a))
+    -- 繰り返し二乗法
     inner :: Int -> Word64 -> Word64 -> Word64
     inner !n !r !y
       | n == 0 = r
