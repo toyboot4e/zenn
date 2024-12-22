@@ -30,7 +30,7 @@ newtype ModInt a = ModInt {unModInt :: Word32}
 -   [`GHC.TypeNats`](https://hackage.haskell.org/package/base-4.21.0.0/docs/GHC-TypeNats.html): `natVal` 関数で `Nat` 型に復元できます
 -   [`GHC.TypeLits`](https://hackage.haskell.org/package/base-4.21.0.0/docs/GHC-TypeLits.html): `natVal` 関数で `Integer` 型に復元できます
 
-いずれも `KnownNat (n :: Nat)` が内部的に `Nat` 型で定義されていることから、 [`GHC.TypeNats`](https://hackage.haskell.org/package/base-4.21.0.0/docs/GHC-TypeNats.html) を使ったほうがパフォーマンス面では無難なようです。参考:
+いずれも `KnownNat (n :: Nat)` が内部的に `Nat` 型で定義されていることから、 [`GHC.TypeNats`](https://hackage.haskell.org/package/base-4.21.0.0/docs/GHC-TypeNats.html) を使った方がパフォーマンス面では無難なようです。参考:
 
 https://zenn.dev/mod_poppo/articles/playing-with-visible-forall#%E5%9E%8B%E3%82%AF%E3%83%A9%E3%82%B9
 
@@ -125,9 +125,7 @@ instance (Modulus p) => Fractional (ModInt p) where
   fromRational q = fromInteger (numerator q) / fromInteger (denominator q)
 ```
 
-`recip` の実装は、 ACL の実装に合わせて法が素数で分岐します。 ACL はコンパイル時に分岐していますが、 `ac-library-hs` の `ModInt` では実行時に分岐しています。
-
-法が素数の場合は [フェルマーの小定理](https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A7%E3%83%AB%E3%83%9E%E3%83%BC%E3%81%AE%E5%B0%8F%E5%AE%9A%E7%90%86) により $x^{-1} \equiv x^{p-2} \mod m$ です:
+`recip` の実装は、 ACL の実装に合わせて法が素数かで分岐します。 ACL はコンパイル時に分岐していますが、 `ac-library-hs` の `ModInt` では実行時に分岐しています。法が素数の場合は [フェルマーの小定理](https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A7%E3%83%AB%E3%83%9E%E3%83%BC%E3%81%AE%E5%B0%8F%E5%AE%9A%E7%90%86) により $x^{-1} \equiv x^{p-2} \mod m$ です:
 
 ```haskell
 {-# INLINE inv #-}
@@ -157,7 +155,7 @@ instance Modulus 998244353 where
   primitiveRootModulus _ = 3
 ```
 
-新しい `Modulus` のインスタンスは orphan instance になりますが、ほぼ定義することは無く問題無いでしょう。
+新しい `Modulus` のインスタンスは orphan instance になりますが、ほぼ定義することは無いため問題無いでしょう。
 
 
 ## `pow` ($x^n \bmod m$)
@@ -189,7 +187,7 @@ https://natsugiri.hatenablog.com/entry/2020/04/06/030559
 
 # 簡易ベンチマーク結果
 
-[`cojna/iota`](https://github.com/cojna/iota) を参考に、 [`criterion`](https://hackage.haskell.org/package/criterion) で各演算の実行速度の差を比較しました。入力値はランダムです。結果の雰囲気だけお伝えします。
+[`cojna/iota`](https://github.com/cojna/iota) を参考に、 [`criterion`](https://hackage.haskell.org/package/criterion) で各演算の実行速度を比較しました。入力値はランダムです。結果の雰囲気だけお伝えします。
 
 
 ## `(+)`
@@ -219,12 +217,12 @@ Barrett reduction 等の準備計算の時間を除外して 10,000 回 mulMod �
 10,000 回 powMod (繰り返し二乗法) を計算しました。
 
 -   Barrett reduction > Montgomery 乗算 > Barredd reduction (64) の順で速かったです。
--   いずれも下準備のコストがあるため、 `powMod` ほど `rem` を圧倒しません。
+    -   いずれも下準備のコストがあるため、 `powMod` ほど `rem` を圧倒しません。
 -   [`(^)`](https://hackage.haskell.org/package/base-4.21.0.0/docs/Prelude.html#v:-94-) が普通の `powerRem` よりも速かったです。今気づきましたが、 `(^)` の繰り返し二乗法の実装をコピーすれば、今より `pow` を高速化できる可能性があります。
 
-> なお、 ACL における `modint.hpp` の [`pow`](https://github.com/atcoder/ac-library/blob/fe9b6fca9ab4e1be946ea23a4e6a2a751cf4aaa2/atcoder/modint.hpp#L95) はなぜか Barrett reduction を実施していません。報告・確認した方が良いでしょうか……？
+> なお本家 ACL の `modint.hpp` の [`pow`](https://github.com/atcoder/ac-library/blob/fe9b6fca9ab4e1be946ea23a4e6a2a751cf4aaa2/atcoder/modint.hpp#L95) ではなぜか Barrett reduction を実施していません。報告・確認した方が良いでしょうか……？
 
 
 ## まとめ
 
-遅過ぎない程度に `ModInt` を高速化したつもりです。本当は `convolution` 全体の速度がどう変わるかを比較しなければ評価し、特に Haskell では特殊化うんぬんで
+ベンチマークテストを確認しつつ、遅過ぎない程度に `ModInt` を高速化したつもりです。本当は `convolution` 全体の速度を比較する必要があり、特に Haskell では特殊化うんぬんで速度が変わります。

@@ -224,7 +224,7 @@ instance (Monoid a) => Monoid (RangeSet a) where
   mconcat (a : _) = a
 ```
 
-これもよくある間違いです。
+これもよく盲点になります。
 
 
 ## `SegAct` 則をテストする
