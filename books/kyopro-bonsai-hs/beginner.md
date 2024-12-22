@@ -44,7 +44,7 @@ inner l r !smL !smR
 
 Haskell で可変変数を扱うためには、 `IO` か `ST` モナドを使います。これらは可変変数の入ったヒープ領域全体を載せた `State` モナドのような表現になります。したがって可変変数へのアクセスは `IO` / `ST` から値を取り出す形になります。
 
-このような `IO` モナドでは、何でもできる『チートモード』はなりません。たとえば可変長配列 ([GrowVec.hs](https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Internal/GrowVec.hs)) を作った際は、可変配列へのポインタ (`MVector`) 自体を書き換え可能にするため、 `MVector` を [`MutVar`](https://hackage.haskell.org/package/primitive-0.9.0.0/docs/Data-Primitive-MutVar.html) に包む必要がありました。使いにくい上にパフォーマンスも落ちます。でもそれを含めて面白い！
+このような `IO` モナドでは、何でもできる『チートモード』にはなりません。たとえば可変長配列 ([GrowVec.hs](https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Internal/GrowVec.hs)) を作った際は、可変配列へのポインタ (`MVector`) 自体を書き換え可能にするため、 `MVector` を [`MutVar`](https://hackage.haskell.org/package/primitive-0.9.0.0/docs/Data-Primitive-MutVar.html) に包む必要がありました。使いにくい上にパフォーマンスも落ちます。でもそれを含めて面白いです。
 
 
 # まとめ
