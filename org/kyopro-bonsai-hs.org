@@ -113,7 +113,7 @@ inner l r !smL !smR
 
 Haskell で可変変数を扱うためには、 =IO= か =ST= モナドを使います。これらは可変変数の入ったヒープ領域全体を載せた =State= モナドのような表現になります。したがって可変変数へのアクセスは =IO= / =ST= から値を取り出す形になります。
 
-このような =IO= モナドでは、何でもできる『チートモード』はなりません。たとえば可変長配列 ([[https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Internal/GrowVec.hs][GrowVec.hs]]) を作った際は、可変配列へのポインタ (=MVector=) 自体を書き換え可能にするため、 =MVector= を [[https://hackage.haskell.org/package/primitive-0.9.0.0/docs/Data-Primitive-MutVar.html][=MutVar=]] に包む必要がありました。使いにくい上にパフォーマンスも落ちます。でもそれを含めて面白い！
+このような =IO= モナドでは、何でもできる『チートモード』にはなりません。たとえば可変長配列 ([[https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Internal/GrowVec.hs][GrowVec.hs]]) を作った際は、可変配列へのポインタ (=MVector=) 自体を書き換え可能にするため、 =MVector= を [[https://hackage.haskell.org/package/primitive-0.9.0.0/docs/Data-Primitive-MutVar.html][=MutVar=]] に包む必要がありました。使いにくい上にパフォーマンスも落ちます。でもそれを含めて面白いです。
 
 ** まとめ
 
@@ -789,7 +789,7 @@ tests =
   ]
 #+END_SRC
 
-当然失敗します。ここで入力値が表示しますが、 **左辺と右辺の値は表示されません** 。改善します。
+当然失敗します。エラーメッセージに入力値が表示しますが、 **左辺と右辺の値は表示されません** 。改善して行きます。
 
 #+BEGIN_SRC sh
 example: FAIL
@@ -1112,7 +1112,7 @@ Test suite ac-library-hs-test: FAIL
 
 1. モノイド作用: $(f_2 \circ f1) * x = f_2 * (f1 * x)$
 2. 恒等写像: $f^0 * x = x$
-3. 自己同型写像: $f (x1 \cdot x2) = (f * x1) \cdot (f * x2)$
+3. 自己同型写像: $f * (x1 \cdot x2) = (f * x1) \cdot (f * x2)$
 
 #+BEGIN_QUOTE
 [[https://en.wikipedia.org/wiki/Semigroup_action#Formal_definitions][半群作用の wiki]] を参考に見様見真似で書いてみました。不正確でしたらすみません。
@@ -1134,7 +1134,7 @@ class (Monoid f) => SegAct f a where
   segAct :: f -> a -> a
 #+END_SRC
 
-上記の 3 つの性質をコードにすれば、以下の性質を満たす必要があります:
+上記の 3 つの性質をコードにすれば、以下の等式が成り立つ必要があります:
 
 1. ~(f2 <> f1) `segAct` x == f2 `segAct` (f1 `segAct` x)~
 2. ~(mempty @f) `segAct` x == x~
@@ -1182,7 +1182,7 @@ class (Monoid f) => SegAct f a where
 
 [[=ac-library-hs=][=ac-library-hs=]] では、 =SegAct= のサンプルを =Extra= モジュールで提供します。これらのモノイドをテストして行きましょう。
 
-- [[https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Extra/Monoid/Affine1.hs][=Affine1.hs=]] ($f: x \rightarrow a \dot x + b$)
+- [[https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Extra/Monoid/Affine1.hs][=Affine1.hs=]] ($f: x \rightarrow a x + b$)
 - [[https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Extra/Monoid/RangeSetId.hs][=RangeSet=]] ($f: x \rightarrow x + a$)
 
 ** 型クラスをテストする
@@ -1394,7 +1394,7 @@ segActLinearMonoidAction _ = myForAllShrink True (const True) desc lhsS lhs rhsS
     rhs (QC.Positive !len, !f, !a) = stimes len (segAct f a)
 #+END_SRC
 
-これがやりたかったんですねー。やりました。
+これがやりたかったんですねー。やりました。 =tests= に追加してテストできます。
 
 ** まとめ
 
@@ -1402,7 +1402,7 @@ segActLinearMonoidAction _ = myForAllShrink True (const True) desc lhsS lhs rhsS
 
 モノイド則や恒等写像が間違っていたり、作用の対象のインスタンスを =Num a= のように広く取り過ぎていたことに気付きました。非常に有意義なテストになりました。
 
-コンテストの本番では、もう少しポータブルな関数で PBT できると良さそうです。
+コンテスト本番では、もう少しポータブルな関数で PBT できると良さそうです。
 
 * 遅くない ModInt
 :PROPERTIES:
@@ -1527,9 +1527,7 @@ instance (Modulus p) => Fractional (ModInt p) where
   fromRational q = fromInteger (numerator q) / fromInteger (denominator q)
 #+END_SRC
 
-=recip= の実装は、 ACL の実装に合わせて法が素数で分岐します。 ACL はコンパイル時に分岐していますが、 =ac-library-hs= の =ModInt= では実行時に分岐しています。
-
-法が素数の場合は [[https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A7%E3%83%AB%E3%83%9E%E3%83%BC%E3%81%AE%E5%B0%8F%E5%AE%9A%E7%90%86][フェルマーの小定理]] により $x^{-1} \equiv x^{p-2} \mod m$ です:
+=recip= の実装は、 ACL の実装に合わせて法が素数かで分岐します。 ACL はコンパイル時に分岐していますが、 =ac-library-hs= の =ModInt= では実行時に分岐しています。法が素数の場合は [[https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A7%E3%83%AB%E3%83%9E%E3%83%BC%E3%81%AE%E5%B0%8F%E5%AE%9A%E7%90%86][フェルマーの小定理]] により $x^{-1} \equiv x^{p-2} \mod m$ です:
 
 #+BEGIN_SRC haskell
 {-# INLINE inv #-}
@@ -1559,7 +1557,7 @@ instance Modulus 998244353 where
   primitiveRootModulus _ = 3
 #+END_SRC
 
-新しい =Modulus= のインスタンスは orphan instance になりますが、ほぼ定義することは無く問題無いでしょう。
+新しい =Modulus= のインスタンスは orphan instance になりますが、ほぼ定義することは無いため問題無いでしょう。
 
 *** =pow= ($x^n \bmod m$)
 
@@ -1593,7 +1591,7 @@ https://natsugiri.hatenablog.com/entry/2020/04/06/030559
 
 ** 簡易ベンチマーク結果
 
-[[https://github.com/cojna/iota][=cojna/iota=]] を参考に、 [[https://hackage.haskell.org/package/criterion][=criterion=]] で各演算の実行速度の差を比較しました。入力値はランダムです。結果の雰囲気だけお伝えします。
+[[https://github.com/cojna/iota][=cojna/iota=]] を参考に、 [[https://hackage.haskell.org/package/criterion][=criterion=]] で各演算の実行速度を比較しました。入力値はランダムです。結果の雰囲気だけお伝えします。
 
 *** =(+)=
 
@@ -1626,16 +1624,16 @@ Barrett reduction 等の準備計算の時間を除外して 10,000 回 mulMod �
 10,000 回 powMod (繰り返し二乗法) を計算しました。
 
 - Barrett reduction > Montgomery 乗算 > Barredd reduction (64) の順で速かったです。
-- いずれも下準備のコストがあるため、 =powMod= ほど =rem= を圧倒しません。
+  - いずれも下準備のコストがあるため、 =powMod= ほど =rem= を圧倒しません。
 - [[https://hackage.haskell.org/package/base-4.21.0.0/docs/Prelude.html#v:-94-][=(^)=]] が普通の =powerRem= よりも速かったです。今気づきましたが、 =(^)= の繰り返し二乗法の実装をコピーすれば、今より =pow= を高速化できる可能性があります。
 
 #+BEGIN_QUOTE
-なお、 ACL における =modint.hpp= の [[https://github.com/atcoder/ac-library/blob/fe9b6fca9ab4e1be946ea23a4e6a2a751cf4aaa2/atcoder/modint.hpp#L95][=pow=]] はなぜか Barrett reduction を実施していません。報告・確認した方が良いでしょうか……？
+なお本家 ACL の =modint.hpp= の [[https://github.com/atcoder/ac-library/blob/fe9b6fca9ab4e1be946ea23a4e6a2a751cf4aaa2/atcoder/modint.hpp#L95][=pow=]] ではなぜか Barrett reduction を実施していません。報告・確認した方が良いでしょうか……？
 #+END_QUOTE
 
 *** まとめ
 
-遅過ぎない程度に =ModInt= を高速化したつもりです。本当は =convolution= 全体の速度がどう変わるかを比較しなければ評価し、特に Haskell では特殊化うんぬんで
+ベンチマークテストを確認しつつ、遅過ぎない程度に =ModInt= を高速化したつもりです。本当は =convolution= 全体の速度を比較する必要があり、特に Haskell では特殊化うんぬんで速度が変わります。
 
 * 終わりに
 :PROPERTIES:
@@ -1644,13 +1642,13 @@ Barrett reduction 等の準備計算の時間を除外して 10,000 回 mulMod �
 
 Haskell と競技プログラミング。いずれも単品で手を出すのは難しいですが、両方同時に始めると +倍難しい+ 不思議と両方進捗します。競プロができないときは Haskell を、 Haskell ができないときには競プロを、と交互に進捗を積み重ねていくと、意外と前に進める気がします。
 
-これは僕に若干乱視があることも影響しており、斜めを見れば真っ直ぐ進めるようになっています。より大きな流れとしては、 Haskell をやることによって本命の目的、理想のゲームプログラミング環境に近づいているのです。本当です、二年半停滞したわけではないんです！
+これは僕に若干乱視があることも影響しており、斜めを見れば真っ直ぐ進めるようになっています。より大きな流れとしては、 Haskell をやることによって本命の目的、理想のゲームプログラミング環境に近づいているのです。本当なんです！
 
 [[https://qiita.com/advent-calendar/2024/haskell][今年の Haskell Advent Calendar]] でも Zenn Book を投稿し、今回はブログ形式としました。奇跡的に文脈が合う人がいれば、読んでもらえるでしょうか……？　上手く行けば来年から AtCodre で [[=ac-library-hs=][=ac-library-hs=]] が使えるようになりますから、書いた僕自身が一番楽しみにしています。また昨年の投稿から、エフェクト・ヒューリスティック等々の課題は未消化で終わってしまいましたが、来年の自分にこそ期待したいと思います。
 
-それでは今年もありがとうございました。残りのカレンダー記事も楽しみです。
+それでは今年もありがとうございました。残りのカレンダー記事も楽しみです。良い年末を！
 
-良い年末を〜 🎉 λ 🎉 λ 🎉
+🎉 λ 🎉 λ 🎉 λ 🎉 λ 🎉 ハッピーラムダー
 
 * 付録 A. ox-zenn.el
 :PROPERTIES:
@@ -1667,7 +1665,7 @@ https://zenn.dev/conao3/articles/ox-zenn-usage
 
 *** 見出しの見え方
 
-=org-mode= 上の見出しの並びがそのまま Zenn Book と対応します。ファイル名の順番は Zenn の表示順と一致しなくて不便でしたが、 =ox-zenn.el= のおかげで大層便利になりました。
+=org-mode= 上の見出しの並びがそのまま Zenn Book と対応します。 =.md= ファイル名のソート順は Zenn の表示順と不一致で不便でしたが、 =ox-zenn.el= のおかげで大層便利になりました。
 
 #+BEGIN_EXPORT markdown
 ![ox-zenn.el](/images/kyopro-bonsai-hs/ox-zenn.png)
