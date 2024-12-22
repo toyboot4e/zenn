@@ -25,7 +25,7 @@
 title: "競プロ盆栽.hs"
 summary: "Haskell の AtCoder 用自作ライブラリ解説"
 topics: ["haskell", "atcoder"]
-published: false
+published: true
 price: 0
 chapters:
 <<zenn-headings()>>
@@ -53,15 +53,15 @@ chapters:
 
 これは [[https://github.com/atcoder/ac-library][AtCoder Library (ACL)]] を Haskell に移植した際の *ブログ* です。 [[https://github.com/toyboot4e/ac-library-hs][ac-library-hs]] の開発をダシに、競プロ文脈で Haskell を学ぶとこうなる、という具体例を延々とやって行きます。
 
-『競プロ盆栽』というタイトルですが、 *Haskeller 向けの投稿* です。競プロ er で読みに来てくれた人がいたら、すみません！　お求めの物ではないかもしれません。お詫びに λ をお送りします。 / λ λ λ λ λ λ λ / ﾗﾑﾀﾞｲｯﾁｮｰ
+『競プロ盆栽』というタイトルですが、 *Haskeller 向けの投稿* です。競プロ er で読みに来てくれた方、お求めの物ではないかもしれません。お詫びに λ をお送りします。 / λ λ λ λ λ λ λ / ﾗﾑﾀﾞｲｯﾁｮｰ
 
-難度感としては、『Haskellで戦う競技プログラミング 第2版』を熟読した (or する) ぐらいの人が読めると思います。 [[https://hackage.haskell.org/package/primitive-0.9.0.0/docs/Control-Monad-Primitive.html#t:PrimMonad][=PrimMonad=]] が使える／興味があるぐらいの人にちょうど良いかと思います。
+難度感としては、『Haskellで戦う競技プログラミング 第2版』を熟読した (or する) ぐらいの人が読めると思います。 [[https://hackage.haskell.org/package/primitive-0.9.0.0/docs/Control-Monad-Primitive.html#t:PrimMonad][=PrimMonad=]] が使える／興味があるぐらいの人にちょうどいいです。
 
 #+BEGIN_EXPORT markdown
 https://booth.pm/ja/items/1577541
 #+END_EXPORT
 
-また投稿の内容はブログであり、技術情報の還元ではなく、僕が調べた・考えたことのごった煮になります。「そうそうそう」と頷ける部分があれば、「これは違う！」と嘆かれることもありそうですが、いかんせんコンテンツの少ない界隈ですので、お楽しみ頂ける部分があれば幸いです。
+また投稿の内容はブログであるため、僕が調べた・考えた内容のごった煮になります。「そうそうそう」と頷ける部分があれば、「これは違う！」と嘆かれることもありそうですが、いかんせんコンテンツの少ない界隈ですので、お楽しみ頂ける部分があれば幸いです。
 
 ** 動作環境
 
@@ -81,16 +81,16 @@ https://booth.pm/ja/items/1577541
 
 何が面白いかと言えば、一言で言えば『純粋関数型プログラミング』です。 Haskell には、手続き型言語における =for= 文、 =return= 文のような制御構文と、可変変数がありません。代わりにクロージャを使い、しかも死ぬほどネストします。
 
-** 純粋関数型の面白いところ
+** 純粋関数型の手続き的プログラミング
 
 *** 1. 関数の出力を関数の入力に繋ぐ
 
-もしも凄そうな響きがあったら、説明が悪かっただけなので忘れてください。とにかく最近僕が楽しいのは、次のような普通のコードを書くことです。
+もしも凄そうな響きがあったら、説明が悪いだけなのでご勘弁ください。ともかく最近の僕は Haskell で書く普通の手続き的プログラミングに夢中になっています。
 
-たとえばループ処理です。無駄にゴツいコードで申し訳ないのですが、セグメント木の区間取得のコードになります。
+たとえばループ処理です。セグメント木の区間取得が以下になります:
 
 #+BEGIN_SRC haskell
--- [l, r] 区間のモノイドの積を取得する
+-- [l, r] 区間のモノイド積を取得する
 inner l r !smL !smR
   | l > r = pure $! smL <> smR
   | otherwise = do
@@ -107,21 +107,19 @@ inner l r !smL !smR
       inner ((l + 1) .>>. 1) ((r - 1) .>>. 1) smL' smR'
 #+END_SRC
 
-こうしたループ処理の面白い点は、状態を引数として持っている点です。末尾の =inner= 関数呼び出しで、 =inner= 関数の出力が次の =inner= 関数呼び出しの入力になります。このように、前の関数から次の関数へ値を渡す処理が繰り替えされて、プログラム全体が構成されるのが面白いです。
+こうしたループ処理の面白い点は、状態を引数として持っている点です。末尾の =inner= 関数呼び出しで、この =inner= 関数の出力が次の =inner= 関数呼び出しの入力になります。このように、前の関数から次の関数へ値を渡す処理が繰り返されて、プログラム全体が構成されるのが面白いです。
 
 *** 2. あくまで可変変数は無い
 
-Haskell の可変変数はヒープ領域にあります。スタック領域に置けるのは、ヒープ領域へのポインタです。ヒープ領域からデータを取り出す際には、 =ST= または =IO= モナドを介します。
+Haskell で可変変数を扱うためには、 =IO= か =ST= モナドを使います。これらは可変変数の入ったヒープ領域全体を載せた =State= モナドのような表現になります。したがって可変変数へのアクセスは =IO= / =ST= から値を取り出す形になります。
 
-=IO= や =ST= モナドは、可変変数の入ったヒープ領域全体を載せた =State= モナドのような表現です。ヒープの中身は変化しますが、スタック上の変数はすべて immutable ですし、ヒープの中からデータを取り出すためには =IO= / =ST= モナドを介する必要があります。
-
-したがって =IO= モナドは何でもできる『チートモード』にはなりません。たとえば可変長配列 ([[https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Internal/GrowVec.hs][GrowVec.hs]]) を作った際には、可変配列へのポインタ (=MVector=) 自体を書き換え可能にするために、 [[https://hackage.haskell.org/package/primitive-0.9.0.0/docs/Data-Primitive-MutVar.html][=MutVar=]] に包みました。使いにくい上にパフォーマンスも落ちます。でも面白い！
+このような =IO= モナドでは、何でもできる『チートモード』はなりません。たとえば可変長配列 ([[https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Internal/GrowVec.hs][GrowVec.hs]]) を作った際は、可変配列へのポインタ (=MVector=) 自体を書き換え可能にするため、 =MVector= を [[https://hackage.haskell.org/package/primitive-0.9.0.0/docs/Data-Primitive-MutVar.html][=MutVar=]] に包む必要がありました。使いにくい上にパフォーマンスも落ちます。でもそれを含めて面白い！
 
 ** まとめ
 
-純粋関数型言語における普通の手続き型プログラミングを振り返りました。以前は『手続き的なコードを書くようになったから Haskell を使っている意味が無い』と考えていましたが、今は手続き的なコードにも十分に純粋関数型の特性が現れているように思います (※ ポジショントークです) 。
+Haskell における手続き的プログラミングへの興味関心を振り返りました。以前は『手続き的なコードを書くようになったから Haskell を使っている意味が無い』と考えていましたが、今は手続き的なコードにも十分に純粋関数型の特性が現れているように思います (※ ポジショントークです) 。このように普通の Haskell を書きながら、値の受け渡しを感覚するのに夢中になっています。
 
-Haskell が良い、役に立つというような観点は特に持っていないのですが、『純粋関数型プログラミングならばこう表現せざるを得ない』というような事情が見えるのがとても楽しいです。
+Haskell が良い、役に立つというような観点は特に持っていないのですが、『純粋関数型プログラミングにおいてはこのように表現せざるを得ない』という事情が見えるのが楽しいです。
 
 * State ベースのパーサ
 :PROPERTIES:
@@ -130,7 +128,7 @@ Haskell が良い、役に立つというような観点は特に持っていな
 
 ** 標準入力をパースする
 
-競技プログラミングでは、通常、標準入力として入力データが与えられます。 [[=ac-library-hs=][=ac-library-hs=]] においては、簡単なパーサ ([[https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/verify/src/Util.hs][=Util.hs=]]) を用意して [[https://atcoder.jp/contests/practice2][AtCoder Library Practice Contest]] の問題を解きました。モチベーションと共に、パーサの内容を解説します。
+競技プログラミングでは入力値が標準入力として与えられるため、プレイヤーが自力でパースする必要があります。 [[=ac-library-hs=][=ac-library-hs=]] の開発においては、簡単なパーサ ([[https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/verify/src/Util.hs][=Util.hs=]]) を用意して [[https://atcoder.jp/contests/practice2][AtCoder Library Practice Contest]] の問題を解いて動作確認しました。パーサ作成のモチベーションと共に、パーサの内容を解説します。
 
 ** 入力の先読み
 
@@ -139,11 +137,11 @@ Haskell が良い、役に立つというような観点は特に持っていな
 - クエリ種別 0: =0 l r b c=
 - クエリ種別 1: =1 l r=
 
-いずれも 5 値のタプル、つまり [[https://hackage.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Unboxed.html#t:Unbox][=Unbox=]] なデータ型にパースして =vector= に保存したいとします。そのため各行一単語目のクエリ種別 (=0= または =1=) を見て分岐する必要があります。しかし Haskell においては、行単位 ([[https://hackage.haskell.org/package/bytestring-0.12.2.0/docs/Data-ByteString.html#v:getLine][=getLine=]]) でしか標準入力を取得できません。対策を考えます。
+いずれも 5 値のタプル、つまり [[https://hackage.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Unboxed.html#t:Unbox][=Unbox=]] なデータ型にパースして =vector= に保存したいとします。そのため各行一単語目のクエリ種別 (=0= または =1=) を見て分岐する必要があります。しかし Haskell では単語単位で標準入力を取得する (手軽な) 方法が無く、細かくしても行単位 ([[https://hackage.haskell.org/package/bytestring-0.12.2.0/docs/Data-ByteString.html#v:getLine][=getLine=]]) の取得となります。対策を考えます。
 
 *** リストを経由する方法
 
-定型的なテンプレートで処理する方法としは、一度リストにパースしてから、タプルに変換することができます。やや釈然としませんが、無難に動作します。
+定型的なテンプレートで処理する方法として、一度リストとして取得してからタプルに変換できます。やや釈然としませんが、無難に動作します。
 
 テンプレート部分は以下です:
 
@@ -191,7 +189,7 @@ if (t == 0) {
 }
 #+END_SRC
 
-Haskell においても =scanf= / =cin= が欲しいと思うと、 [[https://hackage.haskell.org/package/mtl-2.3.1/docs/Control-Monad-State-Strict.html][=Stete=]] モナドを使うのが近いです。標準入力をバッファ (=Stete= モナド) に入れて、単語単位で読み取っていきます。
+Haskell においても =scanf= / =cin= が欲しいと思うと、 [[https://hackage.haskell.org/package/mtl-2.3.1/docs/Control-Monad-State-Strict.html][=Stete=]] モナドを使うのが近いです。標準入力をバッファ (=Stete= モナド) に読み出して、単語単位で読み取っていきます。
 
 パーサ型を以下とします:
 
@@ -212,7 +210,7 @@ withLine :: (HasCallStack) => Parser a -> IO a
 withLine f = fromJust . evalStateT f <$> BS.getLine
 #+END_SRC
 
-クエリ部分では、次のようにパースできます:
+クエリの部分を次のようにパースできます:
 
 #+BEGIN_SRC haskell
   qs <- VU.replicateM q $ do
@@ -243,21 +241,25 @@ charP :: Parser Char
 charP = StateT $ BS.uncons . BS.dropSpace
 #+END_SRC
 
-すると次のように、 =charP=, =intP= を組み合わせて =(Char, Int)= のパーサを作って使用できます:
+すると次のように =charP=, =intP= を組み合わせて =(Char, Int)= のパーサを作って使用できます:
 
 #+BEGIN_SRC haskell
-!movements <- U.replicateM m (withLine ((,) <$> charP <*> intP))
+!movements <- U.replicateM m $ withLine ((,) <$> charP <*> intP)
 #+END_SRC
 
-これは格好いい！　しかも即席のパーサによって、ほぼ任意の入力を処理できます。
+これは格好いい！　しかもパーサの合成により、競技プログラミングで与えられるような入力はほぼすべて処理できることが分かります。
 
 ** まとめ
 
-[[https://hackage.haskell.org/package/mtl-2.3.1/docs/Control-Monad-State-Strict.html][=Stete=]] モナドを作って簡易パーサを作成しました。初めて他の競技者がパーサの合成しているのを見たときは、かなりぐっと来たのを覚えています。実際に使用してみると、格好良さと実用性が両立したスタイルだと思います。
+[[https://hackage.haskell.org/package/mtl-2.3.1/docs/Control-Monad-State-Strict.html][=Stete=]] モナドを作って簡易パーサを作成しました。初めて他の競技者がパーサの合成しているのを見たときは、かなりぐっと来たのを覚えています。実際に使用してみると、格好良さと実用性が両立したスタイルで良いと思います。
 
 なおライブラリとしては、パーサ (=*P=) に [[https://hackage.haskell.org/package/mtl-2.3.1/docs/Control-Monad-State-Class.html#t:MonadState][=MonadState=]] を使ったほうが良さそうです。たとえば標準入力全体を =Stete= モナドに載せておけば、 =withLine= などを経由せず、直にパーサを呼び出しできるようになります。
 
 #+BEGIN_SRC haskell
+main' :: StateT BS.ByteString IO ()
+main' = do
+  {- .. -}
+
 main :: IO ()
 main = evalStateT main' =<< BS.getContents
 #+END_SRC
@@ -275,7 +277,7 @@ main = evalStateT main' =<< BS.getContents
 
 ** 継続モナド (=Cont= モナド)
 
-=transfomer= の [[https://hackage.haskell.org/package/transformers-0.6.1.2/docs/Control-Monad-Trans-Cont.html][=Control.Monad.Trans.Cont=]] は僅か 250 行。リッチなソース解説も、ございます！　ありがとうございます！
+[[https://hackage.haskell.org/package/transformers][=transformers=]] の 継続モナド ([[https://hackage.haskell.org/package/transformers-0.6.1.2/docs/Control-Monad-Trans-Cont.html][=Control.Monad.Trans.Cont=]]) は僅か 250 行。リッチなソース解説も、ございます！　ありがとうございます！
 
 #+BEGIN_EXPORT html
 https://qiita.com/sparklingbaby/items/2eacabb4be93b9b64755
@@ -283,7 +285,7 @@ https://qiita.com/sparklingbaby/items/2eacabb4be93b9b64755
 
 *** =callCC= の使い方
 
-=callCC= の仕組みは理解できていないのですが、試しに使用してみます。たとえば $2^n \ge x$ を満たす $2^n$ を求める関数があります:
+仕組みは理解していませんが、 =callCC= を使ってみます。たとえば $2^n \ge x$ を満たす $2^n$ を求める関数があります:
 
 #+BEGIN_SRC hs
 -- >>> calc1 14
@@ -333,14 +335,22 @@ calc2' x0 = (`execState` (1 :: Int)) $ evalContT $ callCC $ \exit -> do
 - [[https://hackage.haskell.org/package/mtl-2.3.1/docs/Control-Monad-Cont.html#t:MonadCont][=MonadCont=]] は =StateT= に対して実装されています。
 - [[https://hackage.haskell.org/package/primitive-0.9.0.0/docs/Control-Monad-Primitive.html][=PrimMonad=]] でも =PrimMonad m => PrimMonad (ContT r m)= が提供されており、たとえば =ContT () (ST s)= は =PrimMonad= を実装します。
 
-** =callCC= が活きる問題
+*** =callCC= が活きる問題
 
-たとえば [[https://atcoder.jp/contests/abc345/tasks/abc345_d][ABC 345 - D]] で大域脱出が大活躍します。継続モナドを使用した場合、コードは /比較的/ 整理がつきましたが、実行速度は約 3 倍になりました。
+[[https://atcoder.jp/contests/abc345/tasks/abc345_d][ABC 345 - D]] は枝刈りが本質的な計算量の改善に繋がる問題で、大域脱出が大活躍します。継続モナドを使用した場合、コードは /比較的/ 整理がつきましたが、実行速度は約 3 倍になりました:
 
 - [[https://atcoder.jp/contests/abc345/submissions/51371574][継続モナド使用前 (91 ms)]]
 - [[https://atcoder.jp/contests/abc345/submissions/51521918][継続モナド使用時 (281 ms)]]
 
-[[https://atcoder.jp/contests/abc345/submissions/51403780][cojna さんの提出]] は 60 ms です。 =callCC= を使っていますが、めちゃめちゃ速い！　=ContT= の使い方は、この提出から学ばせてもらいました。ありがとうございます。
+=callCC= は =ST= モナドと併せて使用しています:
+
+#+BEGIN_SRC haskell
+solve :: (HasCallStack) => Int -> Int -> U.Vector (Int, Int) -> Bool
+solve h w tiles = runST $ evalContT $ callCC $ \exit -> do
+  {- ゴチャゴチャな実装は省略…… -}
+#+END_SRC
+
+[[https://atcoder.jp/contests/abc345/submissions/51403780][cojna さんの提出]] は 60 ms です。 =callCC= を使っていますが、めちゃめちゃ速い！　この提出から =ContT= の使い方を学ばせてもらいました。非常に助かっています。
 
 ** まとめ
 
@@ -385,30 +395,33 @@ merge dsu@Dsu {..} a b = stToPrim $ do
 
 最近試した [[https://www.purescript.org/][PureScript]] では、大まかに言って部分関数が禁止されていました。部分関数を書いた場合は [[https://pursuit.purescript.org/packages/purescript-partial/1.2.0/docs/Partial.Unsafe#v:unsafePartial][=unsafePartial=]] 越しに呼ぶことになるため、 +屈辱です+ 代わりに =Maybe= や =Either= を使った全域関数が主になります。
 
-一方 Haskell では部分関数が書き放題です。 [[=ac-library-hs=][=ac-library-hs=]] も、 /比較的/ ACL に忠実なライブラリであるとして、部分関数を主に据えてリリース予定でした。しかし今一度全域関数を検討します。競プロ用ライブラリとしての手軽さと、全域関数の便利さを両取りすれば良さそうです。
+一方 Haskell では部分関数が書き放題です。 [[=ac-library-hs=][=ac-library-hs=]] も、 /比較的/ ACL に忠実なライブラリであるとして、部分関数を主に据えてリリース予定でした。しかし今一度全域関数を検討したくなりました。お手本として =vector= パッケージを参照します。
 
 *** test, error, assert を分ける
 
-お手本として =vector= パッケージを参照します。やはり [[https://hackage.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Generic-Mutable.html#v:readMaybe][=readMaybe=]] のように、全域関数も用意するのが無難な線です。上の =merge= の例では、次のように 3 つの関数に分けたいです:
+やはり [[https://hackage.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Generic-Mutable.html#v:readMaybe][=readMaybe=]] のように、全域関数も用意するのが無難な線です。上の =merge= の例では、次のように 3 つの関数に分けてしまいたいです:
 
 #+BEGIN_SRC haskell
+-- Int を返す
 merge :: (HasCallStack, PrimMonad m) => Dsu (PrimState m) -> Int -> Int -> m Int
 merge dsu a b
   | not (testIndex a nDsu) = errorIndex a nDsu
   | not (testIndex b nDsu) = errorIndex b nDsu
   | otherwise = unsafeMerge dsu a b
 
+-- Maybe Int を返す
 mergeMaybe :: (HasCallStack, PrimMonad m) => Dsu (PrimState m) -> Int -> Int -> m (Maybe Int)
 mergeMaybe dsu a b
   | not (testIndex a nDsu) = pure Nothing
   | not (testIndex b nDsu) = pure Nothing
   | otherwise = Just <$> unsafeMerge dsu a b
 
+-- Int を返す (境界チェック無し)
 mergeMaybe :: (HasCallStack, PrimMonad m) => Dsu (PrimState m) -> Int -> Int -> m Int
 mergeMaybe dsu a b = { .. }
 #+END_SRC
 
-必然的に、 =checkIndex= (assertion) も =checkIndex=, =testIndex=, =errorIndex= に分かれます。単純な例ではありますが、こうした構造の整理が盆栽の醍醐味だと思います:
+必然的に =checkIndex= (assertion) は =checkIndex=, =testIndex=, =errorIndex= に分かれます。単純な例ではありますが、こうした構造の整理が盆栽の醍醐味だと思います:
 
 #+BEGIN_SRC haskell
 {-# INLINE checkIndex #-}
@@ -427,13 +440,15 @@ errorIndex funcName i n =
   error $ funcName ++ ": given invalid index `" ++ show i ++ "` over length `" ++ show n ++ "`"
 #+END_SRC
 
+#+BEGIN_QUOTE
 競プロ縛りだと普通の Haskell プログラミングに飢えてきて、普通のプログラミングを『盆栽』と称している可能性はあります。
+#+END_QUOTE
 
 *** 本当に全域関数を追加するのか
 
-部分関数を 3 つの関数 (部分関数、全域関数、 unsafe 関数) に分けて行くと、ドキュメントが分厚くなるのが嫌です。 =vector= パッケージにおいても、 =exchange= や =modify= などには全域関数がありません。用途が少ない関数は省略して良さそうです。
+部分関数を 3 つの関数 (部分関数、全域関数、 unsafe 関数) に分けて行くと、ドキュメントが分厚くなるのが嫌です。 =vector= パッケージにおいても、 =exchange= や =modify= などには全域関数がありませんから、用途が少ない関数は省略して良さそうです。
 
-重要な全域関数のみを追加してみます。経験上、区間取得がよくエラーになるため、セグメント木の =prod= 関数などを対象に =*Maybe= シリーズを作ります。他は随時検討します。
+重要な全域関数のみを追加してみます。経験上、区間取得がよくエラーになるため、セグメント木の =prod= 関数などを対象に =*Maybe= シリーズを作成します。他は随時検討します。
 
 それにしても、自分の作ったライブラリが PureScript 的に出来損ないだと思うのは悲しいです。いずれ全域関数縛りのお作法も学ばなければなりませんね。
 
@@ -476,7 +491,7 @@ main = do
   doctest ["-isrc", "src/"]
 #+END_SRC
 
-=cabal test= からの実行は、色々大変そうで諦めました ([[https://github.com/toyboot4e/ac-library-hs/issues/19][#19]]) 。どうも =Setup.hs= が必要な雰囲気です。
+=cabal test= からの実行は、色々大変そうで諦めました ([[https://github.com/toyboot4e/ac-library-hs/issues/19][#19]]) 。どうも =Setup.hs= が必要な雰囲気です。雰囲気とか言って流しても良いのがブログ……！
 
 **** 3. HLS による実行
 
@@ -493,11 +508,11 @@ f :: Int -> Int
 f = (* 2)
 #+END_SRC
 
-僕のエディタ上では以下のように code lens が表示します。現状、 [[https://github.com/haskell/haskell-language-server/issues/496][eval plugin の code action が無い]] そうなので、 code lens を有効化しましょう。僕は無効化していて気づきませんでした……:
+僕のエディタ上では以下のように code lens が表示します。現状、 [[https://github.com/haskell/haskell-language-server/issues/496][eval plugin の code action が無い]] そうなので、 code lens を有効化しましょう:
 
 #+BEGIN_EXPORT markdown
 ![Emacs](/images/kyopro-bonsai-hs/hls-eval-1.png =269x)
-*Emacs*
+*Evaluate が表示しました。僕は code lens を無効化していて気づきませんでした*
 #+END_EXPORT
 
 Evaluate をクリックすると、次のように =doctest= の評価結果が表示します。
@@ -534,20 +549,26 @@ haskell.packages.ghc983.doctest
 haskell.packages.ghc983.implicit-hie
 #+END_SRC
 
-入れたコマンドは以下の 4 つです:
+これで GHC と共にコマンドのバージョンが切り替わるようになりました。入れたコマンドは以下の 4 つです:
 
 #+BEGIN_EXPORT markdown
 1. [cabal-fmt](https://github.com/phadej/cabal-fmt)
-  `cabal-fmt -i ac-library-hs.cabal` のようにフォーマットできます。
-1. [cabal-plan](https://github.com/haskell-hvr/cabal-plan)
+  `cabal-fmt -i ac-library-hs.cabal` のように `.cabal` を整形できます。
+2. [cabal-plan](https://github.com/haskell-hvr/cabal-plan)
   `cabal-plan info` で今使っているパッケージのバージョン確認などができます。
-1. [`doctest`](https://github.com/sol/doctest)
+3. [`doctest`](https://github.com/sol/doctest)
   `cabal repl --with-ghc=doctest` で `doctest` を実施できます。
-1. [`implicit-hie`](https://github.com/Avi-D-coder/implicit-hie)
+4. [`implicit-hie`](https://github.com/Avi-D-coder/implicit-hie)
   `gen-hie > hie.yaml` を実行して初めて HLS が動作する場合があります。
 #+END_EXPORT
 
-*** おまけ: [[https://github.com/haskell/cabal/issues/1179][すべての警告を表示する]] には
+** Goldten test (snapshots test)
+
+Rust の [[https://docs.rs/insta/latest/insta/][insta]] クレートは、テストプログラムの標準出力をファイル保存しておき、再実行時に diff が見れるライブラリです。 Snapshots test を名乗っています。自作言語の作成時には、構文木の pretty printer などと組み合わせて重宝するようです。
+
+Haskell 界隈で snapshots test は [[https://ro-che.info/articles/2017-12-04-golden-tests][golden test]] として知られています。今回の =checkIndex= 関数のテストは [[https://github.com/sol/doctest][=doctest=]] で十分だったため試していません ([[https://github.com/toyboot4e/ac-library-hs/issues/17][#17]]) が、利用機会が楽しみです。
+
+** おまけ: [[https://github.com/haskell/cabal/issues/1179][すべての警告を表示する]] には
 
 以下のコマンドが (比較的) 速いようです。
 
@@ -555,11 +576,9 @@ haskell.packages.ghc983.implicit-hie
 $ cabal build --ghc-options="-fforce-recomp -fno-code"
 #+END_SRC
 
-** Goldten test (snapshots test)
+** まとめ
 
-Rust の [[https://docs.rs/insta/latest/insta/][insta]] クレートは、テストプログラムの標準出力をファイル保存しておき、再実行時に diff が見れるライブラリです。 Snapshots test を名乗っています。自作言語の作成時には、構文木の pretty printer などと組み合わせて重宝するようです。
-
-Haskell 界隈で snapshots test は [[https://ro-che.info/articles/2017-12-04-golden-tests][golden test]] として知られています。今回の =checkIndex= 関数のテストは [[https://github.com/sol/doctest][=doctest=]] で十分だったため試していません ([[https://github.com/toyboot4e/ac-library-hs/issues/17][#17]]) が、利用機会が楽しみです。
+添字外チェックの assert 文を共通化し、エラーメッセージの =doctest= を実施しました。 HLS の eval plugin は code lens として表示されるので、これを使ってどんどんテストして行きましょう。インクリメンタルな開発にも貢献します。
 
 * インクリメンタルな開発
 :PROPERTIES:
@@ -570,13 +589,13 @@ Haskell 界隈で snapshots test は [[https://ro-che.info/articles/2017-12-04-g
 
 [[=ac-library-hs=][=ac-library-hs=]] の開発は、言ってしまえばただの写経です。本家 [[https://github.com/atcoder/ac-library][=ac-library=]] のコードを右から左へ書き写すだけ。楽勝でした！
 
-色々バグが出て大変でした。特に酷かったのは最小費用流で、大きな関数を何度も一から読み直しました。デバッグに一週間かかり、 *先にテストを書くべきだった* と痛感しました。しかも馬鹿らしくなるほど単純なもので十分でした。
+実際は、色々バグが出て大変でした。特に酷かったのは最小費用流で、大きな関数を一から何度も読み直して確認しました。デバッグに一週間かかり、 *先にテストを書くべきだった* と痛感しました。しかも馬鹿らしくなるほど単純なもので十分でした。
 
 ** [[https://github.com/UnkindPartition/tasty][=tasty=]] のセットアップ
 
 Haskell のテストフレームワークは [[https://github.com/UnkindPartition/tasty][=tasty=]] が主流と思います。 2013 年当時は [[https://blog.ocharles.org.uk/posts/2013-12-03-24-days-of-hackage-tasty.html][=test-framework= が普及していた]] ようですが、メンテナンス困難になり [[https://github.com/UnkindPartition/tasty][=tasty=]] が生まれたとか。
 
-[[https://github.com/UnkindPartition/tasty][=tasty=]] は Haskell 界では珍しく README が充実しています。ツールはドキュメント性で選べば間違い無いと思いますから、 [[https://github.com/UnkindPartition/tasty][=tasty=]] には安心感があります。開発者ブログも面白い。
+[[https://github.com/UnkindPartition/tasty][=tasty=]] は Haskell 界では珍しく README が充実しています。ツールはドキュメント性で選べば間違い無いと思いますから、 [[https://github.com/UnkindPartition/tasty][=tasty=]] には安心感があります。開発者ブログも面白いです。
 
 *** =ac-library-hs.cabal=
 
@@ -628,7 +647,7 @@ main =
 
 *** =tests/Internal/MinHeap.hs=
 
-ここで作成したテストは、自作の =MinHeap= が本当に昇順で値を取り出すかを確認します:
+ここで作成したテストは、自作の =MinHeap= が本当に昇順で値を取り出すか確認します:
 
 #+BEGIN_SRC haskell
 module Tests.Internal.MinHeap (tests) where
@@ -694,7 +713,7 @@ $ cabal test --test-option --rerun
 
 [[https://hackage.haskell.org/package/HUnit][=hunit=]] は僅か 739 行の単体テストのライブラリです。主に =assert= 相当の関数と演算子を提供します。 [[https://hackage.haskell.org/package/tasty-hunit][=tasty-hunit=]] が本家 [[https://hackage.haskell.org/package/HUnit][=hunit=]] の内容を re-export しているため、 [[https://hackage.haskell.org/package/tasty-hunit][=tasty-hunit=]] のみを見れば良いと思います。
 
-[[https://github.com/atcoder/ac-library][=ac-library=]] (C++) の単体テストは assertion であるため、主に [[https://hackage.haskell.org/package/tasty-hunit][=tasty-hunit=]] で移植しました。 [[https://hackage.haskell.org/package/tasty-hunit-0.10.2/docs/Test-Tasty-HUnit.html#v:-64--63--61-][~@=?~]] の使用頻度が高かったです。
+[[https://github.com/atcoder/ac-library][=ac-library=]] (C++) の単体テストは assertion であるため、主に [[https://hackage.haskell.org/package/tasty-hunit][=tasty-hunit=]] で移植しました。 [[https://hackage.haskell.org/package/tasty-hunit-0.10.2/docs/Test-Tasty-HUnit.html#v:-64--63--61-][~@=?~]] による assert の使用頻度が高かったです。
 
 #+BEGIN_SRC haskell
 module Tests.Dsu (tests) where
@@ -716,7 +735,7 @@ tests =
   ]
 #+END_SRC
 
-[[https://hackage.haskell.org/package/HUnit][=hunit=]] はテスト用ライブラリとしては小さ過ぎます。たとえば [[https://hackage.haskell.org/package/tasty-hunit-0.10.2/docs/Test-Tasty-HUnit.html#v:assertEqual][=assertEqual=]] があって =assertNotEqual= はありません。また例外発生を予期したテストを書く仕組みもありません。そのため [[https://hspec.github.io/hunit.html][=hunit= の上に作られた]] という [[https://hackage.haskell.org/package/hspec][=hspec=]] も使います。
+[[https://hackage.haskell.org/package/HUnit][=hunit=]] はテスト用ライブラリとしては小さ過ぎます。たとえば [[https://hackage.haskell.org/package/tasty-hunit-0.10.2/docs/Test-Tasty-HUnit.html#v:assertEqual][=assertEqual=]] に対して =assertNotEqual= がありません。また例外発生を予期したテストを書く仕組みもありません。そのため [[https://hspec.github.io/hunit.html][=hunit= の上に作られた]] という [[https://hackage.haskell.org/package/hspec][=hspec=]] も使います。
 
 *** [[https://hackage.haskell.org/package/hspec][=hspec=]], [[https://hackage.haskell.org/package/tasty-hspec][=tasty-hspec=]]
 
@@ -745,7 +764,7 @@ tests =
   ]
 #+END_SRC
 
-[[https://hackage.haskell.org/package/tasty-hspec-1.2.0.4/docs/Test-Tasty-Hspec.html#g:3][Examples]] にある通り、ここでの =unsafePerformIO= には他のテストへの副作用が無いため、 =perfectly fine= です。もう少しシンプルに =TestTree= に組み込めないかという気はしますが……。また使い方の割に依存が大きかったため、 =hunit= に合わせて =assertException= のような関数を作るだけでも良かった気はします。
+[[https://hackage.haskell.org/package/tasty-hspec-1.2.0.4/docs/Test-Tasty-Hspec.html#g:3][Examples]] にある通り、ここでの =unsafePerformIO= には他のテストへの副作用が無いため問題ありません。もう少しシンプルに =tasty= の =TestTree= に組み込めないかという気はしますが……。また使い方の割に依存が大きかったため、 =hunit= に合わせて =assertException= のような関数を作るだけでも十分だった気はします。
 
 *** [[https://hackage.haskell.org/package/QuickCheck][=QuickCheck=]], [[https://hackage.haskell.org/package/tasty-quickcheck-0.11][=tasty-quickcheck=]]
 
@@ -770,7 +789,7 @@ tests =
   ]
 #+END_SRC
 
-当然失敗します。ここで入力値が表示されますが、 **左辺と右辺の値が表示されません** 。改善します。
+当然失敗します。ここで入力値が表示しますが、 **左辺と右辺の値は表示されません** 。改善します。
 
 #+BEGIN_SRC sh
 example: FAIL
@@ -782,7 +801,7 @@ example: FAIL
 #+END_SRC
 
 #+BEGIN_QUOTE
-なお verbose check にすれば通過ケースや shrink の過程も確認できます。 QuickCheck を読む時は shrink 周辺が見どころですね。
+なお verbose check にすれば通過ケースや shrink の過程も確認できます。 QuickCheck のソースを読む時は shrink 周辺が見どころですね。
 
 #+BEGIN_SRC sh
 $ cabal test --test-options '--quickcheck-verbose'
@@ -804,7 +823,7 @@ example: FAIL
 
 **** エラー表示を詳細に
 
-テスト失敗時のカスタムメッセージを指定する関数が [[https://hackage.haskell.org/package/QuickCheck-2.15.0.1/docs/Test-QuickCheck.html#v:counterexample][=counterexample=]]  です。判例 (counterexample) の詳細を表示するということですね:
+テスト失敗時のカスタムメッセージを指定する関数が [[https://hackage.haskell.org/package/QuickCheck-2.15.0.1/docs/Test-QuickCheck.html#v:counterexample][=counterexample=]]  です。判例 (counterexample) の詳細を示すということですね:
 
 #+BEGIN_SRC haskell
 prop_example :: [Int] -> QC.Property
@@ -815,7 +834,7 @@ prop_example xs = QC.counterexample "error case" $ xs == reverse xs
 
 #+BEGIN_SRC haskell
 example: FAIL
-  ,*** Failed! Falsified (after 4 tests and 2 shrinks):
+  *** Failed! Falsified (after 4 tests and 2 shrinks):
   [0,1]
   error case
   Use --quickcheck-replay="(SMGen 7441833134974059469 3200274122949544035,3)" to reproduce.
@@ -835,7 +854,7 @@ x === y =
     interpret False = " /= "
 #+END_SRC
 
-[[https://hackage.haskell.org/package/QuickCheck-2.15.0.1/docs/Test-QuickCheck.html#v:-61--61--61-][~===~]] を使うと、次のようなエラー表示になります:
+実際に [[https://hackage.haskell.org/package/QuickCheck-2.15.0.1/docs/Test-QuickCheck.html#v:-61--61--61-][~===~]] を使うと、次のようなエラー表示になります:
 
 #+BEGIN_SRC haskell
 prop_example :: [Int] -> QC.Property
@@ -852,7 +871,7 @@ example: FAIL
 1 out of 1 tests failed (0.00s)
 #+END_SRC
 
-欲を言えば、両辺の計算式をそれぞれテキストで表示して、何の式を比較したか一目で確認したいところです。これは『モノイドのテスト』で実施します。
+欲を言えば、両辺の計算式をそれぞれテキストで表示して、何の式を比較したか一目で確認したいところです。これは『モノイドのテスト』の =myForAllShrink= が実現しています。
 
 **** [[https://hackage.haskell.org/package/QuickCheck-2.15.0.1/docs/Test-QuickCheck.html#t:Gen][=Gen=]] モナド
 
@@ -936,11 +955,13 @@ revEdgeDirection n m = QC.monadicIO $ do
       QC.assert $ -costCsr VU.! rev == cost
 #+END_SRC
 
+こうした大雑把なチェックを書くことで開発が速まります。
+
 *** 特定のテストを実行する
 
 =TestTree= の中の特定のテストを実行するため、 =tasty= の [[https://github.com/UnkindPartition/tasty?tab=readme-ov-file#patterns][patterns]] を利用します。開発者ブログ ([[https://ro-che.info/articles/2018-01-08-tasty-new-patterns][New patterns in tasty]]) にあるとおり、 =tasty= の [[https://github.com/UnkindPartition/tasty?tab=readme-ov-file#patterns][patterns]] は AWK のアイデアが元になっています。
 
-AWK と聞いただけで、すべてを理解されたかもしれません。まずテストの一覧を =tasty= の [[https://github.com/UnkindPartition/tasty?tab=readme-ov-file#runtime][=-l=]] オプションで確認します:
+AWK と聞いただけで、すべて理解されたかもしれません。まずテストの一覧を =tasty= の [[https://github.com/UnkindPartition/tasty?tab=readme-ov-file#runtime][=-l=]] オプションで確認します:
 
 #+BEGIN_SRC text
 $ cabal test --test-options '-l'
@@ -1230,7 +1251,7 @@ laws =
 
 *** モノイド則を破っていた
 
-まずは [[https://hackage.haskell.org/package/base-4.21.0.0/docs/Data-Monoid.html#t:Monoid][モノイド則]] をテストしました。
+まずは既存の関数で [[https://hackage.haskell.org/package/base-4.21.0.0/docs/Data-Monoid.html#t:Monoid][モノイド則]] をテストしました。
 
 #+BEGIN_SRC haskell
 module Tests.Extra.Monoid (tests) where
@@ -1304,7 +1325,7 @@ instance (Monoid a) => Monoid (RangeSet a) where
   mconcat (a : _) = a
 #+END_SRC
 
-これもよくある間違いです。
+これもよく盲点になります。
 
 *** =SegAct= 則をテストする
 
@@ -1388,15 +1409,255 @@ segActLinearMonoidAction _ = myForAllShrink True (const True) desc lhsS lhs rhsS
 :EXPORT_FILE_NAME: modint
 :END:
 
+** =ModInt= 型の定義
+
+=ModInt= 型の実装は、畳み込み (=convolution=) の実行速度に直に影響しますから重要です。遅過ぎない程度の高速化を目指しました。
+
+内部データ型は本家 ACL に合わせて =Word32= にしました。 =Int= や =Word64= でも問題ありませんが、長い配列を作る場合は =Word32= の方が高速なのではないかと思います。
+
+#+BEGIN_SRC haskell
+newtype ModInt a = ModInt {unModInt :: Word32}
+  deriving (P.Prim)
+  deriving newtype (Eq, Ord, Read, Show)
+#+END_SRC
+
+早速『思います』と口にしましたが、厳密な確認ができておりません。遅過ぎることはないと思いますが、重要な最適化を逃している可能性はあります。
+
+** 型から整数を復元する
+
+*** =KnownNat= 型
+
+=ModInt a= の型パラメータ =a= は法の値を表します。 =KnownNat= 型にすると =ModInt 998244353= のように型を書けて良さそうです。
+
+=KnownNat= 型は 2 種類あり、以下のモジュールで定義されています:
+
+- [[https://hackage.haskell.org/package/base-4.21.0.0/docs/GHC-TypeNats.html][=GHC.TypeNats=]]: =natVal= 関数で =Nat= 型に復元できます
+- [[https://hackage.haskell.org/package/base-4.21.0.0/docs/GHC-TypeLits.html][=GHC.TypeLits=]]: =natVal= 関数で =Integer= 型に復元できます
+
+いずれも =KnownNat (n :: Nat)= が内部的に =Nat= 型で定義されていることから、 [[https://hackage.haskell.org/package/base-4.21.0.0/docs/GHC-TypeNats.html][=GHC.TypeNats=]] を使った方がパフォーマンス面では無難なようです。参考:
+
+#+BEGIN_EXPORT markdown
+https://zenn.dev/mod_poppo/articles/playing-with-visible-forall#%E5%9E%8B%E3%82%AF%E3%83%A9%E3%82%B9
+#+END_EXPORT
+
+*** =AllowAmbiguousTypes= vs =Tagged= vs =Proxy#=
+
+上のリンク先では、 (主に) 以下の 3 つの方法で型変数 =a= から =Int= を復元する方法が検討されています:
+
+#+BEGIN_SRC haskell
+{-# LANGUAGE GHC2021 #-}
+{-# LANGUAGE AllowAmbiguousTypes #-}
+
+newtype Tagged t a = MkTagged { unTagged :: a }
+
+class Foo a where
+  -- 1. AllowAmbiguousTypes
+  someValueAmb :: Int
+  -- 2. Tagged
+  someValueTagged :: Tagged a Int
+  someValueProxy :: Proxy a -> Int
+#+END_SRC
+
+追加するとしたら =Proyx#= で、 =Proxy= よりは速いはずです:
+
+#+BEGIN_SRC haskell
+  -- 3. Proxy#
+  someValueProxy' :: Proxy# a -> Int
+#+END_SRC
+
+軽くベンチマークした限りでは、 =AllowAmbiguousTypes=, =Proxy=, =Tagged= 間で =ModInt= のパフォーマンスに変化はありませんでした。そのため比較的一般的な =Proxy#= を採用しました。
+
+#+BEGIN_QUOTE
+より複雑なケースが心配で、正直確認まで手が回っていませんが、遅過ぎるということはないでしょう。
+#+END_QUOTE
+
+** 遅過ぎない四則演算 + =pow=
+
+=ModInt= の実装では、とにかく剰余の計算 (=mod=) をしないことが重要です。 ACL を写経して実装しました。
+
+*** =(+)=
+
+=x1 + x2= が法 =m= を超えていたら =m= を引きます:
+
+#+BEGIN_SRC haskell
+{-# INLINE (+) #-}
+(ModInt !x1) + (ModInt !x2)
+  | x' >= m = ModInt $! x' - m
+  | otherwise = ModInt x'
+  where
+    !x' = x1 + x2
+    !m = fromIntegral (natVal' (proxy# @p))
+#+END_SRC
+
+*** =(-)=
+
+=x1 - x2= がアンダーフローした場合に法 =m= を足し直します。ちょっと驚きました:
+
+#+BEGIN_SRC haskell
+{-# INLINE (-) #-}
+(ModInt !x1) - (ModInt !x2)
+  | x' >= m = ModInt $! x' + m
+  | otherwise = ModInt x'
+  where
+    !x' = x1 - x2
+    !m = fromIntegral (natVal' (proxy# @p))
+#+END_SRC
+
+*** =(*)=
+
+=Word64= で計算して =Word32= に戻します。 =mod= 計算を実施しますが、仕方ありません:
+
+#+BEGIN_SRC haskell
+{-# INLINE (*) #-}
+(ModInt !x1) * (ModInt !x2) = ModInt $! fromIntegral (x' `rem` m)
+  where
+    !x' :: Word64 = fromIntegral x1 * fromIntegral x2
+    !m :: Word64 = fromIntegral (natVal' (proxy# @p))
+#+END_SRC
+
+*** =(/)=
+
+=Fractional= クラスの =recip= を通して実装します:
+
+#+BEGIN_SRC haskell
+instance (Modulus p) => Fractional (ModInt p) where
+  {-# INLINE recip #-}
+  recip = inv
+  {-# INLINE fromRational #-}
+  fromRational q = fromInteger (numerator q) / fromInteger (denominator q)
+#+END_SRC
+
+=recip= の実装は、 ACL の実装に合わせて法が素数で分岐します。 ACL はコンパイル時に分岐していますが、 =ac-library-hs= の =ModInt= では実行時に分岐しています。
+
+法が素数の場合は [[https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A7%E3%83%AB%E3%83%9E%E3%83%BC%E3%81%AE%E5%B0%8F%E5%AE%9A%E7%90%86][フェルマーの小定理]] により $x^{-1} \equiv x^{p-2} \mod m$ です:
+
+#+BEGIN_SRC haskell
+{-# INLINE inv #-}
+inv :: forall a. (HasCallStack, Modulus a) => ModInt a -> ModInt a
+inv self@(ModInt x)
+  | isPrimeModulus (proxy# @a) =
+      -- 法が素数の場合
+      let !_ = ACIA.runtimeAssert (x /= 0) "AtCoder.ModInt.inv: tried to perform zero division"
+       in pow self (fromIntegral (natVal' (proxy# @a)) - 2)
+  | otherwise =
+      let (!eg1, !eg2) = ACIM.invGcd (fromIntegral x) $ fromIntegral (natVal' (proxy# @a))
+          !_ = ACIA.runtimeAssert (eg1 == 1) "AtCoder.ModInt.inv: `x^(-1) mod m` cannot be calculated when `gcd x modulus /= 1`"
+       in fromIntegral eg2
+#+END_SRC
+
+高速な素数判定のため、型クラス =Modulus= を定義しました:
+
+#+BEGIN_SRC haskell
+class (KnownNat a) => Modulus a where
+  -- 素数判定
+  isPrimeModulus :: Proxy# a -> Bool
+  -- 原子根を取得 (convolution で使用)
+  primitiveRootModulus :: Proxy# a -> Int
+
+instance Modulus 998244353 where
+  isPrimeModulus _ = True
+  primitiveRootModulus _ = 3
+#+END_SRC
+
+新しい =Modulus= のインスタンスは orphan instance になりますが、ほぼ定義することは無く問題無いでしょう。
+
+*** =pow= ($x^n \bmod m$)
+
+=pow= は繰り返し二乗法により計算します。このように何度も $x \cdot y \bmod m$ を計算する場合は、 Barrrtt reduction や Montgomery 乗算が高速であると知られています。 ACL では Barrett reduction を実施しています:
+
+#+BEGIN_SRC haskell
+{-# INLINE pow #-}
+pow :: forall a. (HasCallStack, KnownNat a) => ModInt a -> Int -> ModInt a
+pow (ModInt x0) n0 = ModInt . fromIntegral $ inner n0 1 (fromIntegral x0)
+  where
+    !_ = ACIA.runtimeAssert (0 <= n0) $ "AtCoder.ModInt.pow: given negative exponential `n`: " ++ show n0 ++ show "`"
+    bt = ACIBT.new64 $ fromIntegral (natVal' (proxy# @a))
+    inner :: Int -> Word64 -> Word64 -> Word64
+    inner !n !r !y
+      | n == 0 = r
+      | otherwise =
+          let r' = if odd n then ACIBT.mulMod bt r y else r
+              y' = ACIBT.mulMod bt y y
+           in inner (n !>>. 1) r' y'
+#+END_SRC
+
+#+BEGIN_QUOTE
+Barrett reduction の実装は省略しますが、 128 bit 整数の実装に [[https://hackage.haskell.org/package/wide-word][=wide-word=]] パッケージを利用しています。
+#+END_QUOTE
+
+一応、次の記事にある 3 つの mod 演算のベンチマークを取ってみましたが、なぜか Barrett reduction が最も高速でした。
+
+#+BEGIN_EXPORT html
+https://natsugiri.hatenablog.com/entry/2020/04/06/030559
+#+END_EXPORT
+
+** 簡易ベンチマーク結果
+
+[[https://github.com/cojna/iota][=cojna/iota=]] を参考に、 [[https://hackage.haskell.org/package/criterion][=criterion=]] で各演算の実行速度の差を比較しました。入力値はランダムです。結果の雰囲気だけお伝えします。
+
+*** =(+)=
+
+#+BEGIN_EXPORT markdown
+![cover](/images/kyopro-bonsai-hs/bench-addMod.png)
+#+END_EXPORT
+
+addMod を 10,000 回計算しました。
+
+- mod 演算を避けたことで 6 倍以上高速化されました。
+- =MagicHash= を使った実装は高速化されていませんでした。
+
+*** =(*)=
+
+#+BEGIN_EXPORT markdown
+![cover](/images/kyopro-bonsai-hs/bench-mulMod.png)
+#+END_EXPORT
+
+Barrett reduction 等の準備計算の時間を除外して 10,000 回 mulMod を計算しました。
+
+- Barrett reduction > Montgomery 乗算 > Barredd reduction (64) の順で速かったです。
+- Barrett reduction は =rem= の 1.5 倍ほど高速化されました。
+
+*** =pow=
+
+#+BEGIN_EXPORT markdown
+![cover](/images/kyopro-bonsai-hs/bench-powMod.png)
+#+END_EXPORT
+
+10,000 回 powMod (繰り返し二乗法) を計算しました。
+
+- Barrett reduction > Montgomery 乗算 > Barredd reduction (64) の順で速かったです。
+- いずれも下準備のコストがあるため、 =powMod= ほど =rem= を圧倒しません。
+- [[https://hackage.haskell.org/package/base-4.21.0.0/docs/Prelude.html#v:-94-][=(^)=]] が普通の =powerRem= よりも速かったです。今気づきましたが、 =(^)= の繰り返し二乗法の実装をコピーすれば、今より =pow= を高速化できる可能性があります。
+
+#+BEGIN_QUOTE
+なお、 ACL における =modint.hpp= の [[https://github.com/atcoder/ac-library/blob/fe9b6fca9ab4e1be946ea23a4e6a2a751cf4aaa2/atcoder/modint.hpp#L95][=pow=]] はなぜか Barrett reduction を実施していません。報告・確認した方が良いでしょうか……？
+#+END_QUOTE
+
+*** まとめ
+
+遅過ぎない程度に =ModInt= を高速化したつもりです。本当は =convolution= 全体の速度がどう変わるかを比較しなければ評価し、特に Haskell では特殊化うんぬんで
+
 * 終わりに
 :PROPERTIES:
 :EXPORT_FILE_NAME: end
 :END:
 
+Haskell と競技プログラミング。いずれも単品で手を出すのは難しいですが、両方同時に始めると +倍難しい+ 不思議と両方進捗します。競プロができないときは Haskell を、 Haskell ができないときには競プロを、と交互に進捗を積み重ねていくと、意外と前に進める気がします。
+
+これは僕に若干乱視があることも影響しており、斜めを見れば真っ直ぐ進めるようになっています。より大きな流れとしては、 Haskell をやることによって本命の目的、理想のゲームプログラミング環境に近づいているのです。本当です、二年半停滞したわけではないんです！
+
+[[https://qiita.com/advent-calendar/2024/haskell][今年の Haskell Advent Calendar]] でも Zenn Book を投稿し、今回はブログ形式としました。奇跡的に文脈が合う人がいれば、読んでもらえるでしょうか……？　上手く行けば来年から AtCodre で [[=ac-library-hs=][=ac-library-hs=]] が使えるようになりますから、書いた僕自身が一番楽しみにしています。また昨年の投稿から、エフェクト・ヒューリスティック等々の課題は未消化で終わってしまいましたが、来年の自分にこそ期待したいと思います。
+
+それでは今年もありがとうございました。残りのカレンダー記事も楽しみです。
+
+良い年末を〜 🎉 λ 🎉 λ 🎉
+
 * 付録 A. ox-zenn.el
 :PROPERTIES:
 :EXPORT_FILE_NAME: ox-zenn
 :END:
+
+** 使用技術 
 
 この投稿は Emacs の [[https://orgmode.org/][org-mode]] で作成し、 [[https://github.com/conao3/ox-zenn.el][=ox-zenn.el=]] により Zeen Markdown に変換して生成しました。
 
@@ -1404,7 +1665,21 @@ segActLinearMonoidAction _ = myForAllShrink True (const True) desc lhsS lhs rhsS
 https://zenn.dev/conao3/articles/ox-zenn-usage
 #+END_EXPORT
 
-具体的には、以下のような =.org= ファイルを自作関数に食わせて、 =config.yaml= や =.md= ファイルを生成しています。
+*** 見出しの見え方
+
+=org-mode= 上の見出しの並びがそのまま Zenn Book と対応します。ファイル名の順番は Zenn の表示順と一致しなくて不便でしたが、 =ox-zenn.el= のおかげで大層便利になりました。
+
+#+BEGIN_EXPORT markdown
+![ox-zenn.el](/images/kyopro-bonsai-hs/ox-zenn.png)
+#+END_EXPORT
+
+#+BEGIN_EXPORT markdown
+https://github.com/conao3/ox-zenn.el
+#+END_EXPORT
+
+*** 全体像
+
+以下のような =.org= ファイルを自作関数に食わせて、 =config.yaml= や =.md= ファイルを生成しています。
 
 #+BEGIN_SRC org
 ,#+TITLE: 競プロ盆栽.hs
@@ -1437,23 +1712,42 @@ https://zenn.dev/conao3/articles/ox-zenn-usage
 ,#+END_SRC
 
 ,* 表紙
-,:PROPERTIES:
-,:EXPORT_FILE_NAME: cover
-,:END:
+:PROPERTIES:
+:EXPORT_FILE_NAME: cover
+:END:
 
 ..
 
 ,* 始めに
-,:PROPERTIES:
-,:EXPORT_FILE_NAME: intro
-,:END:
+:PROPERTIES:
+:EXPORT_FILE_NAME: intro
+:END:
 
 ..
 #+END_SRC
 
-見出しの並びがそのまま Zenn Book と対応します。実際に Book を書くと分かりますが、 slug (ファイル名) で =.md= がソートされると見出しと一致しなくて不便です。 =ox-zenn.el= のおかげで快適に作成できました。
+Export 用の関数は以下です。参考に……なることがあるんでしょうか？:
 
-#+BEGIN_EXPORT markdown
-https://github.com/conao3/ox-zenn.el
-#+END_EXPORT
+#+BEGIN_SRC haskell
+(defun org-zenn-export-buffer-to-book (&optional org-dir)
+    "Runs subtree export to each level 1 heading, respecting `#+BOOK_DIR'."
+    (interactive)
+    ;; tangle `config.yml'
+    (org-babel-tangle)
+    ;; export all the headings
+    (let* ((default-dir default-directory)
+           (pub-dir (car (cdr (car (org-collect-keywords '("BOOK_DIR")))))))
+        ;; cd into the target directory
+        (when pub-dir (cd pub-dir))
+        ;; export all
+        (unwind-protect
+                (org-map-entries
+                 (lambda ()
+                     (let ((exports (org-entry-get nil "EXPORT_FILE_NAME")))
+                         (when exports
+                             (org-zenn-export-to-markdown nil t))))
+                 "LEVEL=1")
+            ;; be sure to come back to the default directory
+            (when pub-dir (cd default-dir)))))
+#+END_SRC
 
