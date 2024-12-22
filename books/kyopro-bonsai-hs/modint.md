@@ -60,7 +60,7 @@ class Foo a where
 someValueProxy' :: Proxy# a -> Int
 ```
 
-軽くベンチマークした限りでは、 `AllowAmbiguousTypes`, `Proxy`, `Tagged` 間で `ModInt` のパフォーマンスに変化はありませんでした。そのため比較的一般的な `Proxy#` を採用しました。
+軽くベンチマークした限りでは、 `AllowAmbiguousTypes`, `Tagged`, `Proxy#` 間で `ModInt` のパフォーマンスに変化はありませんでした。そのため比較的一般的な `Proxy#` を採用しました。
 
 > より複雑なケースが心配で、正直確認まで手が回っていませんが、遅過ぎるということはないでしょう。
 
@@ -87,7 +87,7 @@ someValueProxy' :: Proxy# a -> Int
 
 ## `(-)`
 
-`x1 - x2` がアンダーフローした場合に法 `m` を足し直します。ちょっと驚きました:
+`x1 - x2` がアンダーフローした場合に法 `m` を足し直してオーバーフローさせて戻します。ちょっと驚きました:
 
 ```haskell
 {-# INLINE (-) #-}

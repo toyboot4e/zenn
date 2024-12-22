@@ -294,7 +294,7 @@ segActLinearMonoidAction _ = myForAllShrink True (const True) desc lhsS lhs rhsS
     rhs (QC.Positive !len, !f, !a) = stimes len (segAct f a)
 ```
 
-これがやりたかったんですねー。やりました。 `tests` に追加してテストできます。
+これがやりたかったんですねー。やりました。 `tests` に追加して `SegAct` をテストできます。
 
 
 # まとめ
