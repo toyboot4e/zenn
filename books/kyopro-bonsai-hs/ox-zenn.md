@@ -12,7 +12,7 @@ https://zenn.dev/conao3/articles/ox-zenn-usage
 
 ## 見出しの見え方
 
-`org-mode` 上の見出しの並びがそのまま Zenn Book と対応します。ファイル名の順番は Zenn の表示順と一致しなくて不便でしたが、 `ox-zenn.el` のおかげで大層便利になりました。
+`org-mode` 上の見出しの並びがそのまま Zenn Book と対応します。 `.md` ファイル名のソート順は Zenn の表示順と不一致で不便でしたが、 `ox-zenn.el` のおかげで大層便利になりました。
 
 ![ox-zenn.el](/images/kyopro-bonsai-hs/ox-zenn.png)
 

@@ -9,7 +9,7 @@ title: "モノイドのテスト"
 
 1.  モノイド作用: $(f_2 \circ f1) * x = f_2 * (f1 * x)$
 2.  恒等写像: $f^0 * x = x$
-3.  自己同型写像: $f (x1 \cdot x2) = (f * x1) \cdot (f * x2)$
+3.  自己同型写像: $f * (x1 \cdot x2) = (f * x1) \cdot (f * x2)$
 
 > [半群作用の wiki](https://en.wikipedia.org/wiki/Semigroup_action#Formal_definitions) を参考に見様見真似で書いてみました。不正確でしたらすみません。
 
