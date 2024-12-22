@@ -30,7 +30,7 @@ class (Monoid f) => SegAct f a where
   segAct :: f -> a -> a
 ```
 
-上記の 3 つの性質をコードにすれば、以下の性質を満たす必要があります:
+上記の 3 つの性質をコードにすれば、以下の等式が成り立つ必要があります:
 
 1.  ``(f2 <> f1) `segAct` x == f2 `segAct` (f1 `segAct` x)``
 2.  ``(mempty @f) `segAct` x == x``
@@ -78,7 +78,7 @@ class (Monoid f) => SegAct f a where
 
 [`ac-library-hs`](https://github.com/toyboot4e/ac-library-hs) では、 `SegAct` のサンプルを `Extra` モジュールで提供します。これらのモノイドをテストして行きましょう。
 
--   [`Affine1.hs`](https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Extra/Monoid/Affine1.hs) ($f: x \rightarrow a \dot x + b$)
+-   [`Affine1.hs`](https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Extra/Monoid/Affine1.hs) ($f: x \rightarrow a x + b$)
 -   [`RangeSet`](https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Extra/Monoid/RangeSetId.hs) ($f: x \rightarrow x + a$)
 
 
@@ -294,7 +294,7 @@ segActLinearMonoidAction _ = myForAllShrink True (const True) desc lhsS lhs rhsS
     rhs (QC.Positive !len, !f, !a) = stimes len (segAct f a)
 ```
 
-これがやりたかったんですねー。やりました。
+これがやりたかったんですねー。やりました。 `tests` に追加してテストできます。
 
 
 # まとめ
@@ -303,4 +303,4 @@ segActLinearMonoidAction _ = myForAllShrink True (const True) desc lhsS lhs rhsS
 
 モノイド則や恒等写像が間違っていたり、作用の対象のインスタンスを `Num a` のように広く取り過ぎていたことに気付きました。非常に有意義なテストになりました。
 
-コンテストの本番では、もう少しポータブルな関数で PBT できると良さそうです。
+コンテスト本番では、もう少しポータブルな関数で PBT できると良さそうです。
