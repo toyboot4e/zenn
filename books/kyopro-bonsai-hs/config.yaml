@@ -1,0 +1,17 @@
+title: "競プロ盆栽.hs"
+summary: "Haskell の AtCoder 用自作ライブラリ解説"
+topics: ["haskell", "atcoder"]
+published: true
+price: 0
+chapters:
+- cover
+- intro
+- beginner
+- parser
+- cont-t
+- assert
+- incremental-development
+- monoid-check
+- modint
+- end
+- ox-zenn
