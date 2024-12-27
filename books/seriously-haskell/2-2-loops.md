@@ -188,7 +188,7 @@ digits10' = L.unfoldr f
 -- 計算を続行する場合は `Just (リストに追加する値、次の状態)` を返します
 ```
 
-再帰関数を用いた実装においては、関数 `f` が `:` 演算子に依存していました。 [`unfoldr`] においては関数 `f` が構築するデータ型と無関係になるために、任意のデータ型の [`unfoldr`] を使用することができるようになります。
+再帰関数を用いた実装においては、関数 `f` が `:` 演算子に依存していました。 [`unfoldr`] においては関数 `f` が構築するデータ型と無関係になるために、任意のデータ型の [`unfoldr`] を使用できます。
 
 たとえば上記 `digits10'` を `vector` 版に書き換えてみます (`vector` は後の章で紹介します) 。 [`unfoldr`] 関数のみを置き換えれば、関数 `f` はまったく同じ定義のまま使用できます:
 
@@ -204,7 +204,7 @@ digits10'U = U.unfoldr f
         (!q, !r) = x `divMod` 10
 ```
 
-他の例として `bytestring` パッケージの `readInt :: ByteString -> Maybe (Int, ByteString)` は、リストの `unfoldr` にも [`vector`] の `unfoldr` にも使用できます:
+関数 `f` の例として、 `bytestring` パッケージの `readInt :: ByteString -> Maybe (Int, ByteString)` があります。これはリストの `unfoldr` にも [`vector`] の `unfoldr` にも使用できます:
 
 ```hs
 import Data.ByteString.Char8 qualified as BS
@@ -218,9 +218,9 @@ intsU :: IO (U.Vector Int)
 intsU = U.unfoldr (BS.readInt . BS.dropWhile isSpace) <$> BS.getLine
 ```
 
-特に [`vector`] においては `:` 演算子のように $O(1)$ でデータを追加する方法が存在しないため、 `unfoldr` による生成が有用です。 `unfoldr` のアイデアが実際役に立つことが確認できたと思います。
+特に [`vector`] においては `:` 演算子のように $O(1)$ でデータを追加できないため、 `unfoldr` が有用です。 `unfoldr` のアイデアが実際役に立つことが確認できたと思います。
 
-なお Rust で言えば [`successors`](https://doc.rust-lang.org/std/iter/fn.successors.html) というイテレータのメソッドが [`unfoldr`] に対応すると思います。どのデータ型にも [`collect`](https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.collect) できますね。
+> なお Rust で言えば [`successors`](https://doc.rust-lang.org/std/iter/fn.successors.html) というイテレータのメソッドが [`unfoldr`] に対応すると思います。どのデータ型にも [`collect`](https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.collect) できますね。
 
 その他に [`unfoldr`] で表現できるものとしては、整数列から整数のチャンク列への変換、 `Int` を bit 集合とみなした場合のべき集合の列挙、尺取り法などがあります。
 
