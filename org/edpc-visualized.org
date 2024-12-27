@@ -1,3 +1,0 @@
-#+TITLE: 図解で EDPC
-#+LINK: edpc https://atcoder.jp/contests/dp
-
