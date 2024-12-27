@@ -23,7 +23,7 @@
 
 #+BEGIN_SRC yaml :tangle ../books/kyopro-bonsai-hs/config.yaml :noweb yes
 title: "競プロ盆栽.hs"
-summary: "Haskell の AtCoder 用自作ライブラリ解説"
+summary: "Haskell に AtCoder Library を移植した際のブログです"
 topics: ["haskell", "atcoder"]
 published: true
 price: 0
@@ -431,11 +431,11 @@ checkIndex funcName i n
   | otherwise = errorIndex funcName i n
 
 {-# INLINE testIndex #-}
-testIndex :: (HasCallStack) => Int -> Int -> Bool
+testIndex :: Int -> Int -> Bool
 testIndex i n = 0 <= i && i < n
 
 {-# INLINE errorIndex #-}
-errorIndex :: (HasCallStack) => String -> Int -> Int -> ()
+errorIndex :: (HasCallStack) => String -> Int -> Int -> a
 errorIndex funcName i n =
   error $ funcName ++ ": given invalid index `" ++ show i ++ "` over length `" ++ show n ++ "`"
 #+END_SRC
@@ -1183,7 +1183,7 @@ class (Monoid f) => SegAct f a where
 [[=ac-library-hs=][=ac-library-hs=]] では、 =SegAct= のサンプルを =Extra= モジュールで提供します。これらのモノイドをテストして行きましょう。
 
 - [[https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Extra/Monoid/Affine1.hs][=Affine1.hs=]] ($f: x \rightarrow a x + b$)
-- [[https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Extra/Monoid/RangeSetId.hs][=RangeSet=]] ($f: x \rightarrow x + a$)
+- [[https://github.com/toyboot4e/ac-library-hs/blob/2a5083aeca24896b9fe595edc0eb7f9e4cc6d8fd/src/AtCoder/Extra/Monoid/RangeSet.hs][=RangeSet=]] ($f: x \rightarrow a$)
 
 ** 型クラスをテストする
 
@@ -1329,7 +1329,7 @@ instance (Monoid a) => Monoid (RangeSet a) where
 
 *** =SegAct= 則をテストする
 
-上記の 4 つの性質をコードで表現します。
+さらに冒頭の 4 つの性質をコードで表現します。
 
 #+BEGIN_SRC haskell
 module Tests.Extra.Monoid (tests) where
@@ -1353,16 +1353,6 @@ segActLaw p =
       ("Linear Monoid Action", segActLinearMonoidAction p)
     ]
 
-segActIdentity :: forall f a. (SegAct f a, QC.Arbitrary f, Eq f, Show f, Monoid a, Eq a, QC.Arbitrary a, Show a) => Proxy (f, a) -> QC.Property
-segActIdentity _ = myForAllShrink True (const True) desc lhsS lhs rhsS rhs
-  where
-    desc :: a -> [String]
-    desc (a :: a) = ["a = " ++ show a]
-    lhsS = "segAct mempty a"
-    lhs = segAct (mempty @f)
-    rhsS = "a"
-    rhs = id
-
 segActMonoidAction :: forall f a. (SegAct f a, QC.Arbitrary f, Eq f, Show f, Monoid a, Eq a, QC.Arbitrary a, Show a) => Proxy (f, a) -> QC.Property
 segActMonoidAction _ = myForAllShrink True (const True) desc lhsS lhs rhsS rhs
   where
@@ -1372,6 +1362,16 @@ segActMonoidAction _ = myForAllShrink True (const True) desc lhsS lhs rhsS rhs
     lhs (!f2, !f1, !a) = (f2 <> f1) `segAct` a
     rhsS = "f_2 (f_1 a)"
     rhs (!f2, !f1, !a) = f2 `segAct` (f1 `segAct` a)
+
+segActIdentity :: forall f a. (SegAct f a, QC.Arbitrary f, Eq f, Show f, Monoid a, Eq a, QC.Arbitrary a, Show a) => Proxy (f, a) -> QC.Property
+segActIdentity _ = myForAllShrink True (const True) desc lhsS lhs rhsS rhs
+  where
+    desc :: a -> [String]
+    desc (a :: a) = ["a = " ++ show a]
+    lhsS = "segAct mempty a"
+    lhs = segAct (mempty @f)
+    rhsS = "a"
+    rhs = id
 
 segActEndomorphism :: forall f a. (SegAct f a, QC.Arbitrary f, Eq f, Show f, Monoid a, Eq a, QC.Arbitrary a, Show a) => Proxy (f, a) -> QC.Property
 segActEndomorphism _ = myForAllShrink True (const True) desc lhsS lhs rhsS rhs
@@ -1394,7 +1394,7 @@ segActLinearMonoidAction _ = myForAllShrink True (const True) desc lhsS lhs rhsS
     rhs (QC.Positive !len, !f, !a) = stimes len (segAct f a)
 #+END_SRC
 
-これがやりたかったんですねー。やりました。 =tests= に追加してテストできます。
+これがやりたかったんですねー。やりました。 =tests= に追加して =SegAct= をテストできます。
 
 ** まとめ
 
@@ -1465,7 +1465,7 @@ class Foo a where
   someValueProxy' :: Proxy# a -> Int
 #+END_SRC
 
-軽くベンチマークした限りでは、 =AllowAmbiguousTypes=, =Proxy=, =Tagged= 間で =ModInt= のパフォーマンスに変化はありませんでした。そのため比較的一般的な =Proxy#= を採用しました。
+軽くベンチマークした限りでは、 =AllowAmbiguousTypes=, =Tagged=, =Proxy#= 間で =ModInt= のパフォーマンスに変化はありませんでした。そのため比較的一般的な =Proxy#= を採用しました。
 
 #+BEGIN_QUOTE
 より複雑なケースが心配で、正直確認まで手が回っていませんが、遅過ぎるということはないでしょう。
@@ -1491,7 +1491,7 @@ class Foo a where
 
 *** =(-)=
 
-=x1 - x2= がアンダーフローした場合に法 =m= を足し直します。ちょっと驚きました:
+=x1 - x2= がアンダーフローした場合に法 =m= を足し直してオーバーフローさせて戻します。ちょっと驚きました:
 
 #+BEGIN_SRC haskell
 {-# INLINE (-) #-}
@@ -1561,7 +1561,7 @@ instance Modulus 998244353 where
 
 *** =pow= ($x^n \bmod m$)
 
-=pow= は繰り返し二乗法により計算します。このように何度も $x \cdot y \bmod m$ を計算する場合は、 Barrrtt reduction や Montgomery 乗算が高速であると知られています。 ACL では Barrett reduction を実施しています:
+=pow= は繰り返し二乗法により計算します。このように何度も $x \cdot y \bmod m$ を計算する場合は、 Barrett reduction や Montgomery 乗算が高速であると知られています。 ACL では Barrett reduction を実施しています:
 
 #+BEGIN_SRC haskell
 {-# INLINE pow #-}
@@ -1569,7 +1569,9 @@ pow :: forall a. (HasCallStack, KnownNat a) => ModInt a -> Int -> ModInt a
 pow (ModInt x0) n0 = ModInt . fromIntegral $ inner n0 1 (fromIntegral x0)
   where
     !_ = ACIA.runtimeAssert (0 <= n0) $ "AtCoder.ModInt.pow: given negative exponential `n`: " ++ show n0 ++ show "`"
+    -- Barrett reduction の前計算
     bt = ACIBT.new64 $ fromIntegral (natVal' (proxy# @a))
+    -- 繰り返し二乗法
     inner :: Int -> Word64 -> Word64 -> Word64
     inner !n !r !y
       | n == 0 = r
@@ -1624,7 +1626,7 @@ Barrett reduction 等の準備計算の時間を除外して 10,000 回 mulMod �
 10,000 回 powMod (繰り返し二乗法) を計算しました。
 
 - Barrett reduction > Montgomery 乗算 > Barredd reduction (64) の順で速かったです。
-  - いずれも下準備のコストがあるため、 =powMod= ほど =rem= を圧倒しません。
+  - いずれも下準備のコストがあるため、 =mulMod= ほど =rem= を圧倒しません。
 - [[https://hackage.haskell.org/package/base-4.21.0.0/docs/Prelude.html#v:-94-][=(^)=]] が普通の =powerRem= よりも速かったです。今気づきましたが、 =(^)= の繰り返し二乗法の実装をコピーすれば、今より =pow= を高速化できる可能性があります。
 
 #+BEGIN_QUOTE
@@ -1644,7 +1646,7 @@ Haskell と競技プログラミング。いずれも単品で手を出すのは
 
 これは僕に若干乱視があることも影響しており、斜めを見れば真っ直ぐ進めるようになっています。より大きな流れとしては、 Haskell をやることによって本命の目的、理想のゲームプログラミング環境に近づいているのです。本当なんです！
 
-[[https://qiita.com/advent-calendar/2024/haskell][今年の Haskell Advent Calendar]] でも Zenn Book を投稿し、今回はブログ形式としました。奇跡的に文脈が合う人がいれば、読んでもらえるでしょうか……？　上手く行けば来年から AtCodre で [[=ac-library-hs=][=ac-library-hs=]] が使えるようになりますから、書いた僕自身が一番楽しみにしています。また昨年の投稿から、エフェクト・ヒューリスティック等々の課題は未消化で終わってしまいましたが、来年の自分にこそ期待したいと思います。
+[[https://qiita.com/advent-calendar/2024/haskell][今年の Haskell Advent Calendar]] でも Zenn Book を投稿し、今回はブログ形式としました。奇跡的に文脈が合う人がいれば、読んでもらえるでしょうか……？　上手く行けば来年から AtCodre で [[=ac-library-hs=][=ac-library-hs=]] が使えるようになりますから、僕自身が一番楽しみにしています。また昨年の投稿から、エフェクト・ヒューリスティック等々の課題は未消化で終わってしまいましたが、来年の自分にこそ期待したいと思います。
 
 それでは今年もありがとうございました。残りのカレンダー記事も楽しみです。良い年末を！
 
@@ -1655,7 +1657,7 @@ Haskell と競技プログラミング。いずれも単品で手を出すのは
 :EXPORT_FILE_NAME: ox-zenn
 :END:
 
-** 使用技術 
+** 使用技術
 
 この投稿は Emacs の [[https://orgmode.org/][org-mode]] で作成し、 [[https://github.com/conao3/ox-zenn.el][=ox-zenn.el=]] により Zeen Markdown に変換して生成しました。
 
@@ -1700,12 +1702,12 @@ https://github.com/conao3/ox-zenn.el
 ,* =config.yaml=
 
 ,#+BEGIN_SRC yaml :tangle ../books/kyopro-bonsai-hs/config.yaml :noweb yes
-:title: "競プロ盆栽.hs"
-:summary: "Haskell の AtCoder 用自作ライブラリ解説"
-:topics: ["haskell", "atcoder"]
-:published: false
-:price: 0
-:chapters:
+title: "競プロ盆栽.hs"
+summary: "Haskell に AtCoder Library を移植した際のブログです"
+topics: ["haskell", "atcoder"]
+published: false
+price: 0
+chapters:
 <<zenn-headings()>>
 ,#+END_SRC
 
