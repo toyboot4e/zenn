@@ -12,6 +12,7 @@ chapters:
 - assert
 - incremental-development
 - monoid-check
+- random-test
 - modint
 - end
 - ox-zenn
