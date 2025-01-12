@@ -211,11 +211,11 @@ prop_example xs = xs == reverse xs
 
 tests :: [TestTree]
 tests =
-  [ QC.testProperty "example" prop_example,
+  [ QC.testProperty "example" prop_example
   ]
 ```
 
-当然失敗します。エラーメッセージに入力値が表示しますが、 ****左辺と右辺の値は表示されません**** 。改善して行きます。
+当然失敗します。エラーメッセージに入力値が表示しますが、 ****左辺と右辺の評価値が表示されません**** 。改善して行きます。
 
 ```sh
 example: FAIL

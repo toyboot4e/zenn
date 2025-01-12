@@ -41,7 +41,7 @@ class (Monoid f) => SegAct f a where
 
 ## 追加の API
 
-[maspy さん](https://atcoder.jp/users/maspy) の [遅延伝播セグメント木](https://github.com/maspypy/library/blob/fb8c2faf726e432b0d6c976ebb739cf2f040f553/ds/segtree/lazy_segtree.hpp#L157) では、作用の関数が区間長を受け取ります。
+[maspy さん](https://atcoder.jp/users/maspy) の [遅延伝播セグメント木](https://github.com/maspypy/library/blob/fb8c2faf726e432b0d6c976ebb739cf2f040f553/ds/segtree/lazy_segtree.hpp#L157) では、作用の関数が区間長 (`sz`, size) を受け取ります:
 
 ```cpp
 void apply_at(int k, A a) {
@@ -56,7 +56,7 @@ void apply_at(int k, A a) {
 -   $X$ に区間長を埋め込まなくて済みます。
 -   $F$ から $X$ への作用は、 $X$ に対して制約を設けずに区間長を得ることができます。
 
-[`ac-library-hs`](https://github.com/toyboot4e/ac-library-hs) では真似して `segActWithLength` も用意しています。
+[`ac-library-hs`](https://github.com/toyboot4e/ac-library-hs) では真似して `segActWithLength` も用意しています:
 
 ```haskell
 class (Monoid f) => SegAct f a where
@@ -224,7 +224,7 @@ instance (Monoid a) => Monoid (RangeSet a) where
   mconcat (a : _) = a
 ```
 
-これもよく盲点になります。
+これがよく盲点になります。
 
 
 ## `SegAct` 則をテストする

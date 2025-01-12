@@ -417,8 +417,8 @@ mergeMaybe dsu a b
   | otherwise = Just <$> unsafeMerge dsu a b
 
 -- Int を返す (境界チェック無し)
-mergeMaybe :: (HasCallStack, PrimMonad m) => Dsu (PrimState m) -> Int -> Int -> m Int
-mergeMaybe dsu a b = { .. }
+unsafeMaybe :: (HasCallStack, PrimMonad m) => Dsu (PrimState m) -> Int -> Int -> m Int
+unsafeMaybe dsu a b = { .. }
 #+END_SRC
 
 必然的に =checkIndex= (assertion) は =checkIndex=, =testIndex=, =errorIndex= に分かれます。単純な例ではありますが、こうした構造の整理が盆栽の醍醐味だと思います:
@@ -512,7 +512,7 @@ f = (* 2)
 
 #+BEGIN_EXPORT markdown
 ![Emacs](/images/kyopro-bonsai-hs/hls-eval-1.png =269x)
-*Evaluate が表示しました。僕は code lens を無効化していて気づきませんでした*
+*Evaluate... が表示しました。*
 #+END_EXPORT
 
 Evaluate をクリックすると、次のように =doctest= の評価結果が表示します。
@@ -785,11 +785,11 @@ prop_example xs = xs == reverse xs
 
 tests :: [TestTree]
 tests =
-  [ QC.testProperty "example" prop_example,
+  [ QC.testProperty "example" prop_example
   ]
 #+END_SRC
 
-当然失敗します。エラーメッセージに入力値が表示しますが、 **左辺と右辺の値は表示されません** 。改善して行きます。
+当然失敗します。エラーメッセージに入力値が表示しますが、 **左辺と右辺の評価値が表示されません** 。改善して行きます。
 
 #+BEGIN_SRC sh
 example: FAIL
@@ -1144,7 +1144,7 @@ class (Monoid f) => SegAct f a where
 
 *** 追加の API
 
-[[https://atcoder.jp/users/maspy][maspy さん]] の [[https://github.com/maspypy/library/blob/fb8c2faf726e432b0d6c976ebb739cf2f040f553/ds/segtree/lazy_segtree.hpp#L157][遅延伝播セグメント木]] では、作用の関数が区間長を受け取ります。
+[[https://atcoder.jp/users/maspy][maspy さん]] の [[https://github.com/maspypy/library/blob/fb8c2faf726e432b0d6c976ebb739cf2f040f553/ds/segtree/lazy_segtree.hpp#L157][遅延伝播セグメント木]] では、作用の関数が区間長 (=sz=, size) を受け取ります:
 
 #+BEGIN_SRC cpp
 void apply_at(int k, A a) {
@@ -1159,7 +1159,7 @@ void apply_at(int k, A a) {
 - $X$ に区間長を埋め込まなくて済みます。
 - $F$ から $X$ への作用は、 $X$ に対して制約を設けずに区間長を得ることができます。
 
-[[=ac-library-hs=][=ac-library-hs=]] では真似して =segActWithLength= も用意しています。
+[[=ac-library-hs=][=ac-library-hs=]] では真似して =segActWithLength= も用意しています:
 
 #+BEGIN_SRC haskell
 class (Monoid f) => SegAct f a where
@@ -1325,7 +1325,7 @@ instance (Monoid a) => Monoid (RangeSet a) where
   mconcat (a : _) = a
 #+END_SRC
 
-これもよく盲点になります。
+これがよく盲点になります。
 
 *** =SegAct= 則をテストする
 
@@ -1455,6 +1455,7 @@ class Foo a where
   someValueAmb :: Int
   -- 2. Tagged
   someValueTagged :: Tagged a Int
+  -- Proxy
   someValueProxy :: Proxy a -> Int
 #+END_SRC
 
@@ -1491,7 +1492,7 @@ class Foo a where
 
 *** =(-)=
 
-=x1 - x2= がアンダーフローした場合に法 =m= を足し直してオーバーフローさせて戻します。ちょっと驚きました:
+=x1 - x2= がアンダーフローした場合に法 =m= を足し直してオーバーフローさせて戻します。驚きました:
 
 #+BEGIN_SRC haskell
 {-# INLINE (-) #-}
@@ -1527,7 +1528,7 @@ instance (Modulus p) => Fractional (ModInt p) where
   fromRational q = fromInteger (numerator q) / fromInteger (denominator q)
 #+END_SRC
 
-=recip= の実装は、 ACL の実装に合わせて法が素数かで分岐します。 ACL はコンパイル時に分岐していますが、 =ac-library-hs= の =ModInt= では実行時に分岐しています。法が素数の場合は [[https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A7%E3%83%AB%E3%83%9E%E3%83%BC%E3%81%AE%E5%B0%8F%E5%AE%9A%E7%90%86][フェルマーの小定理]] により $x^{-1} \equiv x^{p-2} \mod m$ です:
+=recip= の実装は、 ACL の実装に合わせて法が素数かで分岐します。 ACL はコンパイル時に分岐していますが、 =ac-library-hs= の =ModInt= では実行時に分岐しています。法が素数の場合は [[https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A7%E3%83%AB%E3%83%9E%E3%83%BC%E3%81%AE%E5%B0%8F%E5%AE%9A%E7%90%86][フェルマーの小定理]] により $x^{-1} \equiv x^{m-2} \mod m$ です:
 
 #+BEGIN_SRC haskell
 {-# INLINE inv #-}

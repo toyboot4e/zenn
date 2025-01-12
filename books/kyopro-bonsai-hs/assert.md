@@ -55,8 +55,8 @@ mergeMaybe dsu a b
   | otherwise = Just <$> unsafeMerge dsu a b
 
 -- Int を返す (境界チェック無し)
-mergeMaybe :: (HasCallStack, PrimMonad m) => Dsu (PrimState m) -> Int -> Int -> m Int
-mergeMaybe dsu a b = { .. }
+unsafeMaybe :: (HasCallStack, PrimMonad m) => Dsu (PrimState m) -> Int -> Int -> m Int
+unsafeMaybe dsu a b = { .. }
 ```
 
 必然的に `checkIndex` (assertion) は `checkIndex`, `testIndex`, `errorIndex` に分かれます。単純な例ではありますが、こうした構造の整理が盆栽の醍醐味だと思います:
@@ -73,7 +73,7 @@ testIndex :: Int -> Int -> Bool
 testIndex i n = 0 <= i && i < n
 
 {-# INLINE errorIndex #-}
-errorIndex :: (HasCallStack) => String -> Int -> Int -> ()
+errorIndex :: (HasCallStack) => String -> Int -> Int -> a
 errorIndex funcName i n =
   error $ funcName ++ ": given invalid index `" ++ show i ++ "` over length `" ++ show n ++ "`"
 ```
@@ -151,7 +151,7 @@ f = (* 2)
 僕のエディタ上では以下のように code lens が表示します。現状、 [eval plugin の code action が無い](https://github.com/haskell/haskell-language-server/issues/496) そうなので、 code lens を有効化しましょう:
 
 ![Emacs](/images/kyopro-bonsai-hs/hls-eval-1.png =269x)
-*Evaluate が表示しました。僕は code lens を無効化していて気づきませんでした*
+*Evaluate... が表示しました。*
 
 Evaluate をクリックすると、次のように `doctest` の評価結果が表示します。
 

@@ -50,6 +50,7 @@ class Foo a where
   someValueAmb :: Int
   -- 2. Tagged
   someValueTagged :: Tagged a Int
+  -- Proxy
   someValueProxy :: Proxy a -> Int
 ```
 
@@ -87,7 +88,7 @@ someValueProxy' :: Proxy# a -> Int
 
 ## `(-)`
 
-`x1 - x2` がアンダーフローした場合に法 `m` を足し直してオーバーフローさせて戻します。ちょっと驚きました:
+`x1 - x2` がアンダーフローした場合に法 `m` を足し直してオーバーフローさせて戻します。驚きました:
 
 ```haskell
 {-# INLINE (-) #-}
@@ -125,7 +126,7 @@ instance (Modulus p) => Fractional (ModInt p) where
   fromRational q = fromInteger (numerator q) / fromInteger (denominator q)
 ```
 
-`recip` の実装は、 ACL の実装に合わせて法が素数かで分岐します。 ACL はコンパイル時に分岐していますが、 `ac-library-hs` の `ModInt` では実行時に分岐しています。法が素数の場合は [フェルマーの小定理](https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A7%E3%83%AB%E3%83%9E%E3%83%BC%E3%81%AE%E5%B0%8F%E5%AE%9A%E7%90%86) により $x^{-1} \equiv x^{p-2} \mod m$ です:
+`recip` の実装は、 ACL の実装に合わせて法が素数かで分岐します。 ACL はコンパイル時に分岐していますが、 `ac-library-hs` の `ModInt` では実行時に分岐しています。法が素数の場合は [フェルマーの小定理](https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A7%E3%83%AB%E3%83%9E%E3%83%BC%E3%81%AE%E5%B0%8F%E5%AE%9A%E7%90%86) により $x^{-1} \equiv x^{m-2} \mod m$ です:
 
 ```haskell
 {-# INLINE inv #-}
