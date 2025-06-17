@@ -32,7 +32,7 @@ Zenn ユーザの皆様は [[https://zenn.dev/zenn/articles/zenn-cli-guide][=zen
 これを活かせば、エディタとブラウザ間で見出しの内容が一致する環境を作ることができます。 =config.yaml= も手動で編集する必要はありません:
 
 #+BEGIN_EXPORT md
-![cover](/images/org-zenn-headings.png)
+![headings](/images/org-zenn-headings.png)
 #+END_EXPORT
 
 実際 [[https://zenn.dev/toyboot4e/books/kyopro-bonsai-hs][競プロ盆栽.hs]] は Org ファイルとして作成しました。こうした環境の作り方を紹介して行こうと思います。
@@ -465,7 +465,7 @@ chapters:
 スクリプトは =org-map-entries= 等でゴリゴリ実装します。詳細は [[https://github.com/toyboot4e/org-zenn-example][リポジトリ]]= の [[https://github.com/toyboot4e/org-zenn-example/blob/main/elisp/export-org-book.el][該当スクリプト]] をご覧ください。
 
 #+BEGIN_EXPORT md
-![cover](/images/org-zenn-headings.png)
+![headings](/images/org-zenn-headings.png)
 *環境構築できれば、こんな感じになります*
 #+END_EXPORT
 
