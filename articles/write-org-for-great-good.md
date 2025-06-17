@@ -339,7 +339,7 @@ TODO Heading 2
 Heading 3
 ```
 
-Org には見出しに [TODO](https://orgmode.org/manual/TODO-Basics.html) をつける機能があります。 `TODO` 付きの見出しは下書きとみなし、スキップすることにすると、 `Heading 2` を下書きとして省略されます:
+Org には見出しに [TODO](https://orgmode.org/manual/TODO-Basics.html) をつける機能があります。 `TODO` 付きの見出しは下書きとみなし、スキップすることにすると、 `Heading 2` は省略されます:
 
 ```elisp
 (org-map-entries
@@ -426,7 +426,7 @@ books/my-org-book
 └── chapter-3.md
 ```
 
-成功です！　後は `config.yaml` を自動生成できれば、 Zenn Book ファイル全体を Org ファイルから展開できます。
+成功です！　後は `config.yaml` を自動生成できれば、 Zenn Book 全体を Org ファイルから展開できます。
 
 
 ### `config.yaml` を自動生成する
@@ -462,10 +462,10 @@ chapters:
 - chapter-3
 ```
 
-スクリプトは `org-map-entries` 等でゴリゴリ実装します。詳細は [リポジトリ](https://github.com/toyboot4e/org-zenn-example)= の [該当スクリプト](https://github.com/toyboot4e/org-zenn-example/blob/main/elisp/export-org-book.el) をご覧ください。
+スクリプトは `org-map-entries` 等でゴリゴリ実装します。詳細は [リポジトリ](https://github.com/toyboot4e/org-zenn-example) の [該当スクリプト](https://github.com/toyboot4e/org-zenn-example/blob/main/elisp/export-org-book.el) をご覧ください。
 
 ![headings](/images/org-zenn-headings.png)
-*環境構築できれば、こんな感じになります*
+*環境構築できれば、このような見た目になります*
 
 
 # 終わりに
