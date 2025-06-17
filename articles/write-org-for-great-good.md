@@ -3,7 +3,7 @@ title: "Zenn Book = One Org File"
 topics: [org]
 emoji: 🗿
 type: tech
-published: false
+published: true
 ---
 
 
