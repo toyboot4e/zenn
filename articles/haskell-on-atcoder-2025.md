@@ -495,7 +495,7 @@ AtCoder の Haskeller への影響を確認します。
         -   [`nextPermutationBy`](https://hackage-content.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Generic-Mutable.html#v:nextPermutationBy), [`prevPermutationBy`](https://hackage-content.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Generic-Mutable.html#v:prevPermutationBy) 追加
     -   `Data.Vector.Generic`: [`spanR`](https://hackage-content.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Generic.html#v:spanR), [`breakR`](https://hackage-content.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Generic.html#v:breakR) 追加
 -   vector-algorithms ([0.9.0.1](https://hackage.haskell.org/package/vector-algorithms-0.9.0.1) → [0.9.1.0](https://hackage.haskell.org/package/vector-algorithms-0.9.1.0)) [[changelog](https://hackage.haskell.org/package/vector-algorithms-0.9.1.0/changelog)]
-    -   `sort`, `sortUniq`, `nub`, `nubBy`, `nubByMut`, を実用可能なレベルに高速化 (`INLINE` 追加)
+    -   `sort`, `sortUniq`, `nub`, `nubBy`, `nubByMut` の高速化 (`INLINE` 追加)
 
 
 # まとめ
