@@ -416,7 +416,7 @@ index-state: hackage.haskell.org 2025-09-07T04:34:43Z
 
 # 言語アップデート 2025 による変化
 
-AtCoder をやっている Haskeller への影響を確認します。
+AtCoder の Haskeller への影響を確認します。
 
 
 ## コンパイラの更新
