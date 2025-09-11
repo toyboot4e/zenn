@@ -435,7 +435,7 @@ AtCoder をやっている Haskeller への影響を確認します。
 ユーザの要望により、以下のパッケージが追加されました:
 
 - [ac-library-hs-1.5.3.0](https://hackage.haskell.org/package/ac-library-hs-1.5.3.0)
-  [AtCoder Library](https://atcoder.github.io/ac-library/production/document_ja/index.html) の Haskell 移植版です。 "Extra" モジュールとして、元々の AtCoder Library には含まれないデータ構造・アルゴリズムも多数収録しています。
+  [AtCoder Library](https://atcoder.github.io/ac-library/production/document_ja/index.html) の Haskell 移植版です。 "Extra" モジュールとして、元々の AtCoder Library には含まれないアルゴリズム・データ構造も多数収録しています。
 - [flow-2.0.0.9](https://hackage.haskell.org/package/flow-2.0.0.9)
   パイプライン演算子等を定義した小さなライブラリです。よく見る Haskell に違和感がある人は興味を惹かれると思います。
 - [hmatrix-0.20.2](https://hackage.haskell.org/package/hmatrix-0.20.2), [hmatrix-glpk-0.19.0.0](https://hackage.haskell.org/package/hmatrix-glpk-0.19.0.0), [hmatrix-gsl-0.19.0.1](https://hackage.haskell.org/package/hmatrix-gsl-0.19.0.1), [hmatrix-special-0.19.0.0](https://hackage.haskell.org/package/hmatrix-special-0.19.0.0)
@@ -467,7 +467,7 @@ AtCoder をやっている Haskeller への影響を確認します。
     -   [`Data.Foldable1`](https://hackage.haskell.org/package/base-4.19.2.0/docs/Data-Foldable1.html) 追加
     -   `Data.Function`: [`applyWhen`](https://hackage.haskell.org/package/base-4.19.2.0/docs/Data-Function.html#v:applyWhen) 追加
     -   `Data.List`: [(!?)](https://hackage.haskell.org/package/base-4.19.0.0/docs/Data-List.html#v:-33--63-) 追加
-    -   `Data.List.NonEmpty`: [`inits`](https://hackage.haskell.org/package/base-4.19.2.0/docs/Data-List-NonEmpty.html#v:inits1), [`tails1`](https://hackage.haskell.org/package/base-4.19.2.0/docs/Data-List-NonEmpty.html#v:tails1), 追加
+    -   `Data.List.NonEmpty`: [`inits1`](https://hackage.haskell.org/package/base-4.19.2.0/docs/Data-List-NonEmpty.html#v:inits1), [`tails1`](https://hackage.haskell.org/package/base-4.19.2.0/docs/Data-List-NonEmpty.html#v:tails1), 追加
     -   `Data.Traversable`: [`mapAccumM`](https://hackage.haskell.org/package/base-4.19.2.0/docs/Data-Traversable.html#v:mapAccumM), [`forAccumM`](https://hackage.haskell.org/package/base-4.19.2.0/docs/Data-Traversable.html#v:forAccumM) 追加
     -   `Debug.Trace`: [`traceWith`](https://hackage.haskell.org/package/base-4.19.2.0/docs/Debug-Trace.html#v:traceWith), [`traceShowWith`](https://hackage.haskell.org/package/base-4.19.2.0/docs/Debug-Trace.html#v:traceShowWith), [`traceEventWith`](https://hackage.haskell.org/package/base-4.19.2.0/docs/Debug-Trace.html#v:traceEventWith) 追加
 -   bytestring ([0.11.4.0](https://hackage.haskell.org/package/bytestring-0.11.4.0) → [0.12.2.0](https://hackage.haskell.org/package/bytestring-0.12.2.0)) [[changelog](https://hackage.haskell.org/package/bytestring-0.12.2.0/changelog)]
@@ -491,7 +491,7 @@ AtCoder をやっている Haskeller への影響を確認します。
 -   vector ([0.13.0.0](https://hackage.haskell.org/package/vector-0.13.0.0) → [0.13.2.0](https://hackage.haskell.org/package/vector-0.13.2.0)) [[changelog](https://hackage.haskell.org/package/vector-0.13.2.0/changelog)]
     -   `Data.Vector.Unboxed`: [`DoNotUnboxLazy`](https://hackage-content.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Unboxed.html#t:DoNotUnboxLazy), [`DoNotUnboxStrict`](https://hackage-content.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Unboxed.html#t:DoNotUnboxStrict), [`DoNotUnboxNormalForm`](https://hackage-content.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Unboxed.html#t:DoNotUnboxNormalForm) 追加
     -   `Data.Vector.Generic.Mutable`:
-        -   [`nextPermutation`](https://hackage-content.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Generic-Mutable.html#v:nextPermutation), [`prevPermutation`](https://hackage-content.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Generic-Mutable.html#v:prevPermutation) の大高速化
+        -   [`nextPermutation`](https://hackage-content.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Generic-Mutable.html#v:nextPermutation), [`prevPermutation`](https://hackage-content.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Generic-Mutable.html#v:prevPermutation) の特大高速化
         -   [`nextPermutationBy`](https://hackage-content.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Generic-Mutable.html#v:nextPermutationBy), [`prevPermutationBy`](https://hackage-content.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Generic-Mutable.html#v:prevPermutationBy) 追加
     -   `Data.Vector.Generic`: [`spanR`](https://hackage-content.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Generic.html#v:spanR), [`breakR`](https://hackage-content.haskell.org/package/vector-0.13.2.0/docs/Data-Vector-Generic.html#v:breakR) 追加
 -   vector-algorithms ([0.9.0.1](https://hackage.haskell.org/package/vector-algorithms-0.9.0.1) → [0.9.1.0](https://hackage.haskell.org/package/vector-algorithms-0.9.1.0)) [[changelog](https://hackage.haskell.org/package/vector-algorithms-0.9.1.0/changelog)]
