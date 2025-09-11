@@ -1,7 +1,7 @@
 ---
 title: "Haskeller のための AtCoder 言語アップデート 2025"
 topics: [org]
-emoji: 🗿
+emoji: 🆕
 type: idea
 published: true
 ---
@@ -17,7 +17,7 @@ AtCoder では、ジャッジ環境 (コンパイル・実行環境) をユー�
 -   2025 年 9 月下旬〜の [AtCoder Daily Training](https://atcoder.jp/contests/adt_top) で新ジャッジが運用されます。
 -   2025 年 10 月中旬を目処に本番のコンテストで新ジャッジが運用されます。
 
-以下では来たる更新に備え、 Haskell のジャッジ環境の設定内容と、以前と比べてどう変化するかを確認します。
+以下では更新に備え、 Haskell のジャッジ環境の設定内容と、以前と比べてどう変化するかを確認します。
 
 
 # 言語アップデート 2025 の内容
@@ -502,6 +502,6 @@ AtCoder をやっている Haskeller への影響を確認します。
 
 以上の通り、順当に最新環境に更新されると思います。僕としては、特に言語サーバ (`haskell-language-server`) を更新できること、 [ac-library-hs](https://hackage.haskell.org/package/ac-library-hs) を追加できたことが嬉しいです。
 
-今回パッケージの追加の機会を逃してしまったという人は、ぜひ次回の言語アップデートにご参加ください。おそらく次回の更新も、 [AtCoderの言語アップデートに関して (2024-25年度)](https://atcoder.jp/posts/1342) に記載のある Discord で実施されるかと思います。
+今回パッケージの追加の機会を逃してしまった人は、ぜひ次回の言語アップデートにご参加ください。おそらく次回の更新も、 [AtCoderの言語アップデートに関して (2024-25年度)](https://atcoder.jp/posts/1342) に記載の Discord で実施されるのではかと思います。
 
 > 前回の言語アップデートで [gksato](https://atcoder.jp/users/gksato) さんご作成のテスト環境があり、今年はその延長で更新されました。いつもありがとうございます。また AtCoder はこれだけ存分に Haskell を振るえる唯一のコンテストサイトだと改めて認識し、深く感謝しております。
