@@ -19,3 +19,10 @@ book file:
 [private]
 alias b := book
 
+# previews the zenn files
+preview:
+    zenn preview --port 8002
+
+[private]
+alias p := preview
+
