@@ -23,10 +23,10 @@ AtCoder では、ジャッジ環境 (コンパイル・実行環境) を (ユー
 
 ** ファイル構成
 
-ジャッジ環境の OS は Ubuntu 24.04 です。 Haskell の場合、ホームディレクトリ以下の =submission= プロジェクトで提出コードがビルドされます:
+ジャッジ環境の OS は Ubuntu 24.04 です。 Haskell の場合、 =/judge/= 以下の =submission= プロジェクトで提出コードがビルドされます:
 
 #+BEGIN_SRC sh
-/home/runner/submission
+/judge/submission
 ├── app/
 │   └── Main.hs          # ユーザの提出コード
 ├── cabal.project        # 下記参照
