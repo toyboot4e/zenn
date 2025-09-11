@@ -1,6 +1,6 @@
 #+TITLE: Haskeller のための AtCoder 言語アップデート 2025
 #+OPTIONS: toc:nil
-#+GFM_TAGS: org
+#+GFM_TAGS: haskell atcoder
 #+GFM_CUSTOM_FRONT_MATTER: :emoji 🆕 :type idea
 #+GFM_CUSTOM_FRONT_MATTER: :published true
 

@@ -1,6 +1,6 @@
 ---
 title: "Haskeller のための AtCoder 言語アップデート 2025"
-topics: [org]
+topics: [haskell, atcoder]
 emoji: 🆕
 type: idea
 published: true
