@@ -448,7 +448,7 @@ AtCoder の Haskeller への影響を確認します。
   `chunksOf` など、 `unfoldr` の具体例にあたる関数が定義されているパッケージです。たまに必要な処理が一発で書けるかもしれません。
 - [wide-word-0.1.8.0](https://hackage.haskell.org/package/wide-word-0.1.8.0)
   128 bit 整数や 256 bit 整数を定義するパッケージです。 SIMD 命令を使っているため高速に動作します。 Barrett reduction, Montgomery 乗算などの実装に利用できます。
-  - 最近 `Word128` の `(-)` が修正されました ([wide-word#107](https://github.com/erikd/wide-word/pull/107)).
+  - 最近 `Word256` の `(-)` が修正されました ([wide-word#107](https://github.com/erikd/wide-word/pull/107)) が、ジャッジ環境には未反映のためご注意ください。
 - [witherable-0.5](https://hackage.haskell.org/package/witherable-0.5)
   これは僕の手に余るので、解説記事だけリンクします:
   - [Too lazy to evaluate - FilterableとWitherableについて](https://viercc.github.io/blog/posts/2021-10-24-witherable-1.html)
