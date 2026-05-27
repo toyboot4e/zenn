@@ -19,6 +19,10 @@ book file:
 [private]
 alias b := book
 
+# composes a Zenn book directory of .md files into one .org file
+md-to-org book-dir out:
+    emacs -q --script elisp/md-to-org-book.el {{book-dir}} {{out}}
+
 # previews the zenn files
 preview:
     zenn preview --port 8002
