@@ -12,6 +12,13 @@ article file:
 [private]
 alias a := article
 
+# re-runs `just article` when the org file changes
+article-watch file:
+    watchexec -w {{file}} -- just article {{file}}
+
+[private]
+alias aw := article-watch
+
 # converts an org-based book into markdown
 book file:
     emacs -q --script elisp/export-org-book.el {{file}}
