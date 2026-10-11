@@ -136,7 +136,7 @@ Import の衝突は自動的に回避されません。たとえば =import Data
 
 * まとめ
 
-[[https://github.com/toyboot4e/bundler-hs][bundler-hs]] のおかげでローカルライブラリの qualified import が捌けるようになり、重宝しています。僕自身は [[https://hackage.haskell.org/package/ghc-lib-parser][ghc-lib-parser]] を乗りこなして AST を操作するには腕力が足りませんでしたが、AI が難なくこなしてしまいました。
+[[https://github.com/toyboot4e/bundler-hs][bundler-hs]] のおかげでローカルライブラリの qualified import が捌けるようになりました。僕自身は [[https://hackage.haskell.org/package/ghc-lib-parser][ghc-lib-parser]] を乗りこなすことができませんでしたが、 AI は難なく成し遂げてしまいました。
 
-ご自身でも [[https://github.com/toyboot4e/bundler-hs][bundler-hs]] 相当のツールが手軽に生成できると思いますので、快適な環境でプログラミングして行きましょう！
+ご自身でも [[https://github.com/toyboot4e/bundler-hs][bundler-hs]] 相当のツールが手軽に生成できる時代ですので、快適な環境でプログラミングして行きましょう！
 
