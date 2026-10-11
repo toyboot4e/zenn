@@ -58,7 +58,7 @@ f :: Int
 f = 77
 #+END_SRC
 
-これらを提出用の =Main.hs= から使用します:
+これらを =Main.hs= から使用します:
 
 #+BEGIN_SRC hs
 -- Main.hs
@@ -88,7 +88,7 @@ fB :: Int
 fB = 77
 #+END_SRC
 
-無事、名前衝突を避けた形に展開されました。普段は素朴な Haskell を書きつつ、提出時には名前衝突を避けることができます。 **ヤッター！**
+無事、名前衝突を避けた形に展開されました。このファイルはそのまま AtCoder に提出できます。 **ヤッター！**
 
 ** Minify, tree shaking
 
@@ -116,7 +116,7 @@ main = print $ fA + fB
 巨大なライブラリを使った場合でも、ファイルの 1 行目にすべてのモジュールを埋め込むことができます。
 
 #+BEGIN_QUOTE
-より大きなコードの例として、 [[https://atcoder.jp/contests/abc478/submissions/79697747][僕の提出 (例)]] は常に =minify= の設定をしています。 AtCoder アカウントをお持ちの方は確認できます。
+より大きなコードの例として、 [[https://atcoder.jp/contests/abc478/submissions/79697747][僕の提出 (例)]] は常に =minify= の設定をしています。 AtCoder アカウントをお持ちの方はご覧いただけます。
 #+END_QUOTE
 
 ** 注意点
